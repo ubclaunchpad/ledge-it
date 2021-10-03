@@ -7,16 +7,16 @@ assignees: ''
 
 ---
 
-Design Task 🎨
+# Design Task 🎨
 
-What? ❓
+## What? ❓
 
 [Describe issue]
 
-Where? 🎯
+## Where? 🎯
 
 [Where the should the changes be made]
 
-Resources 📖
+## Resources 📖
 
 [Possible resources to help with resolving the issue]
