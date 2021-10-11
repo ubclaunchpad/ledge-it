@@ -1,1 +1,1 @@
-# money-management-fe
+# money-manager
