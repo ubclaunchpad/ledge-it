@@ -3,6 +3,9 @@
 This folder will be home to all JavaScript code for the React Native App. 
 Checkout the instructions below to get started.
 
+Note: make sure your terminal path is `money-manager/client` before running any of the commands below. Use command 
+`cd client` to change current directory.
+
 ### Setup
 
 ##### Node
@@ -10,7 +13,7 @@ Make sure you have `node` installed globally on your device. You can verify this
 which should give you the version of `node` you have installed. If you do not have node installed please follow the
 instructions [here](https://nodejs.org/en/download/).
 
-Inside the `/client` directory terminal, run `npm install` to install all dependencies.
+Run `npm install` to install all dependencies.
 
 #### Expo
 

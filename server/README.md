@@ -3,6 +3,9 @@
 This folder will be home to all Python code for the FastAPI server.
 Checkout the instructions below to get started.
 
+Note: make sure your terminal path is `money-manager/server` before running any of the commands below. Use command
+`cd server` to change current directory.
+
 ### Setup
 
 ##### Python
