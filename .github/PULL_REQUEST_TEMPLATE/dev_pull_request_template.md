@@ -8,6 +8,7 @@
 
 ## Checklist 🗒
 
+- [ ] Ran `black .` to format code
 - [ ] Assigned PR to all authors
 - [ ] Requested at least one reviewer
 - [ ] Linked the PR to its respective issue in ZenHub
