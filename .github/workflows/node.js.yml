@@ -13,6 +13,10 @@ jobs:
   build:
 
     runs-on: ubuntu-latest
+    
+    defaults:
+      run:
+        working-directory: './client'
 
     strategy:
       matrix:
@@ -26,9 +30,8 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
+        cache-dependency-path: '**/package-lock.json'
     - name: Install dependencies
-      working-directory: ./client
       run: npm install
     - name: Lint
-      working-directory: ./client
       run: npm run lint
