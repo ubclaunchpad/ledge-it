@@ -33,6 +33,7 @@ class Income(BaseModel):
     location: Optional[str] = None
     locationx: Optional[float] = None
     loacationy: Optional[float] = None
+    category: str[Optional]
 
     class Config:
         allow_population_by_field_name = True
