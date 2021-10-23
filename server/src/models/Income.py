@@ -3,6 +3,7 @@ from bson import ObjectId
 from typing import Optional
 from datetime import date
 
+
 class PyObjectId(ObjectId):
     @classmethod
     def __get_validators__(cls):
