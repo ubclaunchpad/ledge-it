@@ -10,12 +10,10 @@ def currency_list():
     API_KEY = "b248938740450b2e6e0616db"
 
     URL = "https://v6.exchangerate-api.com/v6/" + API_KEY + "/latest/CAD"
-    # print(URL)
 
     # Send GET request to URL link
     response = requests.get(URL)
     output = response.json()
-    # print(output)
 
     # Parsing the json
     currencies = output["conversion_rates"]
@@ -31,12 +29,10 @@ def is_Currency(inputString):
     API_KEY = "b248938740450b2e6e0616db"
 
     URL = "https://v6.exchangerate-api.com/v6/" + API_KEY + "/latest/CAD"
-    # print(URL)
 
     # Send GET request to URL link
     response = requests.get(URL)
     output = response.json()
-    # print(output)
 
     # Parsing the json
     currencies = output["conversion_rates"]
