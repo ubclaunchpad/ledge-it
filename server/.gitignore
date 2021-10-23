@@ -8,6 +8,7 @@ npm-debug.*
 *.mobileprovision
 *.orig.*
 web-build/
+server/__pycache__/
 
 # macOS
 .DS_Store
