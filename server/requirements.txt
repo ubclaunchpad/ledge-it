@@ -4,3 +4,6 @@ aiofiles == 0.6.0
 python-multipart == 0.0.5
 jinja2 == 2.11.2
 black == 21.9b0
+bson == 0.5.10
+typing == 3.7.4.3
+pydantic == 1.8.2
