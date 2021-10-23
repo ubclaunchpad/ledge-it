@@ -1,7 +1,5 @@
+from bson.objectid import ObjectId
 from pydantic import BaseModel, Field
-from bson import ObjectId
-from typing import Optional
-from datetime import date
 
 
 class PyObjectId(ObjectId):
@@ -20,21 +18,8 @@ class PyObjectId(ObjectId):
         field_schema.update(type="string")
 
 
-# included location as x y coordinates
-# date = today date
-# currency_exchange = x -> CAD
-class Income(BaseModel):
+class MongoDBModel(BaseModel):
     id: PyObjectId = Field(default_factory=PyObjectId, alias="_id")
-    name: str
-    description: Optional[str] = None
-    date: date
-    amount: float
-    currency: str
-    exchange_rate: float
-    location: Optional[str] = None
-    locationx: Optional[float] = None
-    loacationy: Optional[float] = None
-    category: Optional[str] = None
 
     class Config:
         allow_population_by_field_name = True
