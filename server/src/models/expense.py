@@ -1,6 +1,6 @@
 from typing import Optional
 from datetime import date
-from . import MongoDBModel
+from .mongo_db_model import MongoDBModel
 
 
 class Expense(MongoDBModel):
