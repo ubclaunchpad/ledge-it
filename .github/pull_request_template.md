@@ -13,6 +13,6 @@
 - [ ] Assigned PR to all authors
 - [ ] Requested at least one reviewer
 - [ ] Linked the PR to its respective issue in ZenHub
-- [ ] Replaced [x] with the issue number
+- [ ] Replaced the X below with the issue number
 
-Closes #[x] 
+Closes #X
