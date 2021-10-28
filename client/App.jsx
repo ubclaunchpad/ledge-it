@@ -27,6 +27,6 @@ const TabNavBar = () => {
       <Tab.Screen name="Settings" component={SettingsPage} />
     </Tab.Navigator>
   );
-}
+};
 
 export default App;
