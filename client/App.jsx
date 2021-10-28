@@ -17,7 +17,7 @@ const App = () => {
 
 const Tab = createBottomTabNavigator();
 
-function TabNavBar() {
+const TabNavBar = () => {
   return (
     <Tab.Navigator>
       <Tab.Screen name="Home" component={HomePage} />
