@@ -5,6 +5,8 @@ Function: Connects backend of our app to our MongoDB database (money_manager_dev
 from pymongo import MongoClient
 import pprint
 
+from src.models.user import User
+
 
 class Connect(object):
     @staticmethod
@@ -15,13 +17,19 @@ class Connect(object):
 
 
 connection = Connect.get_connection()
-# print(connection)
-
+# print(connection
 db = connection.money_manager_dev
 user_collection = db.users
 
-# create dummy user dict
-user = {"name": "Example Name", "balance": 5900}
+# create dummy user
+data = {
+    "username": "Test User1",
+    "email": "testuser1@moneymanager.com",
+    "password": "abcde123",
+    "confirm_password": "abcde123",
+    "timestamp": "2021-10-28 19:15",
+}
+user = User(**data).dict()
 
 # Insert single user
 result = user_collection.insert_one(user)
