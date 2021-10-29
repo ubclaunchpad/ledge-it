@@ -23,11 +23,10 @@ user_collection = db.users
 
 # create dummy user
 data = {
-    "username": "Test User1",
-    "email": "testuser1@moneymanager.com",
-    "password": "abcde123",
-    "confirm_password": "abcde123",
-    "timestamp": "2021-10-28 19:15",
+    "username": "Test User2",
+    "email": "testuser2@moneymanager.com",
+    "password": "efgh123",
+    "confirm_password": "efgh123",
 }
 user = User(**data).dict()
 

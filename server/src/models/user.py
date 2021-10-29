@@ -10,9 +10,6 @@ class User(MongoDBModel):
     email: str
     password: str
     confirm_password: str  # To be used for data validation
-    timestamp: Optional[
-        datetime
-    ] = None  # Was thinking we should record the time when the account is created
 
     @validator("confirm_password")
     def passwords_match(cls, v, values, **kwargs):
