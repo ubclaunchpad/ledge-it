@@ -1,5 +1,7 @@
 from bson.objectid import ObjectId
 from pydantic import BaseModel, Field
+from datetime import datetime
+from typing import Optional
 
 
 class PyObjectId(ObjectId):
@@ -20,6 +22,8 @@ class PyObjectId(ObjectId):
 
 class MongoDBModel(BaseModel):
     id: PyObjectId = Field(default_factory=PyObjectId, alias="_id")
+    created_at: Optional[datetime] = datetime.now()
+    updated_at: Optional[datetime] = datetime.now()
 
     class Config:
         allow_population_by_field_name = True
