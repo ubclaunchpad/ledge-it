@@ -10,11 +10,15 @@
     "lint:fix": "prettier --write . && eslint --ext .jsx --ext .js . --fix"
   },
   "dependencies": {
+    "@react-navigation/bottom-tabs": "^6.0.9",
+    "@react-navigation/native": "^6.0.6",
     "expo": "~42.0.1",
     "expo-status-bar": "~1.0.4",
     "react": "16.13.1",
     "react-dom": "16.13.1",
     "react-native": "https://github.com/expo/react-native/archive/sdk-42.0.0.tar.gz",
+    "react-native-paper": "^4.9.2",
+    "react-native-tailwindcss": "^1.1.11",
     "react-native-web": "~0.13.12"
   },
   "devDependencies": {

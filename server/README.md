@@ -24,7 +24,8 @@ All the primary code should be in the `/src` folder.
 `pip install -r requirements.txt` to install all required packages
 
 #### Code style
-WIP
+
+Run `black .`
 
 ### Running the app
 

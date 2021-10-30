@@ -1,0 +1,21 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+fastapi = "==0.70.0"
+uvicorn = "==0.15.0"
+aiofiles = "==0.6.0"
+python-multipart = "==0.0.5"
+black = "==21.9b0"
+bson = "==0.5.10"
+typing = "==3.7.4.3"
+pydantic = "==1.8.2"
+pymongo = "==3.12.1"
+Jinja2 = "==3.0.2"
+
+[dev-packages]
+
+[requires]
+python_version = "3.10"
