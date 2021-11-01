@@ -3,9 +3,7 @@ from pymongo.database import Database
 from pymongo.collection import Collection
 
 test_db_uri = "mongodb+srv://dev-user:dev-user@moneymanagerdev.m0xh2.mongodb.net/money_manager_dev?retryWrites=true&w=majority"
-docker_db_uri = (
-    "mongodb://dev-user:dev-user@db:27017/?retryWrites=true&w=majority"
-)
+docker_db_uri = "mongodb://dev-user:dev-user@db:27017/?retryWrites=true&w=majority"
 
 
 class Connect(object):
