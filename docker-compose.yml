@@ -1,0 +1,23 @@
+version: '3.9'
+
+services:
+  server:
+    build: ./server
+    ports:
+      - '8000:8000'
+    volumes:
+      - ./server:/server
+    command: [ 'uvicorn', 'server.main:app', '--reload', "--host", "0.0.0.0", "--port", "8000" ]
+    depends_on:
+      - db
+    links:
+      - db
+
+  db:
+    image: mongo
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: dev-user
+      MONGO_INITDB_ROOT_PASSWORD: dev-user
+    ports:
+      - 27017:27017
