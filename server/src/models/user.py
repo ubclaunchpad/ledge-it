@@ -1,7 +1,4 @@
-from datetime import datetime
-from typing import Optional
-from pydantic import ValidationError, validator
-
+from pydantic import validator
 from .mongo_db_model import MongoDBModel
 
 

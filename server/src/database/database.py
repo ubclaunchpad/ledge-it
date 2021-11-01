@@ -1,11 +1,6 @@
-"""
-Author: Mathew Bushuru
-Function: Connects backend of our app to our MongoDB database (money_manager_dev)
-"""
 from pymongo import MongoClient
-import pprint
-
-from src.models.user import User
+from pymongo.database import Database
+from pymongo.collection import Collection
 
 
 class Connect(object):
@@ -16,26 +11,8 @@ class Connect(object):
         )
 
 
-connection = Connect.get_connection()
-# print(connection
-db = connection.money_manager_dev
-user_collection = db.users
+connection: MongoClient = Connect.get_connection()
 
-# create dummy user
-data = {
-    "username": "Test User2",
-    "email": "testuser2@moneymanager.com",
-    "password": "efgh123",
-    "confirm_password": "efgh123",
-}
-user = User(**data).dict()
-
-# Insert single user
-result = user_collection.insert_one(user)
-print(result.inserted_id)
-
-# Print all users
-user_list = user_collection.find()
-pp = pprint.PrettyPrinter(indent=4)
-for doc in user_list:
-    pp.pprint(doc)
+db: Database = connection.money_manager_dev
+user_collection: Collection = db.users
+expense_collection: Collection = db.expenses
