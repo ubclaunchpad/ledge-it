@@ -37,7 +37,9 @@ def update_expense(id, expense: UpdateExpenseModel = Body(...)):
         update_result = expense_collection.update_one({"_id": id}, {"$set": expense})
 
         if update_result.modified_count == 1:
-            if (updated_expense := expense_collection.find_one({"_id": id})) is not None:
+            if (
+                updated_expense := expense_collection.find_one({"_id": id})
+            ) is not None:
                 return updated_expense
 
     if (existing_expense := expense_collection.find_one({"_id": id})) is not None:
@@ -53,7 +55,7 @@ def delete_expense(id):
     if delete_result.deleted_count == 1:
         return JSONResponse(
             status_code=status.HTTP_200_OK,
-            content=f"Expense with id {id} was successfully deleted"
+            content=f"Expense with id {id} was successfully deleted",
         )
 
     raise HTTPException(status_code=404, detail=f"Expense with id {id} not found")
