@@ -16,3 +16,4 @@ web-build/
 .vscode
 
 node_modules
+Pipfile
