@@ -74,8 +74,8 @@ const styles = StyleSheet.create({
     margin: 30,
     right: 0,
     bottom: 0,
-    backgroundColor: '#2196F3'
-  }
+    backgroundColor: '#2196F3',
+  },
 });
 
 export default ActionButton;
