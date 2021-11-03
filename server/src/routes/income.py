@@ -8,11 +8,13 @@ from ..database.database import income_collection
 router = APIRouter()
 
 
-@router.get("/income/{id}", response_description = "Get income by id", response_model=Income)
+@router.get(
+    "/income/{id}", response_description="Get income by id", response_model=Income
+)
 def get_income_by_id(id):
     if (income := income_collection.find_one({"_id": id})) is not None:
         return income
-    
+
     raise HTTPException(status_code=404, detail=f"Income with id {id} not found")
 
 
@@ -24,7 +26,9 @@ def create_income(income: Income = Body(...)):
     return JSONResponse(status_code=status.HTTP_201_CREATED, content=created_income)
 
 
-@router.delete("/income/{id}", response_description = "Delete income by id", response_model=Income)
+@router.delete(
+    "/income/{id}", response_description="Delete income by id", response_model=Income
+)
 def delete_income_by_id(id):
     delete_result = income_collection.delete_one({"_id": id})
 
@@ -37,10 +41,12 @@ def delete_income_by_id(id):
     raise HTTPException(status_code=404, detail=f"Income with id {id} not found")
 
 
-@router.put("/income/{id}", response_description="Edit income by id", response_model=Income)
+@router.put(
+    "/income/{id}", response_description="Edit income by id", response_model=Income
+)
 def edit_income_by_id(id, income: UpdateIncomeModel = Body(...)):
-    income = {k:v for k,v in income.dict().items() if v is not None}
-    
+    income = {k: v for k, v in income.dict().items() if v is not None}
+
     if len(income) >= 1:
         update_result = income_collection.update_one({"_id": id}, {"$set": income})
 
@@ -52,5 +58,3 @@ def edit_income_by_id(id, income: UpdateIncomeModel = Body(...)):
         return existing_income
 
     raise HTTPException(status_code=404, detail=f"Income with id {id} not found")
-        
-

@@ -15,6 +15,7 @@ class Income(MongoDBModel):
     location_y: Optional[float] = None
     category: Optional[str] = None
 
+
 class UpdateIncomeModel(MongoDBModel):
     name: Optional[str]
     description: Optional[str]
