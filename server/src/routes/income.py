@@ -20,7 +20,7 @@ def get_income_by_id(id):
 
 @router.post("/income/", response_description="Add new income", response_model=Income)
 def create_income(income: Income = Body(...)):
-    income = jsonable_encoder(Income)
+    income = jsonable_encoder(income)
     new_income = income_collection.insert_one(income)
     created_income = income_collection.find_one({"_id": new_income.inserted_id})
     return JSONResponse(status_code=status.HTTP_201_CREATED, content=created_income)
