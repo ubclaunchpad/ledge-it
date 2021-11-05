@@ -1,5 +1,5 @@
 # Dependencies:
-# Need to run python3 -m pip install requests 
+# Need to run python3 -m pip install requests
 import requests
 import json
 from currencyList import is_Currency
@@ -12,8 +12,8 @@ API_KEY = "b248938740450b2e6e0616db"
 
 while True:
     try:
-        curr_from = input("Enter foreign currency: ") # Eg: USD
-        if (is_Currency(curr_from) == False):
+        curr_from = input("Enter foreign currency: ")  # Eg: USD
+        if is_Currency(curr_from) == False:
             raise Exception
         break
     except Exception:
@@ -28,8 +28,8 @@ while True:
 
 while True:
     try:
-        curr_to = input("Enter base currency: ") # Eg: CAD
-        if (is_Currency(curr_to) == False):
+        curr_to = input("Enter base currency: ")  # Eg: CAD
+        if is_Currency(curr_to) == False:
             raise Exception
         break
     except Exception:
@@ -44,5 +44,12 @@ response = requests.get(URL)
 output = response.json()
 
 # Parsing the json
-print("Today's Exchange rate from " + curr_from + " to " + curr_to + ": " + str(output["conversion_rate"]))
-print("Amount converted to: " + str(output["conversion_result"])+ " " + curr_to)
+print(
+    "Today's Exchange rate from "
+    + curr_from
+    + " to "
+    + curr_to
+    + ": "
+    + str(output["conversion_rate"])
+)
+print("Amount converted to: " + str(output["conversion_result"]) + " " + curr_to)

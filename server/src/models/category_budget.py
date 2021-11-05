@@ -9,6 +9,7 @@ class CategoryBudget(MongoDBModel):
     spent: float
     category: str
 
+
 class UpdateCategoryBudgetModel(MongoDBModel):
     month: Optional[int]
     value: Optional[float]

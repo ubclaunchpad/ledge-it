@@ -1,5 +1,5 @@
 # Dependencies:
-# Need to run python3 -m pip install requests 
+# Need to run python3 -m pip install requests
 import requests
 import json
 
@@ -23,7 +23,9 @@ def currency_list():
 
     return currNames
 
+
 # EFFECT: Returns whether the string is a currency or not
+
 
 def is_Currency(inputString):
     API_KEY = "b248938740450b2e6e0616db"
@@ -42,8 +44,5 @@ def is_Currency(inputString):
 
     if inputString in currencyNames:
         return True
-    else: 
+    else:
         return False
-
-    
-

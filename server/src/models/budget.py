@@ -8,6 +8,7 @@ class Budget(MongoDBModel):
     value: float
     spent: float
 
+
 class UpdateBudgetModel(MongoDBModel):
     month: Optional[int]
     value: Optional[float]

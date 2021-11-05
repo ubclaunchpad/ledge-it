@@ -6,8 +6,11 @@ from ..database import cbudget_collection
 
 router = APIRouter()
 
+
 @router.post(
-    "/cbudget/", response_description="Add new category budget", response_model=CategoryBudget
+    "/cbudget/",
+    response_description="Add new category budget",
+    response_model=CategoryBudget,
 )
 def add_cbudget(cbudget: CategoryBudget = Body(...)):
     cbudget = jsonable_encoder(cbudget)
@@ -15,8 +18,11 @@ def add_cbudget(cbudget: CategoryBudget = Body(...)):
     created_cbudget = cbudget_collection.find_one({"_id": new_cbudget.inserted_id})
     return JSONResponse(status_code=status.HTTP_201_CREATED, content=created_cbudget)
 
+
 @router.put(
-    "/cbudget/{id}", response_description="Update a category budget", response_model=CategoryBudget
+    "/cbudget/{id}",
+    response_description="Update a category budget",
+    response_model=CategoryBudget,
 )
 def update_budget(id, cbudget: UpdateCategoryBudgetModel = Body(...)):
     cbudget = {k: v for k, v in cbudget.dict().items() if v is not None}
@@ -33,7 +39,10 @@ def update_budget(id, cbudget: UpdateCategoryBudgetModel = Body(...)):
     if (existing_cbudget := cbudget_collection.find_one({"_id": id})) is not None:
         return existing_cbudget
 
-    raise HTTPException(status_code=404, detail=f"Category Budget with id {id} not found")
+    raise HTTPException(
+        status_code=404, detail=f"Category Budget with id {id} not found"
+    )
+
 
 @router.delete("/cbudget/{id}", response_description="Delete a category budget")
 def delete_cbudget(id):
@@ -45,5 +54,6 @@ def delete_cbudget(id):
             content=f"Category Budget with id {id} was successfully deleted",
         )
 
-    raise HTTPException(status_code=404, detail=f"Category Budget with id {id} not found")
-
+    raise HTTPException(
+        status_code=404, detail=f"Category Budget with id {id} not found"
+    )

@@ -6,14 +6,14 @@ from ..database import budget_collection
 
 router = APIRouter()
 
-@router.post(
-    "/budget/", response_description="Add new budget", response_model=Budget
-)
+
+@router.post("/budget/", response_description="Add new budget", response_model=Budget)
 def add_budget(budget: Budget = Body(...)):
     budget = jsonable_encoder(budget)
     new_budget = budget_collection.insert_one(budget)
     created_budget = budget_collection.find_one({"_id": new_budget.inserted_id})
     return JSONResponse(status_code=status.HTTP_201_CREATED, content=created_budget)
+
 
 @router.put(
     "/budget/{id}", response_description="Update a budget", response_model=Budget
@@ -25,15 +25,14 @@ def update_budget(id, budget: UpdateBudgetModel = Body(...)):
         update_result = budget_collection.update_one({"_id": id}, {"$set": budget})
 
         if update_result.modified_count == 1:
-            if (
-                updated_budget := budget_collection.find_one({"_id": id})
-            ) is not None:
+            if (updated_budget := budget_collection.find_one({"_id": id})) is not None:
                 return updated_budget
 
     if (existing_budget := budget_collection.find_one({"_id": id})) is not None:
         return existing_budget
 
     raise HTTPException(status_code=404, detail=f"Budget with id {id} not found")
+
 
 @router.delete("/budget/{id}", response_description="Delete a budget")
 def delete_budget(id):
@@ -46,4 +45,3 @@ def delete_budget(id):
         )
 
     raise HTTPException(status_code=404, detail=f"Budget with id {id} not found")
-
