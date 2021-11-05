@@ -1,118 +1,49 @@
-from pymongo import MongoClient
-import pprint
-import requests
-import json
+from fastapi import APIRouter, Body, HTTPException, status
+from fastapi.responses import JSONResponse
+from fastapi.encoders import jsonable_encoder
+from ..models import Budget, UpdateBudgetModel
+from ..database import budget_collection
 
-class Connect(object):
-    @staticmethod
-    def get_connection():
-        return MongoClient(
-            "mongodb+srv://dev-user:dev-user@moneymanagerdev.m0xh2.mongodb.net/money_manager_dev?retryWrites=true&w=majority"
+router = APIRouter()
+
+@router.post(
+    "/budget/", response_description="Add new budget", response_model=Budget
+)
+def add_budget(budget: Budget = Body(...)):
+    budget = jsonable_encoder(budget)
+    new_budget = budget_collection.insert_one(budget)
+    created_budget = budget_collection.find_one({"_id": new_budget.inserted_id})
+    return JSONResponse(status_code=status.HTTP_201_CREATED, content=created_budget)
+
+@router.put(
+    "/budget/{id}", response_description="Update a budget", response_model=Budget
+)
+def update_budget(id, budget: UpdateBudgetModel = Body(...)):
+    budget = {k: v for k, v in budget.dict().items() if v is not None}
+
+    if len(budget) >= 1:
+        update_result = budget_collection.update_one({"_id": id}, {"$set": budget})
+
+        if update_result.modified_count == 1:
+            if (
+                updated_budget := budget_collection.find_one({"_id": id})
+            ) is not None:
+                return updated_budget
+
+    if (existing_budget := budget_collection.find_one({"_id": id})) is not None:
+        return existing_budget
+
+    raise HTTPException(status_code=404, detail=f"Budget with id {id} not found")
+
+@router.delete("/budget/{id}", response_description="Delete a budget")
+def delete_budget(id):
+    delete_result = budget_collection.delete_one({"_id": id})
+
+    if delete_result.deleted_count == 1:
+        return JSONResponse(
+            status_code=status.HTTP_200_OK,
+            content=f"Budget with id {id} was successfully deleted",
         )
 
-
-def add_budget():
-    # Set up connection to database
-    connection = Connect.get_connection()
-
-    db = connection.money_manager_dev
-    budget_collection = db.budgets
-
-    # Request for user input
-    budget_month = input("Please enter month: ")
-    budget_amount = input("Please enter budget amount: ")
-
-    # Set template object
-    budget_obj = {"month": budget_month, "value": budget_amount, "spent": 0}
-
-    # Insert budget to database
-    res = budget_collection.insert_one(budget_obj)
-    print(res.inserted_id)
-
-# add_budget()
-
-# How to identify the unique budget??? Is this for each customer??
-
-# Function only updates for the first occurence.
-def update_budget():
-
-    # Set up connection to database
-    connection = Connect.get_connection()
-
-    db = connection.money_manager_dev
-    budget_collection = db.budgets
-
-    # Request for user input
-    budget_target_month = input("Please enter the month to change: ")
-    budget_amount_new = input("Please enter new value: ")
-
-    # Set template object
-    filter = {"month": budget_target_month}
-    update = {"$set": {"value": budget_amount_new}}
-
-    # Insert budget to database
-    res = budget_collection.update_one(filter, update)
-    print(res.upserted_id)
-
-# update_budget()
-
-# Function only updates for the first occurence.
-def delete_budget():
-
-    # Set up connection to database
-    connection = Connect.get_connection()
-
-    db = connection.money_manager_dev
-    budget_collection = db.budgets
-
-    # Request for user input
-    budget_target_month = input("Please enter the month to delete: ")
-
-    # Set template object
-    filter = {"month": budget_target_month}
-
-    # Insert budget to database
-    res = budget_collection.delete_one(filter)
-    print(res.deleted_id)
-
-delete_budget()
-
-def add_category_budget():
-    # Set up connection to database
-    connection = Connect.get_connection()
-
-    db = connection.money_manager_dev
-    budgetc_collection = db.budgets_category
-
-    # Request for user input
-    budgetc_month = input("Please enter month: ")
-    budgetc_amount = input("Please enter budget amount: ")
-    budgetc_category = input("Please enter category: ")
-
-    # Set template object
-    budgetc_obj = {"month": budgetc_month, "value": budgetc_amount, "spent": 0, "category": budgetc_category}
-
-    # Insert budget to database
-    res = budgetc_collection.insert_one(budgetc_obj)
-    print(res.inserted_id)
-
-def update_category_budget():
-
-    # Set up connection to database
-    connection = Connect.get_connection()
-
-    db = connection.money_manager_dev
-    budgetc_collection = db.budgets_category
-
-    # Request for user input
-    budgetc_target_month = input("Please enter the month to change: ")
-    budgetc_amount_new = input("Please enter new value: ")
-
-    # Set template object
-    filter = {"month": budgetc_target_month}
-    update = {"$set": {"value": budgetc_amount_new}}
-
-    # Insert budget to database
-    res = budgetc_collection.update_one(filter, update)
-    print(res.inserted_id)
+    raise HTTPException(status_code=404, detail=f"Budget with id {id} not found")
 
