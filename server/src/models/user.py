@@ -1,10 +1,13 @@
 from pydantic import validator
 from .mongo_db_model import MongoDBModel
+from typing import Optional
 
 
 class User(MongoDBModel):
     username: str
     email: str
+    active: Optional[bool] = None
+    hashed_password: str
     password: str
     confirm_password: str  # To be used for data validation
 
