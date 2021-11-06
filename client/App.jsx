@@ -26,8 +26,10 @@ const TabNavBar = () => {
         tabBarIcon: ({ color }) => screenOptions(route, color),
       })}
       tabBarOptions={{
-        activeTintColor: '#0D50B4',
-        inactiveTintColor: '#d9d9d9',
+        activeTintColor: '#fff',
+        activeBackgroundColor: '#7ad7f0',
+        inactiveTintColor: '#fff',
+        inactiveBackgroundColor: '#0D50B4',
         showLabel: false,
       }}
       style={styles.container}>
