@@ -1,6 +1,8 @@
 import React from 'react';
+import { StyleSheet } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { Ionicons } from '@expo/vector-icons';
 import HomePage from './src/pages/HomePage';
 import TablePage from './src/pages/TablePage';
 import BudgetPage from './src/pages/BudgetPage';
@@ -19,7 +21,16 @@ const Tab = createBottomTabNavigator();
 
 const TabNavBar = () => {
   return (
-    <Tab.Navigator>
+    <Tab.Navigator
+      screenOptions={({ route }) => ({
+        tabBarIcon: ({ color }) => screenOptions(route, color),
+      })}
+      tabBarOptions={{
+        activeTintColor: '#0D50B4',
+        inactiveTintColor: '#d9d9d9',
+        showLabel: false,
+      }}
+      style={styles.container}>
       <Tab.Screen name="Home" component={HomePage} />
       <Tab.Screen name="Table" component={TablePage} />
       <Tab.Screen name="Budget" component={BudgetPage} />
@@ -29,4 +40,37 @@ const TabNavBar = () => {
   );
 };
 
+const screenOptions = (route, color) => {
+  let iconName;
+
+  switch (route.name) {
+    case 'Home':
+      iconName = 'home';
+      break;
+    case 'Table':
+      iconName = 'list';
+      break;
+    case 'Budget':
+      iconName = 'wallet';
+      break;
+    case 'Analytics':
+      iconName = 'analytics';
+      break;
+    case 'Settings':
+      iconName = 'settings';
+      break;
+  }
+
+  return <Ionicons name={iconName} color={color} size={26} />;
+};
+
 export default App;
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#fff',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+});
