@@ -43,7 +43,9 @@ def delete_income_by_id(id):
 
 
 @router.put(
-    "/income/{id}", response_description="Update income selected by id", response_model=Income
+    "/income/{id}",
+    response_description="Update income selected by id",
+    response_model=Income,
 )
 def update_income(id, income: UpdateIncomeModel = Body(...)):
     income = {k: v for k, v in income.dict().items() if v is not None}
