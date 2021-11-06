@@ -1,6 +1,7 @@
 from fastapi import APIRouter, Body, HTTPException, status
 from fastapi.responses import JSONResponse
 from fastapi.encoders import jsonable_encoder
+from pymongo.message import update
 from ..models.income import Income, UpdateIncomeModel
 from ..database.database import income_collection
 
@@ -42,10 +43,11 @@ def delete_income_by_id(id):
 
 
 @router.put(
-    "/income/{id}", response_description="Edit income by id", response_model=Income
+    "/income/{id}", response_description="Update income selected by id", response_model=Income
 )
-def edit_income_by_id(id, income: UpdateIncomeModel = Body(...)):
+def update_income(id, income: UpdateIncomeModel = Body(...)):
     income = {k: v for k, v in income.dict().items() if v is not None}
+    income = jsonable_encoder(income)
 
     if len(income) >= 1:
         update_result = income_collection.update_one({"_id": id}, {"$set": income})

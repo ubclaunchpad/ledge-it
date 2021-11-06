@@ -1,12 +1,12 @@
 from typing import Optional
-from datetime import datetime
+from datetime import date
 from .mongo_db_model import MongoDBModel
 
 
 class Income(MongoDBModel):
     name: str
     description: Optional[str] = None
-    date: datetime
+    date: date
     amount: float
     currency: str
     exchange_rate: float
@@ -19,7 +19,7 @@ class Income(MongoDBModel):
 class UpdateIncomeModel(MongoDBModel):
     name: Optional[str]
     description: Optional[str]
-    date: Optional[datetime]
+    date: Optional[date]
     amount: Optional[float]
     currency: Optional[str]
     exchange_rate: Optional[float]
