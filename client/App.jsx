@@ -24,14 +24,12 @@ const TabNavBar = () => {
     <Tab.Navigator
       screenOptions={({ route }) => ({
         tabBarIcon: ({ color }) => screenOptions(route, color),
+        tabBarActiveTintColor: '#fff',
+        tabBarActiveBackgroundColor: '#7ad7f0',
+        tabBarInactiveTintColor: '#fff',
+        tabBarInactiveBackgroundColor: '#0D50B4',
+        tabBarShowLabel: false,
       })}
-      tabBarOptions={{
-        activeTintColor: '#fff',
-        activeBackgroundColor: '#7ad7f0',
-        inactiveTintColor: '#fff',
-        inactiveBackgroundColor: '#0D50B4',
-        showLabel: false,
-      }}
       style={styles.container}>
       <Tab.Screen name="Home" component={HomePage} />
       <Tab.Screen name="Table" component={TablePage} />
