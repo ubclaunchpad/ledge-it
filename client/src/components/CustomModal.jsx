@@ -1,6 +1,7 @@
 import React from 'react';
 import { StyleSheet, Pressable, Text, View, Dimensions } from 'react-native';
 import Modal from 'react-native-modal';
+import { Ionicons } from '@expo/vector-icons';
 
 const CustomModal = ({ isModalVisible, setModalVisible }) => {
   return (
@@ -15,13 +16,10 @@ const CustomModal = ({ isModalVisible, setModalVisible }) => {
       }}
       style={styles.modal}>
       <View style={styles.container}>
-        <Text style={styles.text}>Hello! This is custom modal</Text>
-
-        <Pressable
-          style={[styles.button, styles.buttonClose]}
-          onPress={() => setModalVisible(!isModalVisible)}>
-          <Text style={styles.textStyle}>Close</Text>
+        <Pressable style={styles.closeButton} onPress={() => setModalVisible(!isModalVisible)}>
+          <Ionicons name="close-circle-outline" color="black" size={35} />
         </Pressable>
+        <Text style={styles.text}>Hello! This is custom modal</Text>
       </View>
     </Modal>
   );
@@ -31,6 +29,7 @@ export default CustomModal;
 
 const styles = StyleSheet.create({
   modal: {
+    flex: 1,
     margin: 0,
     display: 'flex',
     flexDirection: 'column',
@@ -38,7 +37,6 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-end',
   },
   container: {
-    flex: 1,
     backgroundColor: '#fff',
     borderTopRightRadius: 10,
     borderTopLeftRadius: 10,
@@ -51,13 +49,9 @@ const styles = StyleSheet.create({
     color: 'black',
     padding: 5,
   },
-  button: {
+  closeButton: {
     display: 'flex',
-    borderRadius: 6,
-  },
-  buttonClose: {
-    backgroundColor: '#2196F3',
-    padding: 5,
-    margin: 10,
+    margin: '2%',
+    alignSelf: 'flex-start',
   },
 });
