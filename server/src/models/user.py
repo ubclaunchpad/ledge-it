@@ -1,4 +1,4 @@
-from pydantic import validator, Field
+from pydantic import validator
 from .mongo_db_model import MongoDBModel
 
 
