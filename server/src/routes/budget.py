@@ -7,6 +7,22 @@ from ..database import budget_collection
 router = APIRouter()
 
 
+@router.get(
+    "/budget/",
+    response_description="Get budget by month and year",
+    response_model=Budget,
+)
+def get_budget(month: int, year: int):
+    if (
+        budget := budget_collection.find_one({"month": month, "year": year})
+    ) is not None:
+        return budget
+
+    raise HTTPException(
+        status_code=404, detail=f"Budget with month: {month} and year: {year} not found"
+    )
+
+
 @router.post("/budget/", response_description="Add new budget", response_model=Budget)
 def add_budget(budget: Budget = Body(...)):
     budget = jsonable_encoder(budget)
@@ -15,33 +31,44 @@ def add_budget(budget: Budget = Body(...)):
     return JSONResponse(status_code=status.HTTP_201_CREATED, content=created_budget)
 
 
-@router.put(
-    "/budget/{id}", response_description="Update a budget", response_model=Budget
-)
-def update_budget(id, budget: UpdateBudgetModel = Body(...)):
+@router.put("/budget/", response_description="Update a budget", response_model=Budget)
+def update_budget(month: int, year: int, budget: UpdateBudgetModel = Body(...)):
     budget = {k: v for k, v in budget.dict().items() if v is not None}
+    budget = jsonable_encoder(budget)
 
     if len(budget) >= 1:
-        update_result = budget_collection.update_one({"_id": id}, {"$set": budget})
+        update_result = budget_collection.update_one(
+            {"month": month, "year": year}, {"$set": budget}
+        )
 
         if update_result.modified_count == 1:
-            if (updated_budget := budget_collection.find_one({"_id": id})) is not None:
+            if (
+                updated_budget := budget_collection.find_one(
+                    {"month": month, "year": year}
+                )
+            ) is not None:
                 return updated_budget
 
-    if (existing_budget := budget_collection.find_one({"_id": id})) is not None:
+    if (
+        existing_budget := budget_collection.find_one({"month": month, "year": year})
+    ) is not None:
         return existing_budget
 
-    raise HTTPException(status_code=404, detail=f"Budget with id {id} not found")
+    raise HTTPException(
+        status_code=404, detail=f"Budget with month: {month} and year: {year} not found"
+    )
 
 
-@router.delete("/budget/{id}", response_description="Delete a budget")
-def delete_budget(id):
-    delete_result = budget_collection.delete_one({"_id": id})
+@router.delete("/budget/", response_description="Delete a budget")
+def delete_budget(month: int, year: int):
+    delete_result = budget_collection.delete_one({"month": month, "year": year})
 
     if delete_result.deleted_count == 1:
         return JSONResponse(
             status_code=status.HTTP_200_OK,
-            content=f"Budget with id {id} was successfully deleted",
+            content=f"Budget with month: {month} and year: {year} was successfully deleted",
         )
 
-    raise HTTPException(status_code=404, detail=f"Budget with id {id} not found")
+    raise HTTPException(
+        status_code=404, detail=f"Budget with month: {month} and year: {year} not found"
+    )
