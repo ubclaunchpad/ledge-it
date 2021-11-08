@@ -17,3 +17,11 @@ Clone the repo: `git clone https://github.com/ubclaunchpad/money-manager.git`
 
 Checkout `/client` for the React Native app
 and `/server` for the FastAPI Python server.
+
+### Contributing
+
+1. Clone the repo as described above
+2. Create a new branch (`git checkout -b branchName`)
+3. Commit your changes (`git commit -m 'Add x,y,z'`)
+4. Push commits to the remote branch (`git push origin branchName`)
+5. Create a Pull Request
