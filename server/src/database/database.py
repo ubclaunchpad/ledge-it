@@ -17,3 +17,5 @@ connection: MongoClient = Connect.get_connection()
 db: Database = connection.money_manager_dev
 user_collection: Collection = db.users
 expense_collection: Collection = db.expenses
+budget_collection: Collection = db.budgets
+category_budget_collection: Collection = db.category_budgets
