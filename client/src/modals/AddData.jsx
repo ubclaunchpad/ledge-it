@@ -1,22 +1,22 @@
 import React from 'react';
 import { Alert, Modal, StyleSheet, Text, Pressable, View } from 'react-native';
 
-const AddData = ({ modalVisible, setModalVisible }) => {
+const AddData = ({ isModalVisible, setModalVisible }) => {
   return (
     <Modal
       animationType="slide"
       transparent={true}
-      visible={modalVisible}
+      visible={isModalVisible}
       onRequestClose={() => {
         Alert.alert('Modal has been closed.');
-        setModalVisible(!modalVisible);
+        setModalVisible(!isModalVisible);
       }}>
       <View style={styles.centeredView}>
         <View style={styles.modalView}>
           <Text style={styles.modalText}>Add Expense/Income Modal</Text>
           <Pressable
             style={[styles.button, styles.buttonClose]}
-            onPress={() => setModalVisible(!modalVisible)}>
+            onPress={() => setModalVisible(!isModalVisible)}>
             <Text style={styles.textStyle}>This is the add expense/income modal</Text>
           </Pressable>
         </View>

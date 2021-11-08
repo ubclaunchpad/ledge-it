@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { FAB } from 'react-native-paper';
-import AddDataModal from '../modals/AddData';
+import Modal from './CustomModal';
 
 const ActionButton = () => {
-  const [modalVisible, setModalVisible] = useState(false);
+  const [isModalVisible, setModalVisible] = useState(false);
   return (
     <View style={styles.centeredView}>
-      <AddDataModal modalVisible={modalVisible} setModalVisible={setModalVisible} />
+      <Modal isModalVisible={isModalVisible} setModalVisible={setModalVisible} />
       <FAB style={styles.fab} medium icon="plus" onPress={() => setModalVisible(true)} />
     </View>
   );
