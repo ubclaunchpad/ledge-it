@@ -1,11 +1,14 @@
 from fastapi import FastAPI
 from src.routes import expense
+from src.routes.auth import signup, login
 
 # Note: the server runs on http://127.0.0.1:8000
 
 app = FastAPI()
 
 app.include_router(expense.router)
+app.include_router(signup.router)
+app.include_router(login.router)
 
 
 @app.get("/")

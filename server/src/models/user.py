@@ -1,4 +1,4 @@
-from pydantic import validator
+from pydantic import validator, Field
 from .mongo_db_model import MongoDBModel
 
 
@@ -13,3 +13,9 @@ class User(MongoDBModel):
         if "password" in values and v != values["password"]:
             raise ValueError("passwords do not match!")
         return v
+
+
+class UserInDB(MongoDBModel):
+    username: str
+    email: str
+    hashed_password: str
