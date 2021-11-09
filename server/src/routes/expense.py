@@ -32,6 +32,7 @@ def create_expense(expense: Expense = Body(...)):
 )
 def update_expense(id, expense: UpdateExpenseModel = Body(...)):
     expense = {k: v for k, v in expense.dict().items() if v is not None}
+    expense = jsonable_encoder(expense)
 
     if len(expense) >= 1:
         update_result = expense_collection.update_one({"_id": id}, {"$set": expense})
