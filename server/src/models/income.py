@@ -14,3 +14,16 @@ class Income(MongoDBModel):
     location_x: Optional[float] = None
     location_y: Optional[float] = None
     category: Optional[str] = None
+
+
+class UpdateIncomeModel(MongoDBModel):
+    name: Optional[str]
+    description: Optional[str]
+    date: Optional[date]
+    amount: Optional[float]
+    currency: Optional[str]
+    exchange_rate: Optional[float]
+    location: Optional[str]
+    location_x: Optional[float]
+    location_y: Optional[float]
+    category: Optional[str]
