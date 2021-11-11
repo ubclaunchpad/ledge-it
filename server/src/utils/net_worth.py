@@ -1,9 +1,10 @@
 from fastapi import APIRouter, Body, HTTPException, status
 from fastapi.responses import JSONResponse
 from fastapi.encoders import jsonable_encoder
-from ..models import NetWorth, UpdateNetWorthModel
+from ..models import NetWorth
 from ..database import net_worth_collection
 from datetime import datetime
+import heapq
 
 router = APIRouter()
 
@@ -34,10 +35,14 @@ def create_net_worth(nwm: NetWorth = Body(...)):
     response_description="Update a NetWorthModel",
     response_model=NetWorth,
 )
-def update_net_worth(id: str, change: UpdateNetWorthModel = Body(...)):
+def update_net_worth(id: str, change: float = Body(...)):
     if (nwm := net_worth_collection.find_one({"_id": id})) is not None:
-        nwm["current"] += change.value
-        nwm["history"][datetime.now().strftime("%Y-%m-%d")] = nwm["current"]
+        todays_date = datetime.today().strftime("%Y-%m-%d")
+        nwm["current"] += change
+        if nwm["history"][-1]["date"] == todays_date:
+            nwm["history"][-1]["value"] = nwm["current"]
+        else:
+            nwm["history"].append({"date": todays_date, "value": nwm["current"]})
         update_result = net_worth_collection.update_one({"_id": id}, {"$set": nwm})
         if (updated_student := net_worth_collection.find_one({"_id": id})) is not None:
             return updated_student
