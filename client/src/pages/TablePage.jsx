@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text } from 'react-native';
+import { Text } from 'react-native';
 import TablePageHeader from '../components/TablePage/TablePageHeader';
 
 const TablePage = () => {
@@ -16,11 +16,11 @@ const TablePage = () => {
   }, [isExpense]);
 
   return (
-    <View>
+    <>
       <TablePageHeader categories={categories} isExpense={isExpense} setIsExpense={setIsExpense} />
       <Text>Table Page</Text>
       <Text>This is the table page</Text>
-    </View>
+    </>
   );
 };
 

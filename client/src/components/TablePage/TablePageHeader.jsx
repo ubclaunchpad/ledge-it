@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { View, ScrollView, StyleSheet } from 'react-native';
 import { Searchbar, Chip, Switch } from 'react-native-paper';
+import SortMenu from './SortMenu';
 
 const TablePageHeader = ({ categories, isExpense, setIsExpense }) => {
   const [searchQuery, setSearchQuery] = useState('');
@@ -12,26 +13,30 @@ const TablePageHeader = ({ categories, isExpense, setIsExpense }) => {
 
   useEffect(() => {
     setAllButton(true);
-    setSelectedLookup((s) => {
-      const copyOfS = s;
+    setSelectedLookup((sl) => {
+      const copyOfSelectedLookup = sl;
       categories.forEach((category) => {
-        copyOfS[category] = true;
+        copyOfSelectedLookup[category] = true;
       });
-      return { ...copyOfS };
+      return { ...copyOfSelectedLookup };
     });
   }, [categories]);
 
   const allButtonPressLogic = () => {
     if (allButton) {
-      categories.forEach((category) => {
-        selectedLookup[category] = false;
-        setSelectedLookup({ ...selectedLookup });
+      setSelectedLookup(() => {
+        categories.forEach((category) => {
+          selectedLookup[category] = false;
+        });
+        return { ...selectedLookup };
       });
       setAllButton(false);
     } else {
-      categories.forEach((category) => {
-        selectedLookup[category] = true;
-        setSelectedLookup({ ...selectedLookup });
+      setSelectedLookup(() => {
+        categories.forEach((category) => {
+          selectedLookup[category] = true;
+        });
+        return { ...selectedLookup };
       });
       setAllButton(true);
     }
@@ -49,12 +54,10 @@ const TablePageHeader = ({ categories, isExpense, setIsExpense }) => {
   return (
     <>
       <Searchbar placeholder="Search" onChangeText={onChangeSearch} value={searchQuery} />
-      <Switch
-        value={isExpense}
-        onValueChange={onToggleSwitch}
-        color="blue"
-        style={styles.switchStyles}
-      />
+      <View style={styles.container}>
+        <Switch value={isExpense} onValueChange={onToggleSwitch} color="blue" style={styles.m10} />
+        <SortMenu />
+      </View>
       <View>
         <ScrollView horizontal={true}>
           <Chip icon="information" selected={allButton} onPress={allButtonPressLogic}>
@@ -76,8 +79,12 @@ const TablePageHeader = ({ categories, isExpense, setIsExpense }) => {
 };
 
 const styles = StyleSheet.create({
-  switchStyles: {
+  m10: {
     margin: 10,
+  },
+  container: {
+    flexDirection: 'row',
+    justifyContent: 'center',
   },
 });
 
