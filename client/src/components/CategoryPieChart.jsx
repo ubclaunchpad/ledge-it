@@ -10,14 +10,20 @@ const CategoryPieChart = () => {
         data={sampleData}
         colorScale={sampleColor}
         labels={() => null}
-        style={{ parent: { marginBottom: -50 } }}>
-        <VictoryLabel
-          textAnchor="middle"
-          verticalAnchor="middle"
-          style={[styles.labelMaj, styles.labelMin]}
-          text={['$999', 'Spent this month']}
-        />
-      </VictoryPie>
+        style={{
+          parent: { marginBottom: -50 },
+        }}
+        labelComponent={
+          <VictoryLabel
+            textAnchor="middle"
+            verticalAnchor="middle"
+            x={205} // these are absolute, need to change to relative
+            y={220}
+            style={[styles.labelMaj, styles.labelMin]}
+            text={[calculateTotal.total, 'Spent this month']}
+          />
+        }
+      />
       <View style={styles.categoryView}>
         {sampleData.map((item) => {
           return (
@@ -43,6 +49,19 @@ const sampleData = [
 
 const sampleColor = ['#FF5E5E', '#D9BBF1', '#92F889', '#FFC36A', '#6DA8FF', 'grey'];
 
+const calculateTotal = {
+  total: (() => {
+    let total = 0;
+    sampleData
+      .filter((item) => item.x !== 'Amount Left')
+      .map((item) => {
+        total += item.y;
+        return item;
+      });
+    return `$${String(total)}`;
+  })(),
+};
+
 const styles = StyleSheet.create({
   centeredView: {
     display: 'flex',
@@ -54,8 +73,9 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
   labelMin: {
-    fontWeight: '600',
     fontSize: 16,
+    color: 'black',
+    fontWeight: '600',
   },
   categoryView: {
     borderWidth: 3,
