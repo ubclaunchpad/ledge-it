@@ -9,7 +9,8 @@ const CategoryPieChart = () => {
         innerRadius={100}
         data={sampleData}
         colorScale={sampleColor}
-        style={{ labels: { fill: '#FFFFFF00' } }}
+        labels={() => null}
+        style={{ parent: { marginBottom: -50 } }}
       />
       <View style={styles.categoryView}>
         {sampleData.map((item) => {
@@ -42,7 +43,6 @@ const styles = StyleSheet.create({
     display: 'flex',
     justifyContent: 'center',
   },
-  pieView: {},
   categoryView: {
     borderWidth: 3,
     borderRadius: 10,
