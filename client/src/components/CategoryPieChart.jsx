@@ -5,6 +5,7 @@ import { VictoryPie, VictoryLabel } from 'victory-native';
 const CategoryPieChart = () => {
   const windowWidth = Dimensions.get('window').width;
   const pieRadius = windowWidth / 4;
+  const ratio = `${String((calculateExpense.total / calculateBudget.total) * 100)}%`;
   return (
     <SafeAreaView style={styles.centeredView}>
       <Text style={styles.title}>{getMonth()} so far</Text>
@@ -24,7 +25,7 @@ const CategoryPieChart = () => {
             x={windowWidth / 2}
             y={windowWidth / 2 + pieRadius / 7}
             style={[styles.labelMaj, styles.labelMin]}
-            text={[calculateExpense.total, 'Spent in '.concat(getMonth())]}
+            text={['$'.concat(calculateExpense.total), 'Spent in '.concat(getMonth())]}
           />
         }
       />
@@ -32,11 +33,11 @@ const CategoryPieChart = () => {
         <View
           style={
             ([StyleSheet.absoluteFill],
-            { backgroundColor: '#17C408', borderRadius: 5, width: '50%' })
+            { backgroundColor: '#17C408', borderRadius: 5, width: ratio })
           }>
-          <Text style={styles.pbarTextExpense}>{calculateExpense.total}</Text>
+          <Text style={styles.pbarTextExpense}>${calculateExpense.total}</Text>
         </View>
-        <Text style={[styles.pbarTextBudget]}>{calculateBudget.total}</Text>
+        <Text style={[styles.pbarTextBudget]}>${calculateBudget.total}</Text>
       </View>
       <View style={styles.categoryView}>
         {sampleData.map((item) => {
@@ -92,7 +93,7 @@ const calculateExpense = {
         total += item.y;
         return item;
       });
-    return `$${String(total)}`;
+    return total;
   })(),
 };
 
@@ -103,7 +104,7 @@ const calculateBudget = {
       total += item.y;
       return item;
     });
-    return `$${String(total)}`;
+    return total;
   })(),
 };
 
