@@ -75,11 +75,11 @@ const getMonth = () => {
 
 const sampleData = [
   { x: 'Category 1', y: 1000, color: '#FF5E5E' },
-  { x: 'Category 2', y: 2000, color: '#D9BBF1' },
-  { x: 'Category 3', y: 2000, color: '#92F889' },
+  { x: 'Category 2', y: 1000, color: '#D9BBF1' },
+  { x: 'Category 3', y: 1000, color: '#92F889' },
   { x: 'Category 4', y: 2500, color: '#FFC36A' },
-  { x: 'Category 5', y: 1500, color: '#6DA8FF' },
-  { x: 'Amount Left', y: 1000, color: 'grey' },
+  { x: 'Category 5', y: 2500, color: '#6DA8FF' },
+  { x: 'Amount Left', y: 3000, color: 'grey' },
 ];
 
 const sampleColor = ['#FF5E5E', '#D9BBF1', '#92F889', '#FFC36A', '#6DA8FF', 'grey'];
@@ -112,6 +112,10 @@ const styles = StyleSheet.create({
   centeredView: {
     display: 'flex',
     justifyContent: 'center',
+    margin: 20,
+    borderWidth: 3,
+    borderRadius: 10,
+    borderColor: '#24838F',
   },
   title: {
     alignSelf: 'center',
@@ -132,11 +136,11 @@ const styles = StyleSheet.create({
   },
   pbar: {
     height: 30,
-    width: '75%',
+    width: '80%',
     marginTop: 20,
-    marginHorizontal: 40,
+    marginHorizontal: 10,
     borderWidth: 3,
-    borderRadius: 10,
+    borderRadius: 20,
     borderColor: '#17C408',
     backgroundColor: 'white',
     flexDirection: 'row',
@@ -144,7 +148,7 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
   },
   pbarTextExpense: {
-    paddingHorizontal: 10,
+    marginHorizontal: 10,
     fontSize: 18,
     fontWeight: 'bold',
     color: 'white',
@@ -152,27 +156,19 @@ const styles = StyleSheet.create({
     alignSelf: 'flex-start',
   },
   pbarTextBudget: {
-    paddingHorizontal: 10,
     fontSize: 18,
     fontWeight: 'bold',
     color: 'black',
     position: 'absolute',
-    left: 215,
+    left: 210,
   },
   categoryView: {
-    borderWidth: 3,
-    borderRadius: 10,
-    borderColor: '#24838F',
-    paddingVertical: 10,
-    marginHorizontal: 40,
-    marginVertical: 20,
+    paddingTop: 15,
   },
   card: {
     paddingVertical: 5,
-    paddingHorizontal: 10,
-    marginVertical: 3,
-    marginHorizontal: 16,
-    borderRadius: 10,
+    paddingHorizontal: 20,
+    marginTop: 1,
     flexDirection: 'row',
     justifyContent: 'space-between',
   },
