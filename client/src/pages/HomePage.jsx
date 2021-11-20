@@ -10,7 +10,7 @@ const HomePage = () => {
         <ScrollView style={styles.content}>
           <Text>Home Page</Text>
           <Text>This is the home page</Text>
-          <CategoryPieChart style={styles.categoryChart} />
+          <CategoryPieChart />
         </ScrollView>
       </SafeAreaView>
       <ActionButton />
@@ -25,9 +25,6 @@ const styles = StyleSheet.create({
   },
   content: {
     display: 'flex',
-  },
-  categoryChart: {
-    flex: 1,
   },
 });
 

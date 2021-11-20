@@ -1,6 +1,6 @@
 import React from 'react';
 import { StyleSheet, Text, SafeAreaView, View } from 'react-native';
-import { VictoryPie } from 'victory-native';
+import { VictoryPie, VictoryLabel } from 'victory-native';
 
 const CategoryPieChart = () => {
   return (
@@ -10,13 +10,18 @@ const CategoryPieChart = () => {
         data={sampleData}
         colorScale={sampleColor}
         labels={() => null}
-        style={{ parent: { marginBottom: -50 } }}
-      />
+        style={{ parent: { marginBottom: -50 } }}>
+        <VictoryLabel
+          textAnchor="middle"
+          verticalAnchor="middle"
+          style={[styles.labelMaj, styles.labelMin]}
+          text={['$999', 'Spent this month']}
+        />
+      </VictoryPie>
       <View style={styles.categoryView}>
         {sampleData.map((item) => {
-          const bgColor = item.color;
           return (
-            <View style={[styles.card, { backgroundColor: bgColor }]} key={item.x}>
+            <View style={[styles.card, { backgroundColor: item.color }]} key={item.x}>
               <Text style={styles.cardText}>{item.x}</Text>
               <Text style={styles.cardText}>${item.y}</Text>
             </View>
@@ -42,6 +47,15 @@ const styles = StyleSheet.create({
   centeredView: {
     display: 'flex',
     justifyContent: 'center',
+  },
+  labelMaj: {
+    fontSize: 35,
+    color: 'black',
+    fontWeight: '600',
+  },
+  labelMin: {
+    fontWeight: '600',
+    fontSize: 16,
   },
   categoryView: {
     borderWidth: 3,
