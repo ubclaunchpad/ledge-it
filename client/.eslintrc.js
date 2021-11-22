@@ -23,5 +23,6 @@ module.exports = {
     quotes: ['error', 'single', { avoidEscape: true }],
     'prettier/prettier': 'error',
     'react/style-prop-object': 0,
+    'react/jsx-props-no-spreading': 0,
   },
 };
