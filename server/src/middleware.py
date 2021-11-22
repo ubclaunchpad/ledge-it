@@ -4,7 +4,7 @@
 - If the user is logged in, then add the user email along with the rest of the request.
 """
 
-from fastapi import HTTPException, status, Depends, FastAPI
+from fastapi import HTTPException, status, Depends, APIRouter
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from pydantic import BaseModel
 from typing import Optional
@@ -15,8 +15,7 @@ from jose import JWTError, jwt
 from .models.user import User
 from .database.database import user_collection
 
-# Using this for to only test authentication, will remove later
-app = FastAPI()
+router = APIRouter()
 
 # secret_key from `openssl rand -hex 32`
 SECRET_KEY = "e58b5e9eb9ec7f63fe63ffc548a5bbace9f9fcba248ea1133dc46e4fac40c9a9"
@@ -46,17 +45,14 @@ def get_password_hash(password):
     return pwd_context.hash(password)
 
 
-def get_user(user_collection, email: str):
+def get_user(email: str):
     if (user := user_collection.find_one({"email": email})) is not None:
         return user
     raise HTTPException(status_code=404, detail=f"User with email {email} not found")
-    """if email in user_collection:
-        user_dict = user_collection[email]
-        return User(**user_dict)"""
 
 
-def authenticate_user(user_collection, email: str, password: str):
-    user = get_user(user_collection, email)
+def authenticate_user(email: str, password: str):
+    user = get_user(email)
     if not user:
         return False
     if not verify_password(password, user["hashed_password"]):
@@ -89,7 +85,7 @@ async def get_current_user(token: str = Depends(oauth2_scheme)):
         token_data = TokenData(username=username)
     except JWTError:
         raise credentials_exception
-    user = get_user(user_collection, email=token_data.username)
+    user = get_user(token_data.username)
     if user is None:
         raise credentials_exception
     return user
@@ -101,10 +97,9 @@ async def get_current_active_user(current_user: User = Depends(get_current_user)
     return current_user
 
 
-# move these to routes folder later
-@app.post("/token", response_model=Token)
+@router.post("/token", response_model=Token)
 async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends()):
-    user = authenticate_user(user_collection, form_data.username, form_data.password)
+    user = authenticate_user(form_data.username, form_data.password)
     if not user:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
@@ -118,11 +113,11 @@ async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(
     return {"access_token": access_token, "token_type": "bearer"}
 
 
-@app.get("/users/me/", response_model=User)
+@router.get("/users/me/", response_model=User)
 async def read_users_me(current_user: User = Depends(get_current_active_user)):
     return current_user
 
 
-@app.get("/users/me/items/")
+@router.get("/users/me/items/")
 async def read_own_items(current_user: User = Depends(get_current_active_user)):
     return [{"item_id": "Foo", "owner": current_user["email"]}]
