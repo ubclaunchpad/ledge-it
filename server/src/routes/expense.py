@@ -1,8 +1,10 @@
 from fastapi import APIRouter, Body, HTTPException, status
 from fastapi.responses import JSONResponse
 from fastapi.encoders import jsonable_encoder
-from ..models import Expense, UpdateExpenseModel
+from pydantic.error_wrappers import ValidationError
+from ..models import Expense, UpdateExpenseModel, AddExpense
 from ..database import expense_collection
+from ..utils.currency import get_exchange_rate_to_cad
 
 router = APIRouter()
 
@@ -20,9 +22,24 @@ def get_expense_by_id(id):
 @router.post(
     "/expense/", response_description="Add new expense", response_model=Expense
 )
-def create_expense(expense: Expense = Body(...)):
-    expense = jsonable_encoder(expense)
-    new_expense = expense_collection.insert_one(expense)
+def create_expense(expense: AddExpense = Body(...)):
+    if expense.currency.lower() == "cad":
+        expense.exchange_rate = 1
+    else:
+        expense.exchange_rate = get_exchange_rate_to_cad(expense.currency)
+
+    expense_dict = {k: v for k, v in expense.dict().items()}
+
+    try:
+        insert_expense = Expense(**expense_dict)
+    except ValidationError as exc:
+        return JSONResponse(
+            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+            content=jsonable_encoder({"detail": exc.errors()}),
+        )
+
+    insert_expense = jsonable_encoder(insert_expense)
+    new_expense = expense_collection.insert_one(insert_expense)
     created_expense = expense_collection.find_one({"_id": new_expense.inserted_id})
     return JSONResponse(status_code=status.HTTP_201_CREATED, content=created_expense)
 
@@ -31,7 +48,20 @@ def create_expense(expense: Expense = Body(...)):
     "/expense/{id}", response_description="Update an expense", response_model=Expense
 )
 def update_expense(id, expense: UpdateExpenseModel = Body(...)):
+    if expense.currency is not None:
+        if expense.currency.lower() == "cad":
+            expense.exchange_rate = 1
+        else:
+            try:
+                expense.exchange_rate = get_exchange_rate_to_cad(expense.currency)
+            except ValidationError as exc:
+                return JSONResponse(
+                    status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+                    content=jsonable_encoder({"detail": exc.errors()}),
+                )
+
     expense = {k: v for k, v in expense.dict().items() if v is not None}
+    expense = jsonable_encoder(expense)
 
     if len(expense) >= 1:
         update_result = expense_collection.update_one({"_id": id}, {"$set": expense})
