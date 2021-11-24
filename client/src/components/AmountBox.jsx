@@ -1,17 +1,14 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Text, StyleSheet, View } from 'react-native';
 
 export default ({ boxWidth, textMargin, fields }) => {
-  const [currentFont, setCurrentFont] = useState(30);
+  const currentFont = 30;
   let id = 0;
 
   return (
     <View style={[styles.box]}>
       <View style={styles.textbox}>
-        <Text
-          style={styles.text}
-          adjustsFontSizeToFit
-          style={[styles.text, { fontSize: currentFont }]}>
+        <Text adjustsFontSizeToFit style={[styles.text, { fontSize: currentFont }]}>
           {`$${fields[0]}`}
         </Text>
         {fields.slice(1, fields.length).map((val) => {
