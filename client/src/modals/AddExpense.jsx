@@ -35,7 +35,7 @@ const AddExpense = ({ setModalVisible }) => {
       body: JSON.stringify({
         name: merchant,
         description,
-        date: date.replace('.', '-').replace('.', '-'),
+        date: date ? date.replace('.', '-').replace('.', '-') : undefined,
         price: amount,
         currency,
         exchange_rate: 0,
