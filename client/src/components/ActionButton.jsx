@@ -2,14 +2,13 @@ import React, { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { FAB } from 'react-native-paper';
 import Modal from './CustomModal';
-import AddData from '../modals/AddData';
 
-const ActionButton = ({ height, children}) => {
+const ActionButton = ({ height, children }) => {
   const [isModalVisible, setModalVisible] = useState(false);
   return (
     <View style={styles.centeredView}>
-      <Modal isModalVisible={isModalVisible} setModalVisible={setModalVisible} style={{height: height}}>
-        {React.cloneElement(children, {setModalVisible: setModalVisible})}
+      <Modal isModalVisible={isModalVisible} setModalVisible={setModalVisible} style={{ height }}>
+        {React.cloneElement(children, { setModalVisible })}
       </Modal>
       <FAB style={styles.fab} medium icon="plus" onPress={() => setModalVisible(true)} />
     </View>

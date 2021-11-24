@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { View, Text, TextInput, StyleSheet, Dimensions } from 'react-native';
 
 export default ({ keyboardType, label, placeholder, onChange }) => {
@@ -15,9 +15,6 @@ export default ({ keyboardType, label, placeholder, onChange }) => {
       <TextInput
         style={styles.text}
         onChangeText={updateValue}
-        onPressIn={() => {
-          setCloseModalOpen(true);
-        }}
         value={value}
         keyboardType={keyboardType}
         placeholder={placeholder}

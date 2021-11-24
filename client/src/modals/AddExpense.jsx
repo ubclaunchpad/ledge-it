@@ -1,17 +1,6 @@
-import React, { useState, useCallback, useEffect } from 'react';
-import {
-  StyleSheet,
-  Text,
-  Pressable,
-  View,
-  Dimensions,
-  Keyboard,
-  TouchableWithoutFeedback,
-  Button,
-  Image,
-  ScrollView,
-} from 'react-native';
-import { Banner, Button as PaperButton } from 'react-native-paper';
+import React, { useState } from 'react';
+import { StyleSheet, Text, View, Dimensions, ScrollView } from 'react-native';
+import { Button as PaperButton } from 'react-native-paper';
 import DropDownPicker from 'react-native-dropdown-picker';
 import Modal from 'react-native-modal';
 import AmountBox from '../components/AmountBox';
@@ -22,9 +11,6 @@ const postExpenseEndpoint = '';
 
 const AddExpense = ({ setModalVisible }) => {
   const currency = 'CAD';
-  const [visible, setVisible] = useState(false);
-  const openMenu = () => setVisible(true);
-  const closeMenu = () => setVisible(false);
   const [amount, setAmount] = useState(undefined);
   const [merchant, setMerchant] = useState(undefined);
   const [date, setDate] = useState(undefined);
@@ -33,29 +19,11 @@ const AddExpense = ({ setModalVisible }) => {
   const categories = [
     { label: 'Groceries', value: 'Groceries' },
     { label: 'Housing', value: 'Housing' },
-    { label: 'Restaurants', value: 'Restaurants'},
+    { label: 'Restaurants', value: 'Restaurants' },
   ];
   const [tag, setTag] = useState(undefined);
   const [description, setDesc] = useState(undefined);
   const [location, setLocation] = useState(undefined);
-  const [closeModalOpen, setCloseModalOpen] = useState(false);
-  const ClickToClose = () => {
-    if (closeModalOpen) return <View style={styles.ck} />;
-    else return <></>;
-  };
-
-  useEffect(() => {
-    const keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', () => {
-      setCloseModalOpen(true);
-    });
-    const keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', () => {
-      setCloseModalOpen(false);
-    });
-    return () => {
-      keyboardDidHideListener.remove();
-      keyboardDidShowListener.remove();
-    };
-  }, []);
 
   const submitExpense = async () => {
     fetch(`${postExpenseEndpoint}/expense/`, {
@@ -77,16 +45,19 @@ const AddExpense = ({ setModalVisible }) => {
       }),
     })
       .then((res) => {
-        res = JSON.stringify(res);
-        res = JSON.parse(res);
-        if (Math.floor(res.status / 100) == 2)
-          setBanner({ bannerVisible: true, bannerColor: 'green', bannerMessage: 'Done!' });
-        else
-          setBanner({
-            bannerVisible: true,
-            bannerColor: 'red',
-            bannerMessage: 'Try entering the text fields.',
-          });
+        if (Math.floor(res.status / 100) === 2) {
+          {
+            setBanner({ bannerVisible: true, bannerColor: 'green', bannerMessage: 'Done!' });
+          }
+        } else {
+          {
+            setBanner({
+              bannerVisible: true,
+              bannerColor: 'red',
+              bannerMessage: 'Try entering the text fields.',
+            });
+          }
+        }
       })
       .catch((err) => {
         setBanner({
@@ -110,20 +81,21 @@ const AddExpense = ({ setModalVisible }) => {
         isVisible={bannerVisible}
         onBackdropPress={() => setBanner({ bannerVisible: false })}
         onRequestClose={() => {
-          setBannerVisible({ bannerVisible: !bannerVisible });
+          setBanner({ bannerVisible: !bannerVisible });
         }}
-        style={styles.modal}
-      >
+        style={styles.modal}>
         <View style={[styles.container, { backgroundColor: bannerColor }]}>
           <ScrollView>
             <View style={styles.content}>
-              <Text style={{alignSelf: 'flex-end', color: 'white', fontSize: 24, margin: 10}}>{bannerMessage}</Text>
+              <Text style={styles.modalText}>{bannerMessage}</Text>
               <PaperButton
                 icon="check"
                 color="#24838F"
                 mode="contained"
                 style={styles.paperButton}
-                onPress={() => {setBanner({bannerVisible: false})}}
+                onPress={() => {
+                  setBanner({ bannerVisible: false });
+                }}
               />
             </View>
           </ScrollView>
@@ -251,8 +223,9 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     width: 10,
     alignSelf: 'flex-end',
-    marginRight: 10
+    marginRight: 10,
   },
+  modalText: { alignSelf: 'flex-end', color: 'white', fontSize: 24, margin: 10 },
 });
 
 export default AddExpense;

@@ -1,11 +1,10 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, TextInput, StyleSheet, Pressable } from 'react-native';
-import { black } from 'react-native-paper';
+import React from 'react';
+import { View, Text, StyleSheet } from 'react-native';
 
 export default ({ label, onTap }) => {
   return (
     <View style={styles.bkgrd}>
-      <Text style={{ color: 'white' }} onPress={onTap}>
+      <Text style={styles.text} onPress={onTap}>
         {label}
       </Text>
     </View>
@@ -22,5 +21,8 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     shadowRadius: 10,
     shadowOpacity: 0.4,
+  },
+  text: {
+    color: 'white',
   },
 });

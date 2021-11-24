@@ -11,7 +11,7 @@ const HomePage = () => {
         <Text>This is the home page</Text>
       </View>
       <ActionButton height={Dimensions.get('window').height}>
-        <AddExpense/>
+        <AddExpense />
       </ActionButton>
     </>
   );
