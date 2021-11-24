@@ -1,6 +1,7 @@
 import React from 'react';
-import { Text, View } from 'react-native';
+import { Dimensions, Text, View } from 'react-native';
 import ActionButton from '../components/ActionButton';
+import AddExpense from '../modals/AddExpense';
 
 const HomePage = () => {
   return (
@@ -9,7 +10,9 @@ const HomePage = () => {
         <Text>Home Page</Text>
         <Text>This is the home page</Text>
       </View>
-      <ActionButton />
+      <ActionButton height={Dimensions.get('window').height}>
+        <AddExpense/>
+      </ActionButton>
     </>
   );
 };

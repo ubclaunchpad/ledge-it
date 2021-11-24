@@ -4,12 +4,12 @@ import { FAB } from 'react-native-paper';
 import Modal from './CustomModal';
 import AddData from '../modals/AddData';
 
-const ActionButton = () => {
+const ActionButton = ({ height, children}) => {
   const [isModalVisible, setModalVisible] = useState(false);
   return (
     <View style={styles.centeredView}>
-      <Modal isModalVisible={isModalVisible} setModalVisible={setModalVisible}>
-        <AddData setModalVisible={setModalVisible} />
+      <Modal isModalVisible={isModalVisible} setModalVisible={setModalVisible} style={{height: height}}>
+        {React.cloneElement(children, {setModalVisible: setModalVisible})}
       </Modal>
       <FAB style={styles.fab} medium icon="plus" onPress={() => setModalVisible(true)} />
     </View>
