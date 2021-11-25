@@ -4,7 +4,12 @@ from fastapi.security import OAuth2PasswordRequestForm
 
 from ...database import user_collection
 from ...models import User
-from ...middleware import authenticate_user, ACCESS_TOKEN_EXPIRE_MINUTES, create_access_token, get_current_active_user
+from ...middleware import (
+    authenticate_user,
+    ACCESS_TOKEN_EXPIRE_MINUTES,
+    create_access_token,
+    get_current_active_user,
+)
 
 router = APIRouter()
 
@@ -24,7 +29,9 @@ async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(
         data={"sub": user["email"]}, expires_delta=access_token_expires
     )
 
-    user_collection.update_one({"email": form_data.username}, {"$set": {"active": True}})
+    user_collection.update_one(
+        {"email": form_data.username}, {"$set": {"active": True}}
+    )
 
     return {"access_token": access_token, "token_type": "bearer"}
 
