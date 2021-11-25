@@ -1,21 +1,24 @@
 from fastapi import APIRouter, Body, status
 from fastapi.responses import JSONResponse
 from fastapi.encoders import jsonable_encoder
-from ...models import User, UserInDB
+
+from ...middleware import pwd_context
+from ...models import User
 from ...database import user_collection
-from passlib.context import CryptContext
 
 router = APIRouter()
 
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
-
-@router.post("/signup/", response_description="Add new user", response_model=UserInDB)
+@router.post("/signup", response_description="Add new user", response_model=User)
 def create_user(user: User = Body(...)):
-    new_user = UserInDB(
-        username=user.username,
+    if user_collection.find_one({"email": user.email}) is not None:
+        return JSONResponse(
+            status_code=status.HTTP_409_CONFLICT,
+            content=jsonable_encoder({"error": "User already exists"}),
+        )
+    new_user = User(
         email=user.email,
-        hashed_password=pwd_context.hash(user.password),
+        hashed_password=pwd_context.hash(user.hashed_password),
     )
     new_user = jsonable_encoder(new_user)
     insert_user = user_collection.insert_one(new_user)
