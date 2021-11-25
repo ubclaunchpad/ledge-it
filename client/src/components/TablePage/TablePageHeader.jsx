@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, ScrollView, StyleSheet } from 'react-native';
+import { View, ScrollView, StyleSheet, Text } from 'react-native';
 import { Searchbar, Chip, Switch } from 'react-native-paper';
 import SortMenu from './SortMenu';
 
@@ -51,21 +51,29 @@ const TablePageHeader = ({ categories, isExpense, setIsExpense }) => {
     setAllButton(categories.every((category) => selectedLookup[category]));
   };
 
+  const emptyIcon = () => null;
+
   return (
     <>
       <Searchbar placeholder="Search" onChangeText={onChangeSearch} value={searchQuery} />
       <View style={styles.container}>
+        <Text>{isExpense ? 'Expense' : 'Income'}</Text>
         <Switch value={isExpense} onValueChange={onToggleSwitch} color="blue" style={styles.m10} />
         <SortMenu />
       </View>
       <View>
-        <ScrollView horizontal={true}>
-          <Chip icon="information" selected={allButton} onPress={allButtonPressLogic}>
+        <ScrollView horizontal={true} style={styles.chipContainer}>
+          <Chip
+            style={styles.chip}
+            icon={emptyIcon}
+            selected={allButton}
+            onPress={allButtonPressLogic}>
             All
           </Chip>
           {categories.map((category) => (
             <Chip
-              icon="information"
+              style={styles.chip}
+              icon={emptyIcon}
               key={category}
               selected={selectedLookup[category]}
               onPress={() => categoryButtonPressLogic(category)}>
@@ -83,8 +91,16 @@ const styles = StyleSheet.create({
     margin: 10,
   },
   container: {
+    marginTop: 10,
     flexDirection: 'row',
     justifyContent: 'center',
+  },
+  chip: {
+    marginHorizontal: 5,
+  },
+  chipContainer: {
+    paddingTop: 5,
+    paddingBottom: 8,
   },
 });
 

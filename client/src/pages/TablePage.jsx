@@ -18,8 +18,6 @@ const TablePage = () => {
   return (
     <>
       <TablePageHeader categories={categories} isExpense={isExpense} setIsExpense={setIsExpense} />
-      <Text>Table Page</Text>
-      <Text>This is the table page</Text>
     </>
   );
 };
