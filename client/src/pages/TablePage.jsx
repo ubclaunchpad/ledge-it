@@ -8,6 +8,13 @@ const expenseDatabase = [
   {
     name: 'Gym',
     price: '65.00',
+    date: new Date('2022-10-21T10:34:23'),
+    currency: 'CAD',
+    category: 'Category #41',
+  },
+  {
+    name: 'Gym',
+    price: '65.00',
     date: new Date('2021-10-21T10:34:23'),
     currency: 'CAD',
     category: 'Category #41',
@@ -74,51 +81,7 @@ const incomeDatabase = [
 ];
 
 const TablePage = () => {
-  const [splitExpenses, setSplitExpenses] = useState([]);
-  const [splitIncome, setSplitIncome] = useState([]);
   const [pickerValue, setPickerValue] = useState('Expenses');
-
-  expenseDatabase.forEach((expense) => {
-    const month = expense.date.getMonth() + 1;
-    const year = expense.date.getFullYear();
-    if (splitExpenses.length === 0) {
-      splitExpenses.push({
-        month,
-        year,
-        list: [],
-      });
-    }
-    if (splitExpenses[splitExpenses.length - 1].month === month) {
-      splitExpenses[splitExpenses.length - 1].list.push(expense);
-    } else {
-      splitExpenses.push({
-        month,
-        year,
-        list: [expense],
-      });
-    }
-  });
-
-  incomeDatabase.forEach((income) => {
-    const month = income.date.getMonth() + 1;
-    const year = income.date.getFullYear();
-    if (splitIncome.length === 0) {
-      splitIncome.push({
-        month,
-        year,
-        list: [],
-      });
-    }
-    if (splitIncome[splitIncome.length - 1].month === month) {
-      splitIncome[splitIncome.length - 1].list.push(income);
-    } else {
-      splitIncome.push({
-        month,
-        year,
-        list: [income],
-      });
-    }
-  });
 
   return (
     <>
@@ -126,17 +89,14 @@ const TablePage = () => {
         selectedValue={pickerValue}
         onValueChange={(chosenValue) => {
           setPickerValue(chosenValue);
-          setSplitExpenses([]);
-          setSplitIncome([]);
         }}>
         <Picker.Item label="Expenses" value="Expenses" />
         <Picker.Item label="Income" value="Income" />
       </Picker>
-      {pickerValue === 'Expenses' ? (
-        <ScrollTable renderList={splitExpenses} type={pickerValue} />
-      ) : (
-        <ScrollTable renderList={splitIncome} type={pickerValue} />
-      )}
+      <ScrollTable
+        renderList={pickerValue === 'Expenses' ? expenseDatabase : incomeDatabase}
+        type={pickerValue}
+      />
     </>
   );
 };

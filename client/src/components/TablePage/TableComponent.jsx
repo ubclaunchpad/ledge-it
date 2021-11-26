@@ -3,7 +3,7 @@ import { List } from 'react-native-paper';
 import { StyleSheet, Text, View } from 'react-native';
 import { Swipeable } from 'react-native-gesture-handler';
 
-const months = [
+const MONTHS = [
   'January',
   'February',
   'March',
@@ -18,15 +18,6 @@ const months = [
   'December',
 ];
 
-const TableComponent = (props) => (
-  <TableComponentHelper
-    title={props.title}
-    subTitle={props.subTitle}
-    mult={props.mult}
-    type={props.type}
-  />
-);
-
 const RightSwipe = () => {
   return (
     <View style={styles.swipeBackground}>
@@ -35,13 +26,9 @@ const RightSwipe = () => {
   );
 };
 
-TableComponentHelper = (props) => {
-  const { mult } = props;
-  const inputType = props.type;
-  let negative = '';
-  {
-    inputType === 'Expenses' ? (negative = '-') : (negative = '');
-  }
+const TableComponent = ({ title, subTitle, mult, type }) => {
+  const negative = type === 'Expenses' ? '-' : '';
+
   const tableItems = mult.map((obj, index) => (
     <Swipeable key={index} renderRightActions={RightSwipe}>
       <List.Item
@@ -50,7 +37,7 @@ TableComponentHelper = (props) => {
           <View>
             <Text style={styles.text}>{obj.category}</Text>
             <Text style={styles.text}>
-              {months[obj.date.getMonth()]} {obj.date.getDate()}, {obj.date.getFullYear()}
+              {MONTHS[obj.date.getMonth()]} {obj.date.getDate()}, {obj.date.getFullYear()}
             </Text>
           </View>
         }
@@ -62,12 +49,7 @@ TableComponentHelper = (props) => {
             </Text>
           </View>
         )}
-        style={{
-          backgroundColor: '#4993ec',
-          marginHorizontal: 15,
-          marginVertical: 5,
-          borderRadius: 10,
-        }}
+        style={styles.listItem}
       />
     </Swipeable>
   ));
@@ -75,7 +57,7 @@ TableComponentHelper = (props) => {
   return (
     <List.Section>
       <List.Subheader style={styles.header}>
-        {months[props.title - 1]} {props.subTitle}
+        {MONTHS[title - 1]} {subTitle}
       </List.Subheader>
       {tableItems}
     </List.Section>
@@ -114,5 +96,11 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontWeight: '600',
     padding: 20,
+  },
+  listItem: {
+    backgroundColor: '#4993ec',
+    marginHorizontal: 15,
+    marginVertical: 5,
+    borderRadius: 10,
   },
 });
