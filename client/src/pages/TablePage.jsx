@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
-import { Picker } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { Picker, Text } from 'react-native';
 import ScrollTable from '../components/TablePage/ScrollTable';
+import TablePageHeader from '../components/TablePage/TablePageHeader';
 
 // Note: These are just sample data of expense/income from the database.
 
@@ -83,8 +84,21 @@ const incomeDatabase = [
 const TablePage = () => {
   const [pickerValue, setPickerValue] = useState('Expenses');
 
+  const [categories, setCategories] = useState([]);
+  const [isExpense, setIsExpense] = useState(true);
+
+  // Fetch user categories from db here
+  useEffect(() => {
+    if (isExpense) {
+      setCategories(['food', 'housing', 'fun', 'other']);
+    } else {
+      setCategories(['main job', 'part-time', 'passive', 'other']);
+    }
+  }, [isExpense]);
+
   return (
     <>
+      <TablePageHeader categories={categories} isExpense={isExpense} setIsExpense={setIsExpense} />
       <Picker
         selectedValue={pickerValue}
         onValueChange={(chosenValue) => {
