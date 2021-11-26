@@ -1,17 +1,29 @@
 import React from 'react';
-import { Text, View } from 'react-native';
+import { StyleSheet, ScrollView, SafeAreaView } from 'react-native';
 import ActionButton from '../components/ActionButton';
+import CategoryPieChart from '../components/CategoryPieChart';
 
 const HomePage = () => {
   return (
     <>
-      <View>
-        <Text>Home Page</Text>
-        <Text>This is the home page</Text>
-      </View>
+      <SafeAreaView style={styles.container}>
+        <ScrollView style={styles.content}>
+          <CategoryPieChart />
+        </ScrollView>
+      </SafeAreaView>
       <ActionButton />
     </>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    display: 'flex',
+    overflow: 'scroll',
+  },
+  content: {
+    display: 'flex',
+  },
+});
 
 export default HomePage;
