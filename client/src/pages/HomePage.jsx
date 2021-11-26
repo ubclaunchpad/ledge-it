@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, ScrollView, SafeAreaView } from 'react-native';
+import { StyleSheet, ScrollView, SafeAreaView } from 'react-native';
 import ActionButton from '../components/ActionButton';
 import CategoryPieChart from '../components/CategoryPieChart';
 
@@ -8,8 +8,6 @@ const HomePage = () => {
     <>
       <SafeAreaView style={styles.container}>
         <ScrollView style={styles.content}>
-          <Text>Home Page</Text>
-          <Text>This is the home page</Text>
           <CategoryPieChart />
         </ScrollView>
       </SafeAreaView>

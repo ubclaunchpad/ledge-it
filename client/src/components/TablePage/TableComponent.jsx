@@ -2,21 +2,7 @@ import * as React from 'react';
 import { List } from 'react-native-paper';
 import { StyleSheet, Text, View } from 'react-native';
 import { Swipeable } from 'react-native-gesture-handler';
-
-const MONTHS = [
-  'January',
-  'February',
-  'March',
-  'April',
-  'May',
-  'June',
-  'July',
-  'August',
-  'September',
-  'October',
-  'November',
-  'December',
-];
+import { MONTHS } from '../../utils/constants';
 
 const RightSwipe = () => {
   return (

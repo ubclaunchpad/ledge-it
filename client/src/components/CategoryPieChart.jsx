@@ -1,14 +1,16 @@
 import React from 'react';
 import { StyleSheet, Text, SafeAreaView, View, Dimensions } from 'react-native';
 import { VictoryPie, VictoryLabel } from 'victory-native';
+import { MONTHS } from '../utils/constants';
 
 const CategoryPieChart = () => {
   const windowWidth = Dimensions.get('window').width;
   const pieRadius = windowWidth / 4;
-  const ratio = `${String((calculateExpense.total / calculateBudget.total) * 100)}%`;
+  const ratio = `${Math.round((calculateExpense.total / calculateBudget.total) * 100)}%`;
+
   return (
     <SafeAreaView style={styles.centeredView}>
-      <Text style={styles.title}>{getMonth()} so far</Text>
+      <Text style={styles.title}>{getMonth()}&apos;s Spending</Text>
       <VictoryPie
         radius={pieRadius}
         innerRadius={pieRadius - pieRadius / 3}
@@ -25,24 +27,33 @@ const CategoryPieChart = () => {
             x={windowWidth / 2}
             y={windowWidth / 2 + pieRadius / 7}
             style={[styles.labelMaj, styles.labelMin]}
-            text={['$'.concat(calculateExpense.total), 'Spent in '.concat(getMonth())]}
+            text={[`$${calculateExpense.total}`, `Spent in ${getMonth()}`]}
           />
         }
       />
       <View style={styles.pbar} key="pbar">
         <View
-          style={
-            ([StyleSheet.absoluteFill],
-            { backgroundColor: '#17C408', borderRadius: 5, width: ratio })
-          }>
-          <Text style={styles.pbarTextExpense}>${calculateExpense.total}</Text>
+          style={[
+            StyleSheet.absoluteFill,
+            { backgroundColor: '#17C408', borderRadius: 20, width: ratio },
+          ]}>
+          <Text style={styles.pbarTextExpense}>{ratio}</Text>
         </View>
         <Text style={[styles.pbarTextBudget]}>${calculateBudget.total}</Text>
       </View>
       <View style={styles.categoryView}>
-        {sampleData.map((item) => {
+        {sampleData.map((item, index) => {
           return (
-            <View style={[styles.card, { backgroundColor: item.color }]} key={item.x}>
+            <View
+              style={[
+                styles.card,
+                {
+                  backgroundColor: item.color,
+                  borderBottomLeftRadius: index === sampleData.length - 1 ? 10 : 0,
+                  borderBottomRightRadius: index === sampleData.length - 1 ? 10 : 0,
+                },
+              ]}
+              key={item.x}>
               <Text style={styles.cardText}>{item.x}</Text>
               <Text style={styles.cardText}>${item.y}</Text>
             </View>
@@ -54,23 +65,8 @@ const CategoryPieChart = () => {
 };
 
 const getMonth = () => {
-  const monthNames = [
-    'January',
-    'February',
-    'March',
-    'April',
-    'May',
-    'June',
-    'July',
-    'August',
-    'September',
-    'October',
-    'November',
-    'December',
-  ];
-
   const d = new Date();
-  return monthNames[d.getMonth() - 1];
+  return MONTHS[d.getMonth()];
 };
 
 const sampleData = [
@@ -79,33 +75,23 @@ const sampleData = [
   { x: 'Category 3', y: 1000, color: '#92F889' },
   { x: 'Category 4', y: 2500, color: '#FFC36A' },
   { x: 'Category 5', y: 2500, color: '#6DA8FF' },
-  { x: 'Amount Left', y: 3000, color: 'grey' },
+  { x: 'Amount Left', y: 3000, color: '#fff' },
 ];
 
-const sampleColor = ['#FF5E5E', '#D9BBF1', '#92F889', '#FFC36A', '#6DA8FF', 'grey'];
+const sampleColor = ['#FF5E5E', '#D9BBF1', '#92F889', '#FFC36A', '#6DA8FF', '#fff'];
 
 const calculateExpense = {
-  total: (() => {
-    let total = 0;
-    sampleData
-      .filter((item) => item.x !== 'Amount Left')
-      .map((item) => {
-        total += item.y;
-        return item;
-      });
-    return total;
-  })(),
+  total: sampleData
+    .filter((item) => item.x !== 'Amount Left')
+    .reduce((acc, item) => {
+      return acc + item.y;
+    }, 0),
 };
 
 const calculateBudget = {
-  total: (() => {
-    let total = 0;
-    sampleData.map((item) => {
-      total += item.y;
-      return item;
-    });
-    return total;
-  })(),
+  total: sampleData.reduce((acc, item) => {
+    return acc + item.y;
+  }, 0),
 };
 
 const styles = StyleSheet.create({
@@ -113,16 +99,16 @@ const styles = StyleSheet.create({
     display: 'flex',
     justifyContent: 'center',
     margin: 20,
-    borderWidth: 3,
+    borderWidth: 2,
     borderRadius: 10,
-    borderColor: '#24838F',
+    borderColor: '#4993ec',
+    backgroundColor: 'lightgrey',
   },
   title: {
     alignSelf: 'center',
-    fontSize: 40,
-    color: '#24838F',
+    fontSize: 30,
     fontWeight: 'bold',
-    padding: 20,
+    paddingVertical: 20,
   },
   labelMaj: {
     fontSize: 32,
@@ -132,14 +118,13 @@ const styles = StyleSheet.create({
   labelMin: {
     fontSize: 12,
     color: '#24838F',
-    fontWeight: '600',
+    fontWeight: '400',
   },
   pbar: {
     height: 30,
     width: '80%',
     marginTop: 20,
     marginHorizontal: 10,
-    borderWidth: 3,
     borderRadius: 20,
     borderColor: '#17C408',
     backgroundColor: 'white',
@@ -148,22 +133,21 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
   },
   pbarTextExpense: {
-    marginHorizontal: 10,
     fontSize: 18,
-    fontWeight: 'bold',
-    color: 'white',
+    fontWeight: '600',
     position: 'absolute',
-    alignSelf: 'flex-start',
+    top: 4,
+    left: 10,
   },
   pbarTextBudget: {
     fontSize: 18,
-    fontWeight: 'bold',
-    color: 'black',
+    fontWeight: '600',
     position: 'absolute',
-    left: 210,
+    right: 10,
+    top: 4,
   },
   categoryView: {
-    paddingTop: 15,
+    marginTop: 15,
   },
   card: {
     paddingVertical: 5,
@@ -173,9 +157,8 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   cardText: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    color: 'white',
+    fontSize: 16,
+    fontWeight: '600',
   },
 });
 

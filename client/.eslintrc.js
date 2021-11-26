@@ -25,5 +25,6 @@ module.exports = {
     'react/style-prop-object': 0,
     'react/jsx-props-no-spreading': 0,
     'react/no-array-index-key': 0,
+    'react-native/no-inline-styles': 0,
   },
 };
