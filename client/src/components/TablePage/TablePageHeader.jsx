@@ -3,13 +3,13 @@ import { View, ScrollView, StyleSheet, Text } from 'react-native';
 import { Searchbar, Chip, Switch } from 'react-native-paper';
 import SortMenu from './SortMenu';
 
-const TablePageHeader = ({ categories, isExpense, setIsExpense }) => {
+const TablePageHeader = ({ categories, type, setType }) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedLookup, setSelectedLookup] = useState({});
   const [allButton, setAllButton] = useState(true);
 
   const onChangeSearch = (query) => setSearchQuery(query);
-  const onToggleSwitch = () => setIsExpense(!isExpense);
+  const onToggleSwitch = () => setType(type === 'Expenses' ? 'Income' : 'Expenses');
 
   useEffect(() => {
     setAllButton(true);
@@ -57,8 +57,13 @@ const TablePageHeader = ({ categories, isExpense, setIsExpense }) => {
     <>
       <Searchbar placeholder="Search" onChangeText={onChangeSearch} value={searchQuery} />
       <View style={styles.container}>
-        <Text>{isExpense ? 'Expense' : 'Income'}</Text>
-        <Switch value={isExpense} onValueChange={onToggleSwitch} color="blue" style={styles.m10} />
+        <Text>{type}</Text>
+        <Switch
+          value={type === 'Expenses'}
+          onValueChange={onToggleSwitch}
+          color="blue"
+          style={styles.m10}
+        />
         <SortMenu />
       </View>
       <View>
@@ -68,7 +73,7 @@ const TablePageHeader = ({ categories, isExpense, setIsExpense }) => {
             icon={emptyIcon}
             selected={allButton}
             onPress={allButtonPressLogic}>
-            All
+            <Text style={styles.text}>All</Text>
           </Chip>
           {categories.map((category) => (
             <Chip
@@ -77,7 +82,7 @@ const TablePageHeader = ({ categories, isExpense, setIsExpense }) => {
               key={category}
               selected={selectedLookup[category]}
               onPress={() => categoryButtonPressLogic(category)}>
-              {category}
+              <Text style={styles.text}>{category}</Text>
             </Chip>
           ))}
         </ScrollView>
@@ -97,10 +102,14 @@ const styles = StyleSheet.create({
   },
   chip: {
     marginHorizontal: 5,
+    paddingRight: 5,
   },
   chipContainer: {
     paddingTop: 5,
     paddingBottom: 8,
+  },
+  text: {
+    fontWeight: 'bold',
   },
 });
 

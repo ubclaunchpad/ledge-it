@@ -55,7 +55,7 @@ const TableComponent = ({ title, subTitle, mult, type }) => {
   ));
 
   return (
-    <List.Section>
+    <List.Section style={styles.container}>
       <List.Subheader style={styles.header}>
         {MONTHS[title - 1]} {subTitle}
       </List.Subheader>
@@ -67,20 +67,30 @@ const TableComponent = ({ title, subTitle, mult, type }) => {
 export default TableComponent;
 
 const styles = StyleSheet.create({
+  container: {
+    marginVertical: 0,
+    paddingBottom: 12,
+    borderBottomWidth: 1,
+    borderBottomColor: '#6072a6',
+  },
   header: {
-    fontSize: 30,
+    fontSize: 20,
     color: '#fff',
+    marginTop: -5,
+    marginBottom: -10,
   },
   subheader: {
-    fontSize: 20,
+    fontSize: 16,
+    fontWeight: 'bold',
     color: '#fff',
   },
   text: {
-    fontSize: 14,
+    fontSize: 12,
     color: '#fff',
   },
   price: {
-    fontSize: 25,
+    fontSize: 20,
+    fontWeight: 'bold',
     color: '#fff',
     justifyContent: 'space-evenly',
   },

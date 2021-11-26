@@ -2,9 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { StyleSheet, ScrollView, SafeAreaView, StatusBar } from 'react-native';
 import TableComponent from './TableComponent';
 
-const ScrollTable = (props) => {
+const ScrollTable = ({ type, renderList }) => {
   const [splitList, setSplitList] = useState([]);
-  const { type, renderList } = props;
 
   useEffect(() => {
     const tempList = [];
@@ -50,11 +49,8 @@ const styles = StyleSheet.create({
   },
   scrollView: {
     backgroundColor: '#244fad',
-    marginHorizontal: 20,
-    borderRadius: 10,
-  },
-  text: {
-    fontSize: 42,
-    margin: 8,
+    borderTopRightRadius: 10,
+    borderTopLeftRadius: 10,
+    paddingVertical: 10,
   },
 });

@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { Picker, Text } from 'react-native';
 import ScrollTable from '../components/TablePage/ScrollTable';
 import TablePageHeader from '../components/TablePage/TablePageHeader';
 
@@ -82,34 +81,24 @@ const incomeDatabase = [
 ];
 
 const TablePage = () => {
-  const [pickerValue, setPickerValue] = useState('Expenses');
-
+  const [type, setType] = useState('Expenses');
   const [categories, setCategories] = useState([]);
-  const [isExpense, setIsExpense] = useState(true);
 
   // Fetch user categories from db here
   useEffect(() => {
-    if (isExpense) {
+    if (type === 'Expenses') {
       setCategories(['food', 'housing', 'fun', 'other']);
     } else {
       setCategories(['main job', 'part-time', 'passive', 'other']);
     }
-  }, [isExpense]);
+  }, [type]);
 
   return (
     <>
-      <TablePageHeader categories={categories} isExpense={isExpense} setIsExpense={setIsExpense} />
-      <Picker
-        selectedValue={pickerValue}
-        onValueChange={(chosenValue) => {
-          setPickerValue(chosenValue);
-        }}>
-        <Picker.Item label="Expenses" value="Expenses" />
-        <Picker.Item label="Income" value="Income" />
-      </Picker>
+      <TablePageHeader categories={categories} type={type} setType={setType} />
       <ScrollTable
-        renderList={pickerValue === 'Expenses' ? expenseDatabase : incomeDatabase}
-        type={pickerValue}
+        renderList={type === 'Expenses' ? expenseDatabase : incomeDatabase}
+        type={type}
       />
     </>
   );
