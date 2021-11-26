@@ -2,6 +2,7 @@ import React from 'react';
 import { StyleSheet, ScrollView, SafeAreaView } from 'react-native';
 import ActionButton from '../components/ActionButton';
 import CategoryPieChart from '../components/CategoryPieChart';
+import ExpenseForm from '../modals/ExpenseForm';
 
 const HomePage = () => {
   return (
@@ -11,7 +12,9 @@ const HomePage = () => {
           <CategoryPieChart />
         </ScrollView>
       </SafeAreaView>
-      <ActionButton />
+      <ActionButton>
+        <ExpenseForm />
+      </ActionButton>
     </>
   );
 };

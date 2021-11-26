@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from 'react';
+import { SafeAreaView, ScrollView, StyleSheet } from 'react-native';
 import ScrollTable from '../components/TablePage/ScrollTable';
 import TablePageHeader from '../components/TablePage/TablePageHeader';
+import ActionButton from '../components/ActionButton';
+import ExpenseForm from '../modals/ExpenseForm';
 
 // Note: These are just sample data of expense/income from the database.
 
@@ -95,13 +98,30 @@ const TablePage = () => {
 
   return (
     <>
-      <TablePageHeader categories={categories} type={type} setType={setType} />
-      <ScrollTable
-        renderList={type === 'Expenses' ? expenseDatabase : incomeDatabase}
-        type={type}
-      />
+      <SafeAreaView style={styles.container}>
+        <TablePageHeader categories={categories} type={type} setType={setType} />
+        <ScrollView style={styles.content}>
+          <ScrollTable
+            renderList={type === 'Expenses' ? expenseDatabase : incomeDatabase}
+            type={type}
+          />
+        </ScrollView>
+      </SafeAreaView>
+      <ActionButton>
+        <ExpenseForm />
+      </ActionButton>
     </>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    display: 'flex',
+    overflow: 'scroll',
+  },
+  content: {
+    display: 'flex',
+  },
+});
 
 export default TablePage;
