@@ -48,7 +48,7 @@ const TablePageHeader = ({ categories, type, setType }) => {
       copyOfS[category] = !copyOfS[category];
       return { ...copyOfS };
     });
-    setAllButton(categories.every((category) => selectedLookup[category]));
+    setAllButton(categories.every((item) => selectedLookup[item]));
   };
 
   const emptyIcon = () => null;
