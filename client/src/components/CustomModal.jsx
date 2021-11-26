@@ -43,11 +43,10 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     borderTopRightRadius: 10,
     borderTopLeftRadius: 10,
-    width: Dimensions.get('window').width,
+    width: '100%',
     alignItems: 'center',
-    maxHeight: Dimensions.get('window').height * 0.99,
+    maxHeight: Dimensions.get('window').height * 0.8,
     justifyContent: 'flex-end',
-    marginLeft: -20,
   },
   closeButton: {
     display: 'flex',
@@ -57,6 +56,5 @@ const styles = StyleSheet.create({
   content: {
     margin: 10,
     marginBottom: '10%',
-    width: Dimensions.get('window').width * 0.944,
   },
 });

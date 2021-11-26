@@ -3,7 +3,7 @@ import { View, Text, StyleSheet } from 'react-native';
 
 export default ({ label, onTap }) => {
   return (
-    <View style={styles.bkgrd}>
+    <View style={styles.background}>
       <Text style={styles.text} onPress={onTap}>
         {label}
       </Text>
@@ -12,17 +12,19 @@ export default ({ label, onTap }) => {
 };
 
 const styles = StyleSheet.create({
-  bkgrd: {
+  background: {
     backgroundColor: '#24838F',
     padding: 10,
     width: 70,
     display: 'flex',
     alignItems: 'center',
     borderRadius: 20,
-    shadowRadius: 10,
-    shadowOpacity: 0.4,
+    shadowRadius: 5,
+    shadowOpacity: 0.2,
+    shadowOffset: { width: 0, height: 0 },
   },
   text: {
     color: 'white',
+    fontWeight: 'bold',
   },
 });

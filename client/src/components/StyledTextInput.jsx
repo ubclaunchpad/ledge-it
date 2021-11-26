@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, StyleSheet, Dimensions } from 'react-native';
 
-export default ({ keyboardType, label, placeholder, onChange }) => {
+export default ({ keyboardType, label, placeholder, onChange, required, noClear, ...rest }) => {
   const [value, setValue] = useState(null);
   const updateValue = (newVal) => {
     setValue(newVal);
@@ -11,14 +11,19 @@ export default ({ keyboardType, label, placeholder, onChange }) => {
   return (
     <View style={styles.container}>
       {/* <ClickToClose/> */}
-      <Text style={styles.label}>{label}</Text>
+      <Text style={styles.label}>
+        {label}
+        {required && '*'}
+      </Text>
       <TextInput
         style={styles.text}
         onChangeText={updateValue}
         value={value}
         keyboardType={keyboardType}
         placeholder={placeholder}
-        placeholderTextColor="#6D6868"
+        placeholderTextColor="lightgrey"
+        clearButtonMode={noClear ? 'never' : 'while-editing'}
+        {...rest}
       />
     </View>
   );
@@ -31,6 +36,7 @@ const styles = StyleSheet.create({
   label: {
     color: '#24838F',
     fontSize: 14,
+    marginBottom: 5,
   },
   text: {
     borderWidth: 0,
@@ -39,6 +45,6 @@ const styles = StyleSheet.create({
     borderColor: 'grey',
     width: Dimensions.get('window').width * 0.8,
     paddingBottom: 2,
-    color: 'rgba(70, 104, 104, 1)',
+    color: '#466868',
   },
 });
