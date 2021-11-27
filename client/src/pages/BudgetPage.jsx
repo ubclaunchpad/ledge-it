@@ -1,7 +1,6 @@
 import React from 'react';
-import { Text, View } from 'react-native';
+import { Text, View, StyleSheet, ScrollView, SafeAreaView, StatusBar } from 'react-native';
 import { List, Colors } from 'react-native-paper';
-import { StyleSheet, ScrollView, SafeAreaView, StatusBar } from 'react-native';
 import ActionButton from '../components/ActionButton';
 import BudgetTable from '../components/BudgetPage/BudgetTable';
 
@@ -65,22 +64,27 @@ const budgetDatabase = [
     year: 2021,
     value: 198.63,
     spent: 96.54,
-  }
+  },
 ];
 
 const BudgetPage = () => {
   return (
     <>
-    <List.Item title = {<Text style={styles.subheader}>   Month</Text>}
-              style = {styles.header}
-              right = {props => <>
-                                <List.Icon {...props} color = {Colors.green600} icon="arrow-up-bold" />
-                                <Text>              </Text>
-                                <List.Icon {...props} color = {Colors.red600} icon="arrow-down-bold" />
-                                <Text>       </Text>
-                                </>}> </List.Item>
-    <BudgetTable renderList = {budgetDatabase}></BudgetTable>
-    {/* <ActionButton /> */}
+      <List.Item
+        title={<Text style={styles.subheader}> Month</Text>}
+        style={styles.header}
+        right={(props) => (
+          <>
+            <List.Icon {...props} color={Colors.green600} icon="arrow-up-bold" />
+            <Text> </Text>
+            <List.Icon {...props} color={Colors.red600} icon="arrow-down-bold" />
+            <Text> </Text>
+          </>
+        )}>
+        {' '}
+      </List.Item>
+      <BudgetTable renderList={budgetDatabase} />
+      {/* <ActionButton /> */}
     </>
   );
 };
@@ -110,15 +114,14 @@ const styles = StyleSheet.create({
   },
   subheader: {
     color: 'white',
-    fontSize: 20
+    fontSize: 20,
   },
-  value:{
+  value: {
     color: 'green',
-    fontSize: 16
+    fontSize: 16,
   },
-  spent:{
+  spent: {
     color: 'red',
-    fontSize: 16
-  }
+    fontSize: 16,
+  },
 });
-
