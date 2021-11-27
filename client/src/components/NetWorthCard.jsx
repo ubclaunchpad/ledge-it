@@ -34,7 +34,7 @@ const NetWorthCard = () => {
             <Text style={[styles.mainText, styles.subText, styles.income]}>$382.04</Text>
           </View>
 
-          <View style={[styles.content, styles.sub]}>
+          <View style={[styles.content, styles.contentContainer, styles.sub]}>
             <Text style={[styles.mainText, styles.subText, styles.label]}>All Time Expenses</Text>
             <Text style={[styles.mainText, styles.subText, styles.expense]}>$573.99</Text>
           </View>
@@ -52,13 +52,20 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
 
+  contentContainer: {
+    zIndex: 2,
+  },
+
   content: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
     width: Dimensions.get('window').width - 30,
     marginTop: 20,
-    borderWidth: 5,
+    marginBottom: 2,
+    paddingHorizontal: 3,
+    paddingVertical: 5,
+    borderWidth: 4,
     borderRadius: 20,
     borderColor: '#1b626b',
   },
@@ -67,7 +74,12 @@ const styles = StyleSheet.create({
     borderWidth: 3,
     borderRadius: 20,
     borderColor: '#1b626b',
-    marginTop: 5,
+    borderTopWidth: 0,
+    borderTopRightRadius: 0,
+    borderTopLeftRadius: 0,
+    marginTop: -20,
+    paddingVertical: 25,
+    paddingBottom: 5,
     width: Dimensions.get('window').width - 30,
   },
 
@@ -82,8 +94,7 @@ const styles = StyleSheet.create({
     display: 'flex',
     justifyContent: 'center',
     paddingLeft: 10,
-    paddingTop: 5,
-    paddingBottom: 5,
+    paddingVertical: 5,
   },
 
   mainText: {
@@ -93,15 +104,15 @@ const styles = StyleSheet.create({
 
   subText: {
     fontSize: 27,
+    fontWeight: '600',
   },
 
   label: {
-    fontWeight: 'normal',
     fontSize: 20,
   },
 
   net: {
-    fontSize: 22,
+    fontSize: 18,
   },
   amount: {
     fontSize: 38,

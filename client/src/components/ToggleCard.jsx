@@ -3,7 +3,7 @@ import { StyleSheet, View, Text, FlatList, Dimensions, Animated } from 'react-na
 import Paginator from './Paginator';
 
 const ToggleCard = () => {
-  const [_, setCurrentIndex] = useState(0);
+  const [, setCurrentIndex] = useState(0);
   const scrollX = useRef(new Animated.Value(0)).current;
   const slidesRef = useRef(null);
 
@@ -53,7 +53,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     width: Dimensions.get('window').width,
-    marginTop: -10
+    marginTop: -10,
   },
 
   itemContainer: {
@@ -69,7 +69,7 @@ const styles = StyleSheet.create({
     width: Dimensions.get('window').width - 30,
     justifyContent: 'center',
     alignItems: 'center',
-    borderWidth: 5,
+    borderWidth: 4,
     borderRadius: 20,
     backgroundColor: '#24838F',
     borderColor: '#1b626b',
