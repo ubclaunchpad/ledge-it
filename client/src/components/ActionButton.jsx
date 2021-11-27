@@ -1,74 +1,77 @@
 import React, { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
-import { FAB } from 'react-native-paper';
+import { FAB, Portal, Provider, Colors } from 'react-native-paper';
 import Modal from './CustomModal';
+import ExpenseForm from '../modals/ExpenseForm';
+import IncomeForm from '../modals/IncomeForm';
 
-const DefaultActionButton = ({ children }) => {
-  const [isModalVisible, setModalVisible] = useState(false);
-  return (
-    <View style={styles.centeredView}>
-      <Modal isModalVisible={isModalVisible} setModalVisible={setModalVisible}>
-        {React.isValidElement(children) && React.cloneElement(children, { setModalVisible })}
-      </Modal>
-      <FAB style={styles.fab} medium icon="plus" onPress={() => setModalVisible(true)} />
-    </View>
-  );
-};
+const DefaultActionButton = (children) => {
+  const [state, setState] = React.useState({ open: false });
 
-const AddIncomeButton = ({ children }) => {
-  const [isModalVisible, setModalVisible] = useState(false);
-  return (
-    <View style={styles.centeredView}>
-      <Modal isModalVisible={isModalVisible} setModalVisible={setModalVisible}>
-        {React.isValidElement(children) && React.cloneElement(children, { setModalVisible })}
-      </Modal>
-      <FAB style={styles.fabIncome} medium icon="plus" onPress={() => setModalVisible(true)} />
-    </View>
-  );
-};
+  const onStateChange = ({ open }) => setState({ open });
 
-const AddExpenseButton = ({ children }) => {
-  const [isModalVisible, setModalVisible] = useState(false);
+  const { open } = state;
+
+  const [isIncomeModalVisible, setIncomeModalVisible] = useState(false);
+  const [isExpenseModalVisible, setExpenseModalVisible] = useState(false);
+
   return (
-    <View style={styles.centeredView}>
-      <Modal isModalVisible={isModalVisible} setModalVisible={setModalVisible}>
-        {React.isValidElement(children) && React.cloneElement(children, { setModalVisible })}
+    <View style={styles.container}>
+      <Modal isModalVisible={isIncomeModalVisible} setModalVisible={setIncomeModalVisible}>
+        <IncomeForm />
       </Modal>
-      <FAB style={styles.fabExpense} medium icon="minus" onPress={() => setModalVisible(true)} />
+      <Modal isModalVisible={isExpenseModalVisible} setModalVisible={setExpenseModalVisible}>
+        <ExpenseForm />
+      </Modal>
+      <Provider>
+        <Portal>
+          <FAB.Group
+            style={open ? styles.FABgroupOpen : styles.FABgroupClosed}
+            fabStyle={styles.fab}
+            open={open}
+            icon={open ? 'close' : 'plus'}
+            actions={[
+              {
+                icon: 'plus',
+                label: 'Add Income',
+                onPress: () => setIncomeModalVisible(true),
+              },
+              {
+                icon: 'minus',
+                label: 'Add Expense',
+                onPress: () => setExpenseModalVisible(true),
+              },
+            ]}
+            onStateChange={onStateChange}
+            onPress={() => {
+              if (open) {
+                // do something if the speed dial is open
+              }
+            }}
+          />
+        </Portal>
+      </Provider>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  centeredView: {
+  container: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
     marginTop: 22,
+    backgroundColor: 'transparent',
   },
   fab: {
-    position: 'absolute',
-    margin: 30,
-    right: 0,
-    bottom: 0,
     backgroundColor: '#2196F3',
   },
-  fabIncome: {
-    position: 'absolute',
-    margin: 30,
-    marginBottom: 32,
-    right: 0,
-    bottom: 0,
-    backgroundColor: 'green',
+  FABgroupOpen: {
+    backgroundColor: 'white',
   },
-  fabExpense: {
-    position: 'absolute',
-    margin: 30,
-    right: 0,
-    bottom: 0,
-    backgroundColor: 'red',
+  FABgroupClosed: {
+    backgroundColor: 'transparent',
   },
 });
 
 export default DefaultActionButton;
-export { AddIncomeButton, AddExpenseButton };

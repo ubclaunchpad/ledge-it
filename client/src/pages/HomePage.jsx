@@ -1,9 +1,8 @@
 import React from 'react';
 import { StyleSheet, ScrollView, SafeAreaView } from 'react-native';
-import { AddIncomeButton, AddExpenseButton } from '../components/ActionButton';
+import { Portal } from 'react-native-paper';
+import DefaultActionButton from '../components/ActionButton';
 import CategoryPieChart from '../components/CategoryPieChart';
-import ExpenseForm from '../modals/ExpenseForm';
-import IncomeForm from '../modals/IncomeForm';
 
 const HomePage = () => {
   return (
@@ -13,12 +12,8 @@ const HomePage = () => {
           <CategoryPieChart />
         </ScrollView>
       </SafeAreaView>
-      <AddIncomeButton>
-        <IncomeForm />
-      </AddIncomeButton>
-      <AddExpenseButton>
-        <ExpenseForm />
-      </AddExpenseButton>
+
+      <DefaultActionButton />
     </>
   );
 };
