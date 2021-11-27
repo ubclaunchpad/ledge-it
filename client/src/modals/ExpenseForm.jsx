@@ -76,6 +76,7 @@ const AddExpense = () => {
           setCategory={setCategory}
           categoryDropdownVisible={categoryDropdownVisible}
           setCategoryDropdownVisible={setCategoryDropdownVisible}
+          placeholder="Select a category"
           required
         />
         <StyledTextInput
@@ -98,7 +99,7 @@ const AddExpense = () => {
           placeholder="optional..."
         />
       </View>
-      <StyledButton label="Add" onTap={submitExpense} />
+      <StyledButton label="Add" onTap={submitExpense} color="#24838F" />
     </View>
   );
 };

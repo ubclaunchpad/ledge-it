@@ -10,6 +10,7 @@ const StyledSelect = ({
   setCategory,
   categoryDropdownVisible,
   setCategoryDropdownVisible,
+  placeholder,
 }) => {
   return (
     <>
@@ -24,7 +25,7 @@ const StyledSelect = ({
         items={categories}
         setOpen={setCategoryDropdownVisible}
         setValue={setCategory}
-        placeholder="Select a category"
+        placeholder={placeholder}
         placeholderStyle={styles.placeholder}
         textStyle={styles.text}
         dropDownContainerStyle={styles.dropDown}
