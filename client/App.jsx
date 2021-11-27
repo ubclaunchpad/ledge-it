@@ -27,6 +27,7 @@ const TabNavBar = () => {
         tabBarActiveTintColor: '#7ad7f0',
         tabBarInactiveTintColor: '#0D50B4',
         tabBarShowLabel: false,
+        headerShown: false,
       })}
       style={styles.container}>
       <Tab.Screen name="Home" component={HomePage} />
