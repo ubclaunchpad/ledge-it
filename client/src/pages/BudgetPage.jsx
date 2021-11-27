@@ -1,16 +1,9 @@
 import React from 'react';
-import { Text, View, StyleSheet, ScrollView, SafeAreaView, StatusBar } from 'react-native';
+import { Text, StyleSheet, View } from 'react-native';
 import { List, Colors } from 'react-native-paper';
-import ActionButton from '../components/ActionButton';
 import BudgetTable from '../components/BudgetPage/BudgetTable';
 
 const budgetDatabase = [
-  {
-    month: 12,
-    year: 2021,
-    value: 500.01,
-    spent: 300.01,
-  },
   {
     month: 11,
     year: 2021,
@@ -65,26 +58,34 @@ const budgetDatabase = [
     value: 198.63,
     spent: 96.54,
   },
+  {
+    month: 0,
+    year: 2021,
+    value: 1098.63,
+    spent: 906.54,
+  },
 ];
 
 const BudgetPage = () => {
   return (
     <>
       <List.Item
-        title={<Text style={styles.subheader}> Month</Text>}
         style={styles.header}
-        right={(props) => (
-          <>
-            <List.Icon {...props} color={Colors.green600} icon="arrow-up-bold" />
-            <Text> </Text>
-            <List.Icon {...props} color={Colors.red600} icon="arrow-down-bold" />
-            <Text> </Text>
-          </>
-        )}>
-        {' '}
-      </List.Item>
+        right={() => (
+          <View style={{ flexDirection: 'row', alignItems: 'center', height: 40 }}>
+            <View style={{ width: '40%' }}>
+              <Text style={styles.subheader}> Month</Text>
+            </View>
+            <View style={{ width: '30%' }}>
+              <List.Icon style={styles.value} color={Colors.green600} icon="arrow-up-bold" />
+            </View>
+            <View style={{ width: '30%' }}>
+              <List.Icon style={styles.spent} color={Colors.red600} icon="arrow-down-bold" />
+            </View>
+          </View>
+        )}
+      />
       <BudgetTable renderList={budgetDatabase} />
-      {/* <ActionButton /> */}
     </>
   );
 };
@@ -92,36 +93,24 @@ const BudgetPage = () => {
 export default BudgetPage;
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    paddingTop: StatusBar.currentHeight,
-  },
-  scrollView: {
-    backgroundColor: 'white',
-    marginHorizontal: 20,
-    borderRadius: 10,
-  },
-  text: {
-    fontSize: 42,
-    margin: 8,
-  },
   header: {
     fontSize: 42,
-    margin: 8,
     backgroundColor: '#24838f',
-    marginHorizontal: 20,
-    borderRadius: 10,
+    marginTop: 8,
+    borderTopRightRadius: 10,
+    borderTopLeftRadius: 10,
   },
   subheader: {
     color: 'white',
     fontSize: 20,
+    fontWeight: 'bold',
   },
   value: {
     color: 'green',
-    fontSize: 16,
+    alignSelf: 'center',
   },
   spent: {
     color: 'red',
-    fontSize: 16,
+    alignSelf: 'center',
   },
 });
