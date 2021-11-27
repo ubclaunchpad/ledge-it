@@ -1,10 +1,11 @@
 from fastapi import APIRouter, Body, HTTPException, status
 from fastapi.responses import JSONResponse
 from fastapi.encoders import jsonable_encoder
+from pydantic.error_wrappers import ValidationError
 from pymongo.message import update
-from ..models.income import Income, UpdateIncomeModel
+from ..models.income import Income, UpdateIncomeModel, AddIncome
 from ..database.database import income_collection
-
+from ..utils.currency import get_exchange_rate_to_cad
 
 router = APIRouter()
 
@@ -20,9 +21,24 @@ def get_income_by_id(id):
 
 
 @router.post("/income/", response_description="Add new income", response_model=Income)
-def create_income(income: Income = Body(...)):
-    income = jsonable_encoder(income)
-    new_income = income_collection.insert_one(income)
+def create_income(income: AddIncome = Body(...)):
+    if income.currency.lower() == "cad":
+        income.exchange_rate = 1
+    else:
+        income.exchange_rate = get_exchange_rate_to_cad(income.currency)
+
+    income_dict = {k: v for k, v in income.dict().items()}
+
+    try:
+        insert_income = Income(**income_dict)
+    except ValidationError as exc:
+        return JSONResponse(
+            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+            content=jsonable_encoder({"detail": exc.errors()}),
+        )
+
+    insert_income = jsonable_encoder(insert_income)
+    new_income = income_collection.insert_one(insert_income)
     created_income = income_collection.find_one({"_id": new_income.inserted_id})
     return JSONResponse(status_code=status.HTTP_201_CREATED, content=created_income)
 
@@ -48,6 +64,18 @@ def delete_income_by_id(id):
     response_model=Income,
 )
 def update_income(id, income: UpdateIncomeModel = Body(...)):
+    if income.currency is not None:
+        if income.currency.lower() == "cad":
+            income.exchange_rate = 1
+        else:
+            try:
+                income.exchange_rate = get_exchange_rate_to_cad(income.currency)
+            except ValidationError as exc:
+                return JSONResponse(
+                    status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+                    content=jsonable_encoder({"detail": exc.errors()}),
+                )
+
     income = {k: v for k, v in income.dict().items() if v is not None}
     income = jsonable_encoder(income)
 
