@@ -99,7 +99,7 @@ const AddExpense = () => {
           placeholder="optional..."
         />
       </View>
-      <StyledButton label="Add" onTap={submitExpense} color="#24838F" />
+      <StyledButton label="Add" onTap={submitExpense} />
     </View>
   );
 };
