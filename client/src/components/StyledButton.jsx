@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
+import { theme } from '../../theme';
 
 export default ({ label, onTap }) => {
   return (
@@ -13,7 +14,7 @@ export default ({ label, onTap }) => {
 
 const styles = StyleSheet.create({
   background: {
-    backgroundColor: '#24838F',
+    backgroundColor: theme.colors.primary,
     padding: 10,
     width: 70,
     display: 'flex',
@@ -24,7 +25,7 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 0 },
   },
   text: {
-    color: 'white',
+    color: theme.colors.textLight,
     fontWeight: 'bold',
   },
 });

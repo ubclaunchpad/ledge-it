@@ -2,6 +2,12 @@ import React, { useState } from 'react';
 import { StyleSheet, View, Text, Dimensions, TouchableOpacity } from 'react-native';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { faChevronDown, faChevronUp } from '@fortawesome/free-solid-svg-icons';
+import { theme } from '../../../theme';
+import { formatNumber } from '../../utils/formatters';
+
+const netWorth = 150000.1212;
+const income = 2000.5;
+const expenses = 500.5;
 
 const NetWorthCard = () => {
   const [isExpanded, setExpand] = useState(false);
@@ -9,20 +15,21 @@ const NetWorthCard = () => {
   return (
     <View style={styles.container}>
       <View style={styles.content}>
-        <View style={styles.text}>
-          <Text style={[styles.mainText, styles.net]}>NET</Text>
-          <Text style={[styles.mainText, styles.amount]}>$1234.00</Text>
-        </View>
-
         <TouchableOpacity
           style={styles.chevron}
           onPress={() => {
             setExpand(!isExpanded);
           }}>
+          <View style={styles.text}>
+            <Text style={[styles.mainText, styles.net]}>NET</Text>
+            <Text style={[styles.mainText, styles.amount]}>
+              {netWorth < 0 && '-'}${formatNumber(netWorth)}
+            </Text>
+          </View>
           {isExpanded ? (
-            <FontAwesomeIcon icon={faChevronUp} color="#24838f" size={32} />
+            <FontAwesomeIcon icon={faChevronUp} color={theme.colors.primary} size={32} />
           ) : (
-            <FontAwesomeIcon icon={faChevronDown} color="#24838f" size={32} />
+            <FontAwesomeIcon icon={faChevronDown} color={theme.colors.primary} size={32} />
           )}
         </TouchableOpacity>
       </View>
@@ -31,12 +38,16 @@ const NetWorthCard = () => {
         <View style={styles.subContent}>
           <View style={[styles.content, styles.sub]}>
             <Text style={[styles.mainText, styles.subText, styles.label]}>All Time Income</Text>
-            <Text style={[styles.mainText, styles.subText, styles.income]}>$382.04</Text>
+            <Text style={[styles.mainText, styles.subText, styles.income]}>
+              ${formatNumber(income)}
+            </Text>
           </View>
 
           <View style={[styles.content, styles.contentContainer, styles.sub]}>
             <Text style={[styles.mainText, styles.subText, styles.label]}>All Time Expenses</Text>
-            <Text style={[styles.mainText, styles.subText, styles.expense]}>$573.99</Text>
+            <Text style={[styles.mainText, styles.subText, styles.expense]}>
+              ${formatNumber(expenses)}
+            </Text>
           </View>
         </View>
       )}
@@ -57,9 +68,6 @@ const styles = StyleSheet.create({
   },
 
   content: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
     width: Dimensions.get('window').width - 30,
     marginTop: 20,
     marginBottom: 2,
@@ -67,13 +75,13 @@ const styles = StyleSheet.create({
     paddingVertical: 5,
     borderWidth: 4,
     borderRadius: 20,
-    borderColor: '#1b626b',
+    borderColor: theme.colors.primaryDark,
   },
 
   subContent: {
     borderWidth: 3,
     borderRadius: 20,
-    borderColor: '#1b626b',
+    borderColor: theme.colors.primaryDark,
     borderTopWidth: 0,
     borderTopRightRadius: 0,
     borderTopLeftRadius: 0,
@@ -88,6 +96,9 @@ const styles = StyleSheet.create({
     paddingLeft: 10,
     paddingRight: 15,
     marginTop: 0,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
   },
 
   text: {
@@ -98,7 +109,7 @@ const styles = StyleSheet.create({
   },
 
   mainText: {
-    color: '#24838f',
+    color: theme.colors.primary,
     fontWeight: 'bold',
   },
 
@@ -120,15 +131,18 @@ const styles = StyleSheet.create({
   },
 
   income: {
-    color: '#17c308',
+    color: theme.colors.green,
   },
 
   expense: {
-    color: '#fd1e1e',
+    color: theme.colors.red,
   },
 
   chevron: {
     paddingRight: 15,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
   },
 });
 

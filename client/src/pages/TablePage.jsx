@@ -4,6 +4,7 @@ import ScrollTable from '../components/TablePage/ScrollTable';
 import TablePageHeader from '../components/TablePage/TablePageHeader';
 import ActionButton from '../components/ActionButton';
 import ExpenseForm from '../modals/ExpenseForm';
+import { theme } from '../../theme';
 
 // Note: These are just sample data of expense/income from the database.
 
@@ -90,9 +91,9 @@ const TablePage = () => {
   // Fetch user categories from db here
   useEffect(() => {
     if (type === 'Expenses') {
-      setCategories(['food', 'housing', 'fun', 'other']);
+      setCategories(['Food', 'Housing', 'Fun', 'Other']);
     } else {
-      setCategories(['main job', 'part-time', 'passive', 'other']);
+      setCategories(['Main job', 'Part-time', 'Passive', 'Other']);
     }
   }, [type]);
 
@@ -121,6 +122,7 @@ const styles = StyleSheet.create({
   },
   content: {
     display: 'flex',
+    backgroundColor: theme.colors.primaryLight,
   },
 });
 

@@ -1,6 +1,20 @@
 import React, { useState, useRef } from 'react';
 import { StyleSheet, View, Text, FlatList, Dimensions, Animated } from 'react-native';
 import Paginator from './Paginator';
+import { theme } from '../../../theme';
+
+const data = [
+  {
+    id: '1',
+    title: 'Visualization',
+    description: 'This is a graph',
+  },
+  {
+    id: '2',
+    title: 'Calendar',
+    description: 'This is a calendar',
+  },
+];
 
 const ToggleCard = () => {
   const [, setCurrentIndex] = useState(0);
@@ -71,28 +85,15 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderWidth: 4,
     borderRadius: 20,
-    backgroundColor: '#24838F',
-    borderColor: '#1b626b',
+    backgroundColor: theme.colors.primary,
+    borderColor: theme.colors.primaryDark,
   },
 
   text: {
     fontWeight: 'bold',
-    color: '#f3f3f3',
+    color: theme.colors.white,
     fontSize: 20,
   },
 });
-
-const data = [
-  {
-    id: '1',
-    title: 'Visualization',
-    description: 'This is the graph',
-  },
-  {
-    id: '2',
-    title: 'Calendar',
-    description: 'This is the calendar',
-  },
-];
 
 export default ToggleCard;

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, ScrollView, SafeAreaView, StatusBar } from 'react-native';
+import { Dimensions, StyleSheet, View } from 'react-native';
 import TableComponent from './TableComponent';
 
 const ScrollTable = ({ type, renderList }) => {
@@ -24,33 +24,25 @@ const ScrollTable = ({ type, renderList }) => {
   }, [renderList]);
 
   return (
-    <SafeAreaView style={styles.container}>
-      <ScrollView style={styles.scrollView}>
-        {splitList.map((monthExp, index) => (
-          <TableComponent
-            key={index}
-            title={monthExp.month}
-            subTitle={monthExp.year}
-            mult={monthExp.list}
-            type={type}
-          />
-        ))}
-      </ScrollView>
-    </SafeAreaView>
+    <View style={styles.scrollView}>
+      {splitList.map((monthExp, index) => (
+        <TableComponent
+          key={index}
+          title={monthExp.month}
+          subTitle={monthExp.year}
+          mult={monthExp.list}
+          type={type}
+        />
+      ))}
+    </View>
   );
 };
 
 export default ScrollTable;
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    paddingTop: StatusBar.currentHeight,
-  },
   scrollView: {
-    backgroundColor: '#244fad',
-    borderTopRightRadius: 10,
-    borderTopLeftRadius: 10,
     paddingVertical: 10,
+    minHeight: Dimensions.get('window').height - 300,
   },
 });

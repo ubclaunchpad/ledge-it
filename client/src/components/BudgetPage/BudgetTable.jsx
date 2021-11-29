@@ -1,7 +1,8 @@
 import React from 'react';
 import { List } from 'react-native-paper';
-import { StyleSheet, ScrollView, SafeAreaView, StatusBar, Text, View } from 'react-native';
+import { StyleSheet, ScrollView, SafeAreaView, Text, View } from 'react-native';
 import { MONTHS } from '../../utils/constants';
+import { theme } from '../../../theme';
 
 const BudgetTable = ({ renderList }) => {
   const componentList = renderList.map((budget, index) => (
@@ -38,27 +39,26 @@ export default BudgetTable;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: StatusBar.currentHeight,
   },
   scrollView: {
-    backgroundColor: 'white',
+    backgroundColor: theme.colors.primaryBackground,
   },
   listItem: {
-    borderBottomColor: '#24838f',
+    borderBottomColor: theme.colors.primaryDark,
     borderBottomWidth: 1,
     marginBottom: 9,
   },
   month: {
-    color: 'black',
+    color: theme.colors.textDark,
     fontSize: 16,
   },
   value: {
-    color: 'green',
+    color: theme.colors.green,
     fontSize: 16,
     textAlign: 'center',
   },
   spent: {
-    color: 'red',
+    color: theme.colors.red,
     fontSize: 16,
     textAlign: 'center',
   },

@@ -1,10 +1,10 @@
 import React from 'react';
-import { StyleSheet, ScrollView, SafeAreaView } from 'react-native';
+import { StyleSheet, ScrollView, SafeAreaView, View } from 'react-native';
 import ActionButton from '../components/ActionButton';
-import CategoryPieChart from '../components/CategoryPieChart';
+import CategoryPieChart from '../components/HomePage/CategoryPieChart';
 import ExpenseForm from '../modals/ExpenseForm';
-import ToggleCard from '../components/ToggleCard';
-import NetWorthCard from '../components/NetWorthCard';
+import ToggleCard from '../components/HomePage/ToggleCard';
+import NetWorthCard from '../components/HomePage/NetWorthCard';
 
 const HomePage = () => {
   return (
@@ -14,6 +14,7 @@ const HomePage = () => {
           <NetWorthCard />
           <ToggleCard />
           <CategoryPieChart />
+          <View style={{ height: 60 }} />
         </ScrollView>
       </SafeAreaView>
       <ActionButton>
