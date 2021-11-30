@@ -46,7 +46,7 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: 10,
     width: '100%',
     alignItems: 'center',
-    maxHeight: Dimensions.get('window').height * 0.8,
+    maxHeight: Dimensions.get('window').height * 0.85,
     justifyContent: 'flex-end',
   },
   closeButton: {

@@ -1,13 +1,14 @@
 import React from 'react';
 import { StyleSheet, Text, SafeAreaView, View } from 'react-native';
 import { theme } from '../../../theme';
+import { formatNumber } from '../../utils/formatters';
 
 // data taken directly from "../pages/TablePage"
 const expenseDatabase = [
   {
     id: 0,
     name: 'Gym',
-    price: '65.00',
+    price: 65.0,
     date: new Date('2022-10-21T10:34:23'),
     currency: 'CAD',
     category: 'Category #41',
@@ -15,7 +16,7 @@ const expenseDatabase = [
   {
     id: 1,
     name: 'Gym',
-    price: '65.00',
+    price: 65.0,
     date: new Date('2021-10-21T10:34:23'),
     currency: 'CAD',
     category: 'Category #41',
@@ -23,7 +24,7 @@ const expenseDatabase = [
   {
     id: 2,
     name: 'Coffee',
-    price: '4.29',
+    price: 4.29,
     date: new Date('2021-10-17T10:34:23'),
     currency: 'CAD',
     category: 'Category #12',
@@ -31,7 +32,7 @@ const expenseDatabase = [
   {
     id: 3,
     name: 'Monitor',
-    price: '205.00',
+    price: 205.0,
     date: new Date('2021-09-27T10:34:23'),
     currency: 'CAD',
     category: 'Category #13',
@@ -39,7 +40,7 @@ const expenseDatabase = [
   {
     id: 4,
     name: 'Mouse',
-    price: '54.99',
+    price: 54.9,
     date: new Date('2021-09-05T10:34:23'),
     currency: 'CAD',
     category: 'Category #22',
@@ -47,7 +48,7 @@ const expenseDatabase = [
   {
     id: 5,
     name: 'Skateboard',
-    price: '80.99',
+    price: 80.99,
     date: new Date('2021-08-17T10:34:23'),
     currency: 'USD',
     category: 'Category #25',
@@ -58,7 +59,7 @@ const incomeDatabase = [
   {
     id: 6,
     name: 'Part Time: Piano Lessons',
-    price: '650.00',
+    price: 650.0,
     date: new Date('2021-10-21T10:34:23'),
     currency: 'CAD',
     category: 'Category #1',
@@ -66,7 +67,7 @@ const incomeDatabase = [
   {
     id: 7,
     name: 'Tax Refunds',
-    price: '205.00',
+    price: 205.0,
     date: new Date('2021-09-27T10:34:23'),
     currency: 'CAD',
     category: 'Category #13',
@@ -74,7 +75,7 @@ const incomeDatabase = [
   {
     id: 8,
     name: 'Part Time: CPSC 312 TA',
-    price: '1344.99',
+    price: 1344.99,
     date: new Date('2021-09-05T10:34:23'),
     currency: 'CAD',
     category: 'Category #1',
@@ -82,7 +83,7 @@ const incomeDatabase = [
   {
     id: 9,
     name: 'Monthly Allowance',
-    price: '80.99',
+    price: 80.99,
     date: new Date('2021-08-17T10:34:23'),
     currency: 'USD',
     category: 'Category #25',
@@ -100,26 +101,19 @@ const getTransactionsToDisplay = () => {
   const temp = [];
   while (i < expenses.length && j < incomes.length && k < 10) {
     if (expenses[i].date - incomes[j].date) {
-      temp[k] = expenses[i];
-      i += 1;
-      temp[k].price = '-$'.concat(temp[k].price);
+      temp[k] = expenses[i++];
+      temp[k++].price *= -1;
     } else {
-      temp[k] = incomes[j];
-      j += 1;
-      temp[k].price = '$'.concat(temp[k].price);
+      temp[k++] = incomes[j++];
     }
-    k += 1;
   }
 
   while (i < expenses.length && k < 10) {
-    temp[k] = expenses[i];
-    i += 1;
-    k += 1;
+    temp[k] = expenses[i++];
+    temp[k++].price *= -1;
   }
   while (j < incomes.length && k < 10) {
-    temp[k] = incomes[j];
-    j += 1;
-    k += 1;
+    temp[k++] = incomes[j++];
   }
 
   return temp;
@@ -149,7 +143,13 @@ const RecentTransactions = () => {
                 <Text style={styles.cardText}>{item.category}</Text>
               </View>
               <View style={styles.cardRight}>
-                <Text style={styles.cardText}>{item.price}</Text>
+                <Text
+                  style={[
+                    styles.cardText,
+                    item.price < 0 ? styles.expenseText : styles.incomeText,
+                  ]}>
+                  {item.price < 0 && '-'}${formatNumber(item.price)}
+                </Text>
               </View>
             </View>
           );
@@ -212,6 +212,12 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '600',
     color: theme.colors.primary,
+  },
+  incomeText: {
+    color: theme.colors.green,
+  },
+  expenseText: {
+    color: theme.colors.red,
   },
 });
 

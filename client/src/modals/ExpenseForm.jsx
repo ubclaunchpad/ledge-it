@@ -13,13 +13,13 @@ const categories = [
 
 const getCurrentDate = () => {
   const date = new Date();
-  return `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`;
+  return `${date.getMonth() + 1}/${date.getDate()}/${date.getFullYear()}`;
 };
 
 const AddExpense = () => {
   const currency = 'CAD';
-  const [amount, setAmount] = useState(undefined);
-  const [merchant, setMerchant] = useState(undefined);
+  const [price, setPrice] = useState(undefined);
+  const [name, setName] = useState(undefined);
   const [date, setDate] = useState(getCurrentDate());
   const [category, setCategory] = useState(undefined);
   const [categoryDropdownVisible, setCategoryDropdownVisible] = useState(false);
@@ -29,10 +29,10 @@ const AddExpense = () => {
 
   const submitExpense = async () => {
     console.log({
-      name: merchant,
+      name,
       description,
-      date: date ? date.replace('.', '-').replace('.', '-') : undefined,
-      price: amount,
+      date: date ? date.replaceAll('/', '-') : undefined,
+      price,
       currency,
       exchange_rate: 0,
       location,
@@ -43,29 +43,34 @@ const AddExpense = () => {
 
   return (
     <View style={styles.centeredView}>
-      <AmountBox
-        fields={[amount || 0.0, merchant, date, category || '', tag, description, location]}
-      />
+      <AmountBox fields={[price || 0.0, name, description, date, category || '', tag, location]} />
       <View style={styles.form}>
         <StyledTextInput
-          onChange={setAmount}
+          onChange={setPrice}
           keyboardType="numeric"
           label="Amount"
           placeholder="$$$"
           required
         />
         <StyledTextInput
-          onChange={setMerchant}
+          onChange={setName}
           keyboardType="default"
-          label="Merchant"
+          label="Name"
           placeholder="Amazon"
           required
+        />
+        <StyledTextInput
+          onChange={setDesc}
+          keyboardType="default"
+          label="Description"
+          placeholder="Optional..."
+          multiline
         />
         <StyledTextInput
           onChange={setDate}
           keyboardType="default"
           label="Date"
-          placeholder="DD/MM/YYYY"
+          placeholder="MM/DD/YYYY"
           defaultValue={getCurrentDate()}
           required
         />
@@ -83,20 +88,13 @@ const AddExpense = () => {
           onChange={setTag}
           keyboardType="default"
           label="Tag"
-          placeholder="optional..."
-        />
-        <StyledTextInput
-          onChange={setDesc}
-          keyboardType="default"
-          label="Description"
-          placeholder="optional..."
-          multiline
+          placeholder="Optional..."
         />
         <StyledTextInput
           onChange={setLocation}
           keyboardType="default"
           label="Location"
-          placeholder="optional..."
+          placeholder="Optional..."
         />
       </View>
       <StyledButton label="Add" onTap={submitExpense} />
