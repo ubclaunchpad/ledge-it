@@ -5,7 +5,7 @@ import CategoryPieChart from '../components/HomePage/CategoryPieChart';
 import ExpenseForm from '../modals/ExpenseForm';
 import ToggleCard from '../components/HomePage/ToggleCard';
 import NetWorthCard from '../components/HomePage/NetWorthCard';
-import RecentTransactions from '../components/Home/RecentTransactions';
+import RecentTransactions from '../components/HomePage/RecentTransactions';
 
 const HomePage = () => {
   return (
