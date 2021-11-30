@@ -3,6 +3,7 @@ import { List } from 'react-native-paper';
 import { StyleSheet, Text, View } from 'react-native';
 import { Swipeable } from 'react-native-gesture-handler';
 import { MONTHS } from '../../utils/constants';
+import { theme } from '../../../theme';
 import ExpenseSummaryModal from '../../modals/ExpenseSummary';
 
 const RightSwipe = () => {
@@ -82,27 +83,28 @@ const styles = StyleSheet.create({
     marginVertical: 0,
     paddingBottom: 12,
     borderBottomWidth: 1,
-    borderBottomColor: '#6072a6',
+    borderBottomColor: theme.colors.grey,
   },
   header: {
     fontSize: 20,
-    color: '#fff',
+    fontWeight: 'bold',
+    color: theme.colors.textLight,
     marginTop: -5,
     marginBottom: -10,
   },
   subheader: {
     fontSize: 16,
     fontWeight: 'bold',
-    color: '#fff',
+    color: theme.colors.textLight,
   },
   text: {
     fontSize: 12,
-    color: '#fff',
+    color: theme.colors.textLight,
   },
   price: {
     fontSize: 20,
     fontWeight: 'bold',
-    color: '#fff',
+    color: theme.colors.textLight,
     justifyContent: 'space-evenly',
   },
   swipeBackground: {
@@ -114,12 +116,12 @@ const styles = StyleSheet.create({
     marginRight: 15,
   },
   swipeText: {
-    color: '#fff',
+    color: theme.colors.textLight,
     fontWeight: '600',
     padding: 20,
   },
   listItem: {
-    backgroundColor: '#4993ec',
+    backgroundColor: theme.colors.primary,
     marginHorizontal: 15,
     marginVertical: 5,
     borderRadius: 10,
