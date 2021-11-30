@@ -118,18 +118,18 @@ const styles = StyleSheet.create({
     fontSize: 30,
     fontWeight: 'bold',
     paddingVertical: 20,
-    color: theme.colors.textDark,
+    color: theme.colors.primary,
   },
   labelMaj: {
     fontSize: 30,
     fontFamily: '',
-    color: theme.colors.textDark,
+    color: theme.colors.primary,
     fontWeight: '600',
   },
   labelMin: {
     fontSize: 12,
     fontFamily: '',
-    color: theme.colors.textDark,
+    color: theme.colors.primary,
     fontWeight: '400',
   },
   pbar: {

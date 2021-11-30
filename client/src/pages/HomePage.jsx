@@ -5,6 +5,7 @@ import CategoryPieChart from '../components/HomePage/CategoryPieChart';
 import ExpenseForm from '../modals/ExpenseForm';
 import ToggleCard from '../components/HomePage/ToggleCard';
 import NetWorthCard from '../components/HomePage/NetWorthCard';
+import RecentTransactions from '../components/HomePage/RecentTransactions';
 
 const HomePage = () => {
   return (
@@ -14,6 +15,7 @@ const HomePage = () => {
           <NetWorthCard />
           <ToggleCard />
           <CategoryPieChart />
+          <RecentTransactions />
           <View style={{ height: 60 }} />
         </ScrollView>
       </SafeAreaView>
