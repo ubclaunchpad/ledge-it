@@ -1,9 +1,10 @@
-import * as React from 'react';
+import React, { useState } from 'react';
 import { List } from 'react-native-paper';
 import { StyleSheet, Text, View } from 'react-native';
 import { Swipeable } from 'react-native-gesture-handler';
 import { MONTHS } from '../../utils/constants';
 import { theme } from '../../../theme';
+import ExpenseSummaryModal from '../../modals/ExpenseSummary';
 
 const RightSwipe = () => {
   return (
@@ -13,13 +14,21 @@ const RightSwipe = () => {
   );
 };
 
-const TableComponent = ({ title, subTitle, mult, type }) => {
-  const negative = type === 'Expenses' ? '-' : '';
+const ListInputComponent = ({ obj, type }) => {
+  const [expenseSummaryModal, setExpenseSummaryModal] = useState(false);
 
-  const tableItems = mult.map((obj, index) => (
-    <Swipeable key={index} renderRightActions={RightSwipe}>
+  const negative = type === 'Expenses' ? '-' : '';
+  const userCategories = ['Food', 'Housing', 'Fun', 'Other', 'School'];
+
+  return (
+    <>
       <List.Item
         title={<Text style={styles.subheader}>{obj.name}</Text>}
+        onPress={() => {
+          if (type === 'Expenses') {
+            setExpenseSummaryModal(true);
+          }
+        }}
         description={
           <View>
             <Text style={styles.text}>{obj.category}</Text>
@@ -38,6 +47,22 @@ const TableComponent = ({ title, subTitle, mult, type }) => {
         )}
         style={styles.listItem}
       />
+      {expenseSummaryModal && (
+        <ExpenseSummaryModal
+          modalVisible={expenseSummaryModal}
+          setModalVisible={setExpenseSummaryModal}
+          expenseData={obj}
+          userCategories={userCategories}
+        />
+      )}
+    </>
+  );
+};
+
+const TableComponent = ({ title, subTitle, mult, type }) => {
+  const tableItems = mult.map((obj, index) => (
+    <Swipeable key={index} renderRightActions={RightSwipe}>
+      <ListInputComponent obj={obj} type={type} />
     </Swipeable>
   ));
 
