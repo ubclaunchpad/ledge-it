@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { FAB } from 'react-native-paper';
 import Modal from './CustomModal';
+import { theme } from '../../theme';
 
 const ActionButton = ({ children }) => {
   const [isModalVisible, setModalVisible] = useState(false);
@@ -20,14 +21,13 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop: 22,
   },
   fab: {
     position: 'absolute',
-    margin: 30,
+    margin: 20,
     right: 0,
     bottom: 0,
-    backgroundColor: '#2196F3',
+    backgroundColor: theme.colors.primaryDark,
   },
 });
 

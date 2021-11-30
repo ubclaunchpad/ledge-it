@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, StyleSheet, Dimensions } from 'react-native';
+import { theme } from '../../theme';
 
 export default ({ keyboardType, label, placeholder, onChange, required, noClear, ...rest }) => {
   const [value, setValue] = useState(null);
@@ -21,7 +22,7 @@ export default ({ keyboardType, label, placeholder, onChange, required, noClear,
         value={value}
         keyboardType={keyboardType}
         placeholder={placeholder}
-        placeholderTextColor="lightgrey"
+        placeholderTextColor={theme.colors.lightgrey}
         clearButtonMode={noClear ? 'never' : 'while-editing'}
         {...rest}
       />
@@ -34,7 +35,7 @@ const styles = StyleSheet.create({
     margin: 10,
   },
   label: {
-    color: '#24838F',
+    color: theme.colors.primary,
     fontSize: 14,
     marginBottom: 5,
   },
@@ -42,9 +43,9 @@ const styles = StyleSheet.create({
     borderWidth: 0,
     shadowRadius: 0,
     borderBottomWidth: 1,
-    borderColor: 'grey',
+    borderColor: theme.colors.primaryDark,
     width: Dimensions.get('window').width * 0.8,
     paddingBottom: 2,
-    color: '#466868',
+    color: theme.colors.textDark,
   },
 });

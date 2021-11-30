@@ -1,6 +1,7 @@
 import DropDownPicker from 'react-native-dropdown-picker';
 import React from 'react';
 import { Dimensions, StyleSheet, Text } from 'react-native';
+import { theme } from '../../theme';
 
 const StyledSelect = ({
   label,
@@ -40,13 +41,13 @@ const styles = StyleSheet.create({
     marginLeft: 10,
     marginTop: 10,
     marginBottom: -8,
-    color: '#24838F',
+    color: theme.colors.primary,
   },
   categorySelect: {
-    width: Dimensions.get('window').width - 80,
+    width: Dimensions.get('window').width - 75,
     height: 40,
-    borderColor: '#24838F',
-    color: '#24838F',
+    borderColor: theme.colors.primaryDark,
+    color: theme.colors.primary,
     backgroundColor: 'transparent',
     borderWidth: 0,
     borderBottomWidth: 1,
@@ -54,18 +55,19 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   text: {
-    color: '#466868',
+    color: theme.colors.textDark,
     marginLeft: -6,
     marginBottom: -15,
   },
   dropDown: {
-    borderColor: '#24838F',
+    borderColor: theme.colors.primaryDark,
+    width: Dimensions.get('window').width - 75,
   },
   container: {
     marginTop: -5,
     paddingTop: 0,
   },
-  placeholder: { color: 'lightgrey' },
+  placeholder: { color: theme.colors.lightgrey },
 });
 
 export default StyledSelect;

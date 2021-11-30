@@ -1,7 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { View, ScrollView, StyleSheet, Text } from 'react-native';
-import { Searchbar, Chip, Switch } from 'react-native-paper';
+import { View, ScrollView, StyleSheet, Text, TouchableOpacity } from 'react-native';
+import { Searchbar, Chip } from 'react-native-paper';
+import { faChevronRight } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import SortMenu from './SortMenu';
+import { theme } from '../../../theme';
 
 const TablePageHeader = ({ categories, type, setType }) => {
   const [searchQuery, setSearchQuery] = useState('');
@@ -54,22 +57,30 @@ const TablePageHeader = ({ categories, type, setType }) => {
   const emptyIcon = () => null;
 
   return (
-    <>
-      <Searchbar placeholder="Search" onChangeText={onChangeSearch} value={searchQuery} />
+    <View style={styles.headerContainer}>
+      <Searchbar
+        placeholder="Search"
+        onChangeText={onChangeSearch}
+        value={searchQuery}
+        style={{ shadowOpacity: 0.1 }}
+      />
       <View style={styles.container}>
-        <Text>{type}</Text>
-        <Switch
-          value={type === 'Expenses'}
-          onValueChange={onToggleSwitch}
-          color="blue"
-          style={styles.m10}
-        />
+        <TouchableOpacity
+          style={styles.toggleButton}
+          onPress={() => onToggleSwitch()}
+          activeOpacity={0.8}>
+          <Text style={styles.toggleButtonText}>{type}</Text>
+          <FontAwesomeIcon icon={faChevronRight} color={theme.colors.white} size={24} />
+        </TouchableOpacity>
         <SortMenu />
       </View>
       <View>
         <ScrollView horizontal={true} style={styles.chipContainer}>
           <Chip
-            style={styles.chip}
+            style={[
+              styles.chip,
+              { backgroundColor: allButton ? theme.colors.primary : theme.colors.primaryLight },
+            ]}
             icon={emptyIcon}
             selected={allButton}
             onPress={allButtonPressLogic}>
@@ -77,7 +88,14 @@ const TablePageHeader = ({ categories, type, setType }) => {
           </Chip>
           {categories.map((category) => (
             <Chip
-              style={styles.chip}
+              style={[
+                styles.chip,
+                {
+                  backgroundColor: selectedLookup[category]
+                    ? theme.colors.primary
+                    : theme.colors.primaryLight,
+                },
+              ]}
               icon={emptyIcon}
               key={category}
               selected={selectedLookup[category]}
@@ -87,11 +105,37 @@ const TablePageHeader = ({ categories, type, setType }) => {
           ))}
         </ScrollView>
       </View>
-    </>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
+  headerContainer: {
+    borderBottomWidth: 4,
+    borderBottomColor: theme.colors.primaryDark,
+  },
+  toggleButton: {
+    backgroundColor: theme.colors.primary,
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginHorizontal: 5,
+    marginVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 25,
+    shadowRadius: 5,
+    shadowOpacity: 0.2,
+    shadowOffset: { width: 0, height: 0 },
+  },
+  toggleButtonText: {
+    paddingVertical: 10,
+    marginRight: 10,
+    color: theme.colors.white,
+    textAlign: 'center',
+    fontSize: 24,
+    fontWeight: 'bold',
+  },
   m10: {
     margin: 10,
   },
@@ -106,10 +150,11 @@ const styles = StyleSheet.create({
   },
   chipContainer: {
     paddingTop: 5,
-    paddingBottom: 8,
+    paddingBottom: 10,
   },
   text: {
     fontWeight: 'bold',
+    color: theme.colors.white,
   },
 });
 
