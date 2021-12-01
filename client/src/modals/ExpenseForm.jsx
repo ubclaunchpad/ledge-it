@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
+import axios from 'axios';
 import AmountBox from '../components/AmountBox';
 import StyledTextInput from '../components/StyledTextInput';
 import StyledButton from '../components/StyledButton';
 import StyledSelect from '../components/StyledSelect';
-import axios from 'axios';
 
 const categories = [
   { label: 'Groceries', value: 'Groceries' },
@@ -19,14 +19,11 @@ const getCurrentDate = () => {
 
 // "12/1/2021" -> "2021-01-12"
 const parseDateForSend = (curDate) => {
-  let [month, day, year] = curDate.split('/');
-  if (month.length == 1) {
-    month = '0' + month;
-  }
-  if (day.length == 1) {
-    day = '0' + day;
-  }
-  return year + '-' + day + '-' + month;
+  const dateList = curDate.split('/');
+  const month = dateList[0].length === 1 ? `0${dateList[0]}` : dateList[0];
+  const day = dateList[1].length === 1 ? `0${dateList[1]}` : dateList[1];
+  const year = dateList[2];
+  return `${year}-${day}-${month}`;
 };
 
 const AddExpense = () => {
