@@ -4,6 +4,7 @@ import AmountBox from '../components/AmountBox';
 import StyledTextInput from '../components/StyledTextInput';
 import StyledButton from '../components/StyledButton';
 import StyledSelect from '../components/StyledSelect';
+import axios from 'axios';
 
 const categories = [
   { label: 'Groceries', value: 'Groceries' },
@@ -14,6 +15,18 @@ const categories = [
 const getCurrentDate = () => {
   const date = new Date();
   return `${date.getMonth() + 1}/${date.getDate()}/${date.getFullYear()}`;
+};
+
+// "12/1/2021" -> "2021-01-12"
+const parseDateForSend = (curDate) => {
+  let [month, day, year] = curDate.split('/');
+  if (month.length == 1) {
+    month = '0' + month;
+  }
+  if (day.length == 1) {
+    day = '0' + day;
+  }
+  return year + '-' + day + '-' + month;
 };
 
 const AddExpense = () => {
@@ -28,17 +41,30 @@ const AddExpense = () => {
   const [location, setLocation] = useState(undefined);
 
   const submitExpense = async () => {
-    console.log({
-      name,
-      description,
-      date: date ? date.replaceAll('/', '-') : undefined,
-      price,
-      currency,
-      exchange_rate: 0,
-      location,
-      category,
-      sub_category: tag,
-    });
+    // This post request does not work since backend is http
+    // I tested using localtunnel, which connects your local http server to an https url on the web
+    axios
+      .post(
+        '{ insert_base_url_here }/expense/',
+        JSON.stringify({
+          name,
+          description,
+          date: parseDateForSend(date),
+          price,
+          currency,
+          exchange_rate: 0,
+          location,
+          category,
+          sub_category: tag,
+        }),
+        {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        },
+      )
+      .then((res) => console.log(res))
+      .catch((err) => console.log(err));
   };
 
   return (
