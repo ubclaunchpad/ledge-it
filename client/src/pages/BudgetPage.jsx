@@ -67,10 +67,10 @@ const budgetDatabase = [
     spent: 906.54,
   },
   {
-  month: 11,
-  year: 2020,
-  value: 1098.63,
-  spent: 906.54,
+    month: 11,
+    year: 2020,
+    value: 1098.63,
+    spent: 906.54,
   },
   {
     month: 10,
@@ -92,7 +92,7 @@ const BudgetPage = () => {
 
   return (
     <>
-      <BudgetHeader year={year} setYear={setYear} sortFunction={sortBudgets}/>
+      <BudgetHeader year={year} setYear={setYear} sortFunction={sortBudgets} />
       <List.Item
         style={styles.header}
         right={() => (
@@ -109,7 +109,7 @@ const BudgetPage = () => {
           </View>
         )}
       />
-      <BudgetTable renderList={budgetDatabase.filter(monthBudget => monthBudget.year === year)} />
+      <BudgetTable renderList={budgetDatabase.filter((monthBudget) => monthBudget.year === year)} />
     </>
   );
 };

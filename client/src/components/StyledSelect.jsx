@@ -6,7 +6,6 @@ import { theme } from '../../theme';
 const StyledSelect = ({
   label,
   required,
-<<<<<<< HEAD
   dropdownVisible,
   setDropdownVisible,
   selected,
@@ -16,14 +15,6 @@ const StyledSelect = ({
   type, // 'line, box'
   primaryColor,
   secondaryColor,
-=======
-  categories,
-  category,
-  setCategory,
-  categoryDropdownVisible,
-  setCategoryDropdownVisible,
-  placeholder,
->>>>>>> 00f2ff029ce9602c0a7e75d78ac8bcbbf6a1d91a
 }) => {
   const styles = type === 'box' ? boxStyles : lineStyles;
   const textStyle =
@@ -37,21 +28,12 @@ const StyledSelect = ({
         </Text>
       )}
       <DropDownPicker
-<<<<<<< HEAD
         style={[styles.choiceSelect, { border: 'none' }]}
         open={dropdownVisible}
         value={selected}
         items={options}
         setOpen={setDropdownVisible}
         setValue={setSelected}
-=======
-        style={[styles.categorySelect, { border: 'none' }]}
-        open={categoryDropdownVisible}
-        value={category}
-        items={categories}
-        setOpen={setCategoryDropdownVisible}
-        setValue={setCategory}
->>>>>>> 00f2ff029ce9602c0a7e75d78ac8bcbbf6a1d91a
         placeholder={placeholder}
         placeholderStyle={styles.placeholder}
         textStyle={textStyle}
@@ -70,13 +52,8 @@ const lineStyles = StyleSheet.create({
     marginBottom: -8,
     color: theme.colors.primary,
   },
-<<<<<<< HEAD
   choiceSelect: {
-    width: Dimensions.get('window').width - 80,
-=======
-  categorySelect: {
     width: Dimensions.get('window').width - 75,
->>>>>>> 00f2ff029ce9602c0a7e75d78ac8bcbbf6a1d91a
     height: 40,
     borderColor: theme.colors.primaryDark,
     color: theme.colors.primary,

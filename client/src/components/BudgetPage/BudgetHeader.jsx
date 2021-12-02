@@ -1,9 +1,7 @@
 import React, { useState } from 'react';
 import { Text, View, StyleSheet, Dimensions } from 'react-native';
-import { Button } from 'react-native-paper';
 import StyledSelect from '../StyledSelect';
 import StyledButton from '../StyledButton';
-import ActionButton from '../ActionButton';
 import Modal from '../CustomModal';
 
 const BudgetHeader = ({ year, setYear, sortFunction }) => {
@@ -14,10 +12,10 @@ const BudgetHeader = ({ year, setYear, sortFunction }) => {
   ];
 
   const [yearDropdownVisible, setYearDropdownVisible] = useState(false);
-  
+
   const [sortModalVisible, setSortModalVisible] = useState(false);
   const sortBudgets = (sortCriteria) => {
-	sortFunction(sortCriteria);
+    sortFunction(sortCriteria);
     setSortModalVisible(false);
   };
 
@@ -38,7 +36,12 @@ const BudgetHeader = ({ year, setYear, sortFunction }) => {
           type="box"
           placeholder="2021"
         />
-        <StyledButton customStyles={btnCustomStyles} label="Sort" onTap={setSortModalVisible} icon={sortModalVisible ? 'chevron-up' : 'chevron-down'}/>
+        <StyledButton
+          customStyles={btnCustomStyles}
+          label="Sort"
+          onTap={setSortModalVisible}
+          icon={sortModalVisible ? 'chevron-up' : 'chevron-down'}
+        />
         <Modal isModalVisible={sortModalVisible} setModalVisible={setSortModalVisible}>
           <View style={styles.sortButtons}>
             <StyledButton
@@ -94,9 +97,9 @@ const styles = StyleSheet.create({
     zIndex: 1,
     marginTop: 8,
     flexDirection: 'row',
-	justifyContent: 'space-around',
-	marginLeft: 35,
-	marginRight: 35
+    justifyContent: 'space-around',
+    marginLeft: 35,
+    marginRight: 35,
   },
 });
 
@@ -110,8 +113,8 @@ const btnCustomStyles = StyleSheet.create({
     backgroundColor: 'transparent',
     height: 40,
     margin: 5,
-	flexDirection: 'row',
-	justifyContent: 'space-between',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
   },
   text: {
     color: '#24838F',

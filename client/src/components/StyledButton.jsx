@@ -1,11 +1,7 @@
 import React from 'react';
-<<<<<<< HEAD
 import { View, Text, StyleSheet, Pressable } from 'react-native';
 import { Button } from 'react-native-paper';
-=======
-import { View, Text, StyleSheet } from 'react-native';
 import { theme } from '../../theme';
->>>>>>> 00f2ff029ce9602c0a7e75d78ac8bcbbf6a1d91a
 
 export default ({ label, onTap, customStyles, icon }) => {
   const styles = customStyles || defaultStyles;
@@ -20,7 +16,7 @@ export default ({ label, onTap, customStyles, icon }) => {
       onPress={onTap}>
       <View style={styles.background}>
         <Text style={styles.text}>{label}</Text>
-        {icon && <Button color='#24838F' style={{marginRight: -30}} icon={icon}></Button>}
+        {icon && <Button color="#24838F" style={{ marginRight: -30 }} icon={icon} />}
       </View>
     </Pressable>
   );
