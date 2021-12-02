@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { Text, StyleSheet, View } from 'react-native';
-import { List, Colors } from 'react-native-paper';
+import { List } from 'react-native-paper';
 import BudgetTable from '../components/BudgetPage/BudgetTable';
 import BudgetHeader from '../components/BudgetPage/BudgetHeader';
-
+import { theme } from '../../theme';
 
 const budgetDatabase = [
   {
@@ -101,10 +101,10 @@ const BudgetPage = () => {
               <Text style={styles.subheader}> Month</Text>
             </View>
             <View style={{ width: '30%' }}>
-              <List.Icon style={styles.value} color={Colors.green600} icon="arrow-up-bold" />
+              <List.Icon style={styles.value} color={theme.colors.green} icon="arrow-up-bold" />
             </View>
             <View style={{ width: '30%' }}>
-              <List.Icon style={styles.spent} color={Colors.red600} icon="arrow-down-bold" />
+              <List.Icon style={styles.spent} color={theme.colors.red} icon="arrow-down-bold" />
             </View>
           </View>
         )}
@@ -119,22 +119,22 @@ export default BudgetPage;
 const styles = StyleSheet.create({
   header: {
     fontSize: 42,
-    backgroundColor: '#24838f',
+    backgroundColor: theme.colors.primary,
     marginTop: 8,
     borderTopRightRadius: 10,
     borderTopLeftRadius: 10,
   },
   subheader: {
-    color: 'white',
+    color: theme.colors.textLight,
     fontSize: 20,
     fontWeight: 'bold',
   },
   value: {
-    color: 'green',
+    color: theme.colors.green,
     alignSelf: 'center',
   },
   spent: {
-    color: 'red',
+    color: theme.colors.red,
     alignSelf: 'center',
   },
 });

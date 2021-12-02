@@ -1,8 +1,10 @@
-import * as React from 'react';
+import React, { useState } from 'react';
 import { List } from 'react-native-paper';
 import { StyleSheet, Text, View } from 'react-native';
 import { Swipeable } from 'react-native-gesture-handler';
 import { MONTHS } from '../../utils/constants';
+import { theme } from '../../../theme';
+import ExpenseSummaryModal from '../../modals/ExpenseSummary';
 
 const RightSwipe = () => {
   return (
@@ -12,13 +14,21 @@ const RightSwipe = () => {
   );
 };
 
-const TableComponent = ({ title, subTitle, mult, type }) => {
-  const negative = type === 'Expenses' ? '-' : '';
+const ListInputComponent = ({ obj, type }) => {
+  const [expenseSummaryModal, setExpenseSummaryModal] = useState(false);
 
-  const tableItems = mult.map((obj, index) => (
-    <Swipeable key={index} renderRightActions={RightSwipe}>
+  const negative = type === 'Expenses' ? '-' : '';
+  const userCategories = ['Food', 'Housing', 'Fun', 'Other', 'School'];
+
+  return (
+    <>
       <List.Item
         title={<Text style={styles.subheader}>{obj.name}</Text>}
+        onPress={() => {
+          if (type === 'Expenses') {
+            setExpenseSummaryModal(true);
+          }
+        }}
         description={
           <View>
             <Text style={styles.text}>{obj.category}</Text>
@@ -37,6 +47,22 @@ const TableComponent = ({ title, subTitle, mult, type }) => {
         )}
         style={styles.listItem}
       />
+      {expenseSummaryModal && (
+        <ExpenseSummaryModal
+          modalVisible={expenseSummaryModal}
+          setModalVisible={setExpenseSummaryModal}
+          expenseData={obj}
+          userCategories={userCategories}
+        />
+      )}
+    </>
+  );
+};
+
+const TableComponent = ({ title, subTitle, mult, type }) => {
+  const tableItems = mult.map((obj, index) => (
+    <Swipeable key={index} renderRightActions={RightSwipe}>
+      <ListInputComponent obj={obj} type={type} />
     </Swipeable>
   ));
 
@@ -57,27 +83,28 @@ const styles = StyleSheet.create({
     marginVertical: 0,
     paddingBottom: 12,
     borderBottomWidth: 1,
-    borderBottomColor: '#6072a6',
+    borderBottomColor: theme.colors.grey,
   },
   header: {
     fontSize: 20,
-    color: '#fff',
+    fontWeight: 'bold',
+    color: theme.colors.textLight,
     marginTop: -5,
     marginBottom: -10,
   },
   subheader: {
     fontSize: 16,
     fontWeight: 'bold',
-    color: '#fff',
+    color: theme.colors.textLight,
   },
   text: {
     fontSize: 12,
-    color: '#fff',
+    color: theme.colors.textLight,
   },
   price: {
     fontSize: 20,
     fontWeight: 'bold',
-    color: '#fff',
+    color: theme.colors.textLight,
     justifyContent: 'space-evenly',
   },
   swipeBackground: {
@@ -89,12 +116,12 @@ const styles = StyleSheet.create({
     marginRight: 15,
   },
   swipeText: {
-    color: '#fff',
+    color: theme.colors.textLight,
     fontWeight: '600',
     padding: 20,
   },
   listItem: {
-    backgroundColor: '#4993ec',
+    backgroundColor: theme.colors.primary,
     marginHorizontal: 15,
     marginVertical: 5,
     borderRadius: 10,

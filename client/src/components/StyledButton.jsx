@@ -1,6 +1,11 @@
 import React from 'react';
+<<<<<<< HEAD
 import { View, Text, StyleSheet, Pressable } from 'react-native';
 import { Button } from 'react-native-paper';
+=======
+import { View, Text, StyleSheet } from 'react-native';
+import { theme } from '../../theme';
+>>>>>>> 00f2ff029ce9602c0a7e75d78ac8bcbbf6a1d91a
 
 export default ({ label, onTap, customStyles, icon }) => {
   const styles = customStyles || defaultStyles;
@@ -23,7 +28,7 @@ export default ({ label, onTap, customStyles, icon }) => {
 
 const defaultStyles = StyleSheet.create({
   background: {
-    backgroundColor: '#24838F',
+    backgroundColor: theme.colors.primary,
     padding: 10,
     width: 70,
     display: 'flex',
@@ -34,7 +39,7 @@ const defaultStyles = StyleSheet.create({
     shadowOffset: { width: 0, height: 0 },
   },
   text: {
-    color: 'white',
+    color: theme.colors.textLight,
     fontWeight: 'bold',
   },
 });

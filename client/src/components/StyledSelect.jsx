@@ -1,10 +1,12 @@
 import DropDownPicker from 'react-native-dropdown-picker';
 import React from 'react';
 import { Dimensions, StyleSheet, Text } from 'react-native';
+import { theme } from '../../theme';
 
 const StyledSelect = ({
   label,
   required,
+<<<<<<< HEAD
   dropdownVisible,
   setDropdownVisible,
   selected,
@@ -14,6 +16,14 @@ const StyledSelect = ({
   type, // 'line, box'
   primaryColor,
   secondaryColor,
+=======
+  categories,
+  category,
+  setCategory,
+  categoryDropdownVisible,
+  setCategoryDropdownVisible,
+  placeholder,
+>>>>>>> 00f2ff029ce9602c0a7e75d78ac8bcbbf6a1d91a
 }) => {
   const styles = type === 'box' ? boxStyles : lineStyles;
   const textStyle =
@@ -27,12 +37,21 @@ const StyledSelect = ({
         </Text>
       )}
       <DropDownPicker
+<<<<<<< HEAD
         style={[styles.choiceSelect, { border: 'none' }]}
         open={dropdownVisible}
         value={selected}
         items={options}
         setOpen={setDropdownVisible}
         setValue={setSelected}
+=======
+        style={[styles.categorySelect, { border: 'none' }]}
+        open={categoryDropdownVisible}
+        value={category}
+        items={categories}
+        setOpen={setCategoryDropdownVisible}
+        setValue={setCategory}
+>>>>>>> 00f2ff029ce9602c0a7e75d78ac8bcbbf6a1d91a
         placeholder={placeholder}
         placeholderStyle={styles.placeholder}
         textStyle={textStyle}
@@ -49,13 +68,18 @@ const lineStyles = StyleSheet.create({
     marginLeft: 10,
     marginTop: 10,
     marginBottom: -8,
-    color: '#24838F',
+    color: theme.colors.primary,
   },
+<<<<<<< HEAD
   choiceSelect: {
     width: Dimensions.get('window').width - 80,
+=======
+  categorySelect: {
+    width: Dimensions.get('window').width - 75,
+>>>>>>> 00f2ff029ce9602c0a7e75d78ac8bcbbf6a1d91a
     height: 40,
-    borderColor: '#24838F',
-    color: '#24838F',
+    borderColor: theme.colors.primaryDark,
+    color: theme.colors.primary,
     backgroundColor: 'transparent',
     borderWidth: 0,
     borderBottomWidth: 1,
@@ -63,18 +87,19 @@ const lineStyles = StyleSheet.create({
     marginBottom: 10,
   },
   text: {
-    color: '#466868',
+    color: theme.colors.textDark,
     marginLeft: -6,
     marginBottom: -15,
   },
   dropDown: {
-    borderColor: '#24838F',
+    borderColor: theme.colors.primaryDark,
+    width: Dimensions.get('window').width - 75,
   },
   container: {
     marginTop: -5,
     paddingTop: 0,
   },
-  placeholder: { color: 'lightgrey' },
+  placeholder: { color: theme.colors.lightgrey },
 });
 
 const boxStyles = StyleSheet.create({

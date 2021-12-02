@@ -2,6 +2,7 @@ import React from 'react';
 import { StyleSheet, Pressable, View, Dimensions, ScrollView } from 'react-native';
 import Modal from 'react-native-modal';
 import { Ionicons } from '@expo/vector-icons';
+import { theme } from '../../theme';
 
 const CustomModal = ({ isModalVisible, setModalVisible, children, ...rest }) => {
   return (
@@ -18,7 +19,7 @@ const CustomModal = ({ isModalVisible, setModalVisible, children, ...rest }) => 
       {...rest}>
       <View style={styles.container}>
         <Pressable style={styles.closeButton} onPress={() => setModalVisible(!isModalVisible)}>
-          <Ionicons name="close-circle-outline" color="black" size={35} />
+          <Ionicons name="close-circle-outline" color={theme.colors.primaryDark} size={35} />
         </Pressable>
         <ScrollView>
           <View style={styles.content}>{children}</View>
@@ -40,12 +41,12 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-end',
   },
   container: {
-    backgroundColor: '#fff',
+    backgroundColor: theme.colors.white,
     borderTopRightRadius: 10,
     borderTopLeftRadius: 10,
     width: '100%',
     alignItems: 'center',
-    maxHeight: Dimensions.get('window').height * 0.8,
+    maxHeight: Dimensions.get('window').height * 0.85,
     justifyContent: 'flex-end',
   },
   closeButton: {
