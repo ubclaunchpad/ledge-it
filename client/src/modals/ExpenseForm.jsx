@@ -16,7 +16,7 @@ const getCurrentDate = () => {
   return `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`;
 };
 
-const AddExpense = () => {
+const AddExpense = ({ setModalVisible }) => {
   const currency = 'CAD';
   const [amount, setAmount] = useState(undefined);
   const [merchant, setMerchant] = useState(undefined);
@@ -28,6 +28,7 @@ const AddExpense = () => {
   const [location, setLocation] = useState(undefined);
 
   const submitExpense = async () => {
+    setModalVisible(false);
     console.log({
       name: merchant,
       description,
@@ -71,11 +72,12 @@ const AddExpense = () => {
         />
         <StyledSelect
           label="Category"
-          categories={categories}
-          category={category}
-          setCategory={setCategory}
-          categoryDropdownVisible={categoryDropdownVisible}
-          setCategoryDropdownVisible={setCategoryDropdownVisible}
+          options={categories}
+          selected={category}
+          setSelected={setCategory}
+          dropdownVisible={categoryDropdownVisible}
+          setDropdownVisible={setCategoryDropdownVisible}
+          placeholder="Select a category"
           required
         />
         <StyledTextInput
