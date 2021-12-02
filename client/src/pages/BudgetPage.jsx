@@ -1,7 +1,9 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Text, StyleSheet, View } from 'react-native';
 import { List, Colors } from 'react-native-paper';
 import BudgetTable from '../components/BudgetPage/BudgetTable';
+import BudgetHeader from '../components/BudgetPage/BudgetHeader';
+
 
 const budgetDatabase = [
   {
@@ -64,11 +66,33 @@ const budgetDatabase = [
     value: 1098.63,
     spent: 906.54,
   },
+  {
+  month: 11,
+  year: 2020,
+  value: 1098.63,
+  spent: 906.54,
+  },
+  {
+    month: 10,
+    year: 2020,
+    value: 1098.63,
+    spent: 906.54,
+  },
+  {
+    month: 0,
+    year: 2019,
+    value: 1098.63,
+    spent: 906.54,
+  },
 ];
 
 const BudgetPage = () => {
+  const [year, setYear] = useState(2021);
+  const sortBudgets = (sortMethod) => {};
+
   return (
     <>
+      <BudgetHeader year={year} setYear={setYear} sortFunction={sortBudgets}/>
       <List.Item
         style={styles.header}
         right={() => (
@@ -85,7 +109,7 @@ const BudgetPage = () => {
           </View>
         )}
       />
-      <BudgetTable renderList={budgetDatabase} />
+      <BudgetTable renderList={budgetDatabase.filter(monthBudget => monthBudget.year === year)} />
     </>
   );
 };
