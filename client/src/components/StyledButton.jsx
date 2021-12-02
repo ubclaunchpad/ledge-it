@@ -1,17 +1,27 @@
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, Pressable } from 'react-native';
+import { Button } from 'react-native-paper';
 
-export default ({ label, onTap }) => {
+export default ({ label, onTap, customStyles, icon }) => {
+  const styles = customStyles || defaultStyles;
   return (
-    <View style={styles.background}>
-      <Text style={styles.text} onPress={onTap}>
-        {label}
-      </Text>
-    </View>
+    <Pressable
+      style={({ pressed }) => [
+        {
+          opacity: pressed ? 0.5 : 1,
+        },
+        styles.wrapperCustom,
+      ]}
+      onPress={onTap}>
+      <View style={styles.background}>
+        <Text style={styles.text}>{label}</Text>
+        {icon && <Button color='#24838F' style={{marginRight: -30}} icon={icon}></Button>}
+      </View>
+    </Pressable>
   );
 };
 
-const styles = StyleSheet.create({
+const defaultStyles = StyleSheet.create({
   background: {
     backgroundColor: '#24838F',
     padding: 10,

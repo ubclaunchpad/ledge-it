@@ -5,28 +5,37 @@ import { Dimensions, StyleSheet, Text } from 'react-native';
 const StyledSelect = ({
   label,
   required,
-  categories,
-  category,
-  setCategory,
-  categoryDropdownVisible,
-  setCategoryDropdownVisible,
+  dropdownVisible,
+  setDropdownVisible,
+  selected,
+  setSelected,
+  options,
+  placeholder,
+  type, // 'line, box'
+  primaryColor,
+  secondaryColor,
 }) => {
+  const styles = type === 'box' ? boxStyles : lineStyles;
+  const textStyle =
+    type === 'box' ? (dropdownVisible ? styles.text : styles.placeholder) : styles.text;
   return (
     <>
-      <Text style={styles.label}>
-        {label}
-        {required && '*'}
-      </Text>
+      {label && (
+        <Text style={styles.label}>
+          {label}
+          {required && '*'}
+        </Text>
+      )}
       <DropDownPicker
-        style={[styles.categorySelect, { border: 'none' }]}
-        open={categoryDropdownVisible}
-        value={category}
-        items={categories}
-        setOpen={setCategoryDropdownVisible}
-        setValue={setCategory}
-        placeholder="Select a category"
+        style={[styles.choiceSelect, { border: 'none' }]}
+        open={dropdownVisible}
+        value={selected}
+        items={options}
+        setOpen={setDropdownVisible}
+        setValue={setSelected}
+        placeholder={placeholder}
         placeholderStyle={styles.placeholder}
-        textStyle={styles.text}
+        textStyle={textStyle}
         dropDownContainerStyle={styles.dropDown}
         containerStyle={styles.container}
       />
@@ -34,7 +43,7 @@ const StyledSelect = ({
   );
 };
 
-const styles = StyleSheet.create({
+const lineStyles = StyleSheet.create({
   label: {
     alignSelf: 'flex-start',
     marginLeft: 10,
@@ -42,7 +51,7 @@ const styles = StyleSheet.create({
     marginBottom: -8,
     color: '#24838F',
   },
-  categorySelect: {
+  choiceSelect: {
     width: Dimensions.get('window').width - 80,
     height: 40,
     borderColor: '#24838F',
@@ -66,6 +75,34 @@ const styles = StyleSheet.create({
     paddingTop: 0,
   },
   placeholder: { color: 'lightgrey' },
+});
+
+const boxStyles = StyleSheet.create({
+  choiceSelect: {
+    backgroundColor: 'rgba(36, 131, 143, 1)',
+    borderWidth: 0,
+    borderRadius: 20,
+    color: 'white',
+    width: 110,
+  },
+  placeholder: {
+    color: 'white',
+    fontSize: 24,
+    fontWeight: '500',
+  },
+  containerStyle: {
+    backgroundColor: 'rgba(36, 131, 143, 1)',
+  },
+  dropDown: {
+    borderColor: '#24838F',
+    width: 110,
+    zIndex: 1010010100,
+    color: '#466868',
+  },
+  text: {
+    fontWeight: '500',
+    color: '#24838F',
+  },
 });
 
 export default StyledSelect;
