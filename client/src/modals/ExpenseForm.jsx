@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
+import axios from 'axios';
 import AmountBox from '../components/AmountBox';
 import StyledTextInput from '../components/StyledTextInput';
 import StyledButton from '../components/StyledButton';
@@ -16,7 +17,16 @@ const getCurrentDate = () => {
   return `${date.getMonth() + 1}/${date.getDate()}/${date.getFullYear()}`;
 };
 
-const AddExpense = () => {
+// "12/1/2021" -> "2021-01-12"
+const parseDateForSend = (curDate) => {
+  const dateList = curDate.split('/');
+  const month = dateList[0].length === 1 ? `0${dateList[0]}` : dateList[0];
+  const day = dateList[1].length === 1 ? `0${dateList[1]}` : dateList[1];
+  const year = dateList[2];
+  return `${year}-${day}-${month}`;
+};
+
+const AddExpense = ({ setModalVisible }) => {
   const currency = 'CAD';
   const [price, setPrice] = useState(undefined);
   const [name, setName] = useState(undefined);
@@ -28,17 +38,29 @@ const AddExpense = () => {
   const [location, setLocation] = useState(undefined);
 
   const submitExpense = async () => {
-    console.log({
-      name,
-      description,
-      date: date ? date.replaceAll('/', '-') : undefined,
-      price,
-      currency,
-      exchange_rate: 0,
-      location,
-      category,
-      sub_category: tag,
-    });
+    axios
+      .post(
+        'https://money-manager-dev.herokuapp.com/expense/',
+        JSON.stringify({
+          name,
+          description,
+          date: parseDateForSend(date),
+          price,
+          currency,
+          exchange_rate: 0,
+          location,
+          category,
+          sub_category: tag,
+        }),
+        {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        },
+      )
+      .then((res) => console.log(res))
+      .catch((err) => console.log(err));
+    setModalVisible(false);
   };
 
   return (
