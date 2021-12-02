@@ -5,6 +5,7 @@ import { Swipeable } from 'react-native-gesture-handler';
 import { MONTHS } from '../../utils/constants';
 import { theme } from '../../../theme';
 import ExpenseSummaryModal from '../../modals/ExpenseSummary';
+import IncomeSummaryModal from '../../modals/IncomeSummary'
 
 const RightSwipe = () => {
   return (
@@ -16,18 +17,18 @@ const RightSwipe = () => {
 
 const ListInputComponent = ({ obj, type }) => {
   const [expenseSummaryModal, setExpenseSummaryModal] = useState(false);
+  const [incomeSummaryModal, setIncomeSummaryModal] = useState(false)
 
   const negative = type === 'Expenses' ? '-' : '';
-  const userCategories = ['Food', 'Housing', 'Fun', 'Other', 'School'];
+  const userCategoriesExpenses = ['Food', 'Housing', 'Fun', 'Other', 'School'];
+  const userCategoriesIncomes = ['Main job', 'Part-time', 'Passive', 'Other'];
 
   return (
     <>
       <List.Item
         title={<Text style={styles.subheader}>{obj.name}</Text>}
         onPress={() => {
-          if (type === 'Expenses') {
-            setExpenseSummaryModal(true);
-          }
+          type === 'Expenses' ? setExpenseSummaryModal(true) : setIncomeSummaryModal(true)
         }}
         description={
           <View>
@@ -52,7 +53,16 @@ const ListInputComponent = ({ obj, type }) => {
           modalVisible={expenseSummaryModal}
           setModalVisible={setExpenseSummaryModal}
           expenseData={obj}
-          userCategories={userCategories}
+          userCategories={userCategoriesExpenses}
+        />
+      )}
+
+      {incomeSummaryModal && (
+        <IncomeSummaryModal
+          modalVisible={incomeSummaryModal}
+          setModalVisible={setIncomeSummaryModal}
+          incomeData={obj}
+          userCategories={userCategoriesIncomes}
         />
       )}
     </>
