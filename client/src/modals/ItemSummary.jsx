@@ -7,7 +7,6 @@ import CustomModal from '../components/CustomModal';
 import AmountBox from '../components/AmountBox';
 import { theme } from '../../theme';
 
-
 const ItemSummary = ({ modalVisible, setModalVisible, data, userCategories, type }) => {
   const [item, setItem] = useState(data.price);
   const [name, setName] = useState(data.name);
