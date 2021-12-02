@@ -13,8 +13,6 @@ const StyledSelect = ({
   options,
   placeholder,
   type, // 'line, box'
-  primaryColor,
-  secondaryColor,
 }) => {
   const styles = type === 'box' ? boxStyles : lineStyles;
   const textStyle =

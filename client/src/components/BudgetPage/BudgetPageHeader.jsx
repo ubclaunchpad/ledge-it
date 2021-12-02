@@ -13,7 +13,6 @@ const BudgetHeader = ({ year, setYear, sortFunction }) => {
   ];
 
   const [yearDropdownVisible, setYearDropdownVisible] = useState(false);
-
   const [sortModalVisible, setSortModalVisible] = useState(false);
   const sortBudgets = (sortCriteria) => {
     sortFunction(sortCriteria);
