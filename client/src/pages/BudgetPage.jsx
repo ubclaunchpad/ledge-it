@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Text, StyleSheet, View } from 'react-native';
 import { List } from 'react-native-paper';
 import BudgetTable from '../components/BudgetPage/BudgetTable';
-import BudgetHeader from '../components/BudgetPage/BudgetHeader';
+import BudgetHeader from '../components/BudgetPage/BudgetPageHeader';
 import { theme } from '../../theme';
 
 const budgetDatabase = [

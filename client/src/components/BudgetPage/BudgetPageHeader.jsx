@@ -3,6 +3,7 @@ import { Text, View, StyleSheet, Dimensions } from 'react-native';
 import StyledSelect from '../StyledSelect';
 import StyledButton from '../StyledButton';
 import Modal from '../CustomModal';
+import theme from '../../../theme';
 
 const BudgetHeader = ({ year, setYear, sortFunction }) => {
   const years = [
@@ -83,8 +84,8 @@ const styles = StyleSheet.create({
   box: {
     borderRadius: 10,
     borderWidth: 1.5,
-    borderColor: 'rgba(36, 131, 143, 1)',
-    color: 'rgba(36, 131, 143, 1)',
+    borderColor: theme.colors.primary,
+    color: theme.colors.primary,
     padding: 10,
     fontWeight: '400',
     fontSize: 50,
@@ -105,8 +106,8 @@ const styles = StyleSheet.create({
 
 const btnCustomStyles = StyleSheet.create({
   background: {
-    color: 'rgba(36, 131, 143, 1)',
-    borderColor: '#24838F',
+    color: theme.colors.white,
+    borderColor: theme.colors.primary,
     borderWidth: 1.5,
     padding: 10,
     borderRadius: 20,
@@ -117,7 +118,7 @@ const btnCustomStyles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   text: {
-    color: '#24838F',
+    color: theme.colors.primary,
   },
 });
 

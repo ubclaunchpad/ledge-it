@@ -16,7 +16,7 @@ export default ({ label, onTap, customStyles, icon }) => {
       onPress={onTap}>
       <View style={styles.background}>
         <Text style={styles.text}>{label}</Text>
-        {icon && <Button color="#24838F" style={{ marginRight: -30 }} icon={icon} />}
+        {icon && <Button color={theme.colors.primary} style={{ marginRight: -30 }} icon={icon} />}
       </View>
     </Pressable>
   );

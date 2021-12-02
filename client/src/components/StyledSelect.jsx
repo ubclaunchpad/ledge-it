@@ -81,29 +81,28 @@ const lineStyles = StyleSheet.create({
 
 const boxStyles = StyleSheet.create({
   choiceSelect: {
-    backgroundColor: 'rgba(36, 131, 143, 1)',
+    backgroundColor: theme.colors.primary,
     borderWidth: 0,
     borderRadius: 20,
-    color: 'white',
+    color: theme.colors.white,
     width: 110,
   },
   placeholder: {
-    color: 'white',
+    color: theme.colors.white,
     fontSize: 24,
     fontWeight: '500',
   },
   containerStyle: {
-    backgroundColor: 'rgba(36, 131, 143, 1)',
+    backgroundColor: theme.colors.primary,
   },
   dropDown: {
-    borderColor: '#24838F',
+    borderColor: theme.colors.primary,
     width: 110,
     zIndex: 1010010100,
-    color: '#466868',
   },
   text: {
     fontWeight: '500',
-    color: '#24838F',
+    color: theme.colors.primary,
   },
 });
 
