@@ -38,11 +38,9 @@ const AddExpense = () => {
   const [location, setLocation] = useState(undefined);
 
   const submitExpense = async () => {
-    // This post request does not work since backend is http
-    // I tested using localtunnel, which connects your local http server to an https url on the web
     axios
       .post(
-        '{ insert_base_url_here }/expense/',
+        'https://money-manager-dev.herokuapp.com/expense/',
         JSON.stringify({
           name,
           description,
