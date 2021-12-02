@@ -7,7 +7,7 @@ import CustomModal from '../components/CustomModal';
 import AmountBox from '../components/AmountBox';
 import { theme } from '../../theme';
 
-//same as incomeSummary and expenseSummary, takes in type to decide what labels to print
+
 const ItemSummary = ({ modalVisible, setModalVisible, data, userCategories, type }) => {
   const [item, setItem] = useState(data.price);
   const [name, setName] = useState(data.name);
@@ -18,8 +18,8 @@ const ItemSummary = ({ modalVisible, setModalVisible, data, userCategories, type
   const [location, setLocation] = useState(data.location);
   const [categoryDropdownVisible, setCategoryDropdownVisible] = useState(false);
 
-  const labelName = type === "Expenses" ? "Price" : "Amount"
-  const labelTitle = type === "Expenses" ? "Expense" : "Income"
+  const labelName = type === 'Expenses' ? 'Price' : 'Amount';
+  const labelTitle = type === 'Expenses' ? 'Expense' : 'Income';
 
   const makeReadableDate = (preProcessedDate) => {
     return `${

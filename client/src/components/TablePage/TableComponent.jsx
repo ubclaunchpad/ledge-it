@@ -5,7 +5,7 @@ import { Swipeable } from 'react-native-gesture-handler';
 import { MONTHS } from '../../utils/constants';
 import { theme } from '../../../theme';
 import ExpenseSummaryModal from '../../modals/ExpenseSummary';
-import IncomeSummaryModal from '../../modals/IncomeSummary'
+import IncomeSummaryModal from '../../modals/IncomeSummary';
 import ItemSummary from '../../modals/ItemSummary';
 
 const RightSwipe = () => {
@@ -32,7 +32,9 @@ const ListInputComponent = ({ obj, type }) => {
         // onPress={() => {
         //   type === "Expenses" ? setExpenseSummaryModal(true) : setIncomeSummaryModal(true)
         // }}
-        onPress={() => { setItemSummaryModal(true) }}
+        onPress={() => {
+          setItemSummaryModal(true);
+        }}
         description={
           <View>
             <Text style={styles.text}>{obj.category}</Text>
@@ -74,11 +76,10 @@ const ListInputComponent = ({ obj, type }) => {
           modalVisible={itemSummaryModal}
           setModalVisible={setItemSummaryModal}
           data={obj}
-          userCategories={type === "Expenses" ? userCategoriesExpenses : userCategoriesIncomes}
+          userCategories={type === 'Expenses' ? userCategoriesExpenses : userCategoriesIncomes}
           type={type}
         />
       )}
-
     </>
   );
 };
