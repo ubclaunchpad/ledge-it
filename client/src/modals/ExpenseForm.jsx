@@ -26,7 +26,7 @@ const parseDateForSend = (curDate) => {
   return `${year}-${day}-${month}`;
 };
 
-const AddExpense = () => {
+const AddExpense = ({ setModalVisible }) => {
   const currency = 'CAD';
   const [price, setPrice] = useState(undefined);
   const [name, setName] = useState(undefined);
@@ -60,6 +60,7 @@ const AddExpense = () => {
       )
       .then((res) => console.log(res))
       .catch((err) => console.log(err));
+    setModalVisible(false);
   };
 
   return (
