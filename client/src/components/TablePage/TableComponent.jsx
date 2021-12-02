@@ -6,6 +6,7 @@ import { MONTHS } from '../../utils/constants';
 import { theme } from '../../../theme';
 import ExpenseSummaryModal from '../../modals/ExpenseSummary';
 import IncomeSummaryModal from '../../modals/IncomeSummary'
+import ItemSummary from '../../modals/ItemSummary';
 
 const RightSwipe = () => {
   return (
@@ -16,8 +17,9 @@ const RightSwipe = () => {
 };
 
 const ListInputComponent = ({ obj, type }) => {
-  const [expenseSummaryModal, setExpenseSummaryModal] = useState(false);
-  const [incomeSummaryModal, setIncomeSummaryModal] = useState(false)
+  // const [expenseSummaryModal, setExpenseSummaryModal] = useState(false);
+  // const [incomeSummaryModal, setIncomeSummaryModal] = useState(false);
+  const [itemSummaryModal, setItemSummaryModal] = useState(false);
 
   const negative = type === 'Expenses' ? '-' : '';
   const userCategoriesExpenses = ['Food', 'Housing', 'Fun', 'Other', 'School'];
@@ -27,9 +29,10 @@ const ListInputComponent = ({ obj, type }) => {
     <>
       <List.Item
         title={<Text style={styles.subheader}>{obj.name}</Text>}
-        onPress={() => {
-          type === 'Expenses' ? setExpenseSummaryModal(true) : setIncomeSummaryModal(true)
-        }}
+        // onPress={() => {
+        //   type === "Expenses" ? setExpenseSummaryModal(true) : setIncomeSummaryModal(true)
+        // }}
+        onPress={() => { setItemSummaryModal(true) }}
         description={
           <View>
             <Text style={styles.text}>{obj.category}</Text>
@@ -48,7 +51,7 @@ const ListInputComponent = ({ obj, type }) => {
         )}
         style={styles.listItem}
       />
-      {expenseSummaryModal && (
+      {/* {expenseSummaryModal && (
         <ExpenseSummaryModal
           modalVisible={expenseSummaryModal}
           setModalVisible={setExpenseSummaryModal}
@@ -64,7 +67,18 @@ const ListInputComponent = ({ obj, type }) => {
           incomeData={obj}
           userCategories={userCategoriesIncomes}
         />
+      )} */}
+
+      {itemSummaryModal && (
+        <ItemSummary
+          modalVisible={itemSummaryModal}
+          setModalVisible={setItemSummaryModal}
+          data={obj}
+          userCategories={type === "Expenses" ? userCategoriesExpenses : userCategoriesIncomes}
+          type={type}
+        />
       )}
+
     </>
   );
 };
