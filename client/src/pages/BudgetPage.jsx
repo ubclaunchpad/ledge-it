@@ -1,8 +1,9 @@
-import React from 'react';
+import React, {useState} from 'react';
 import { Text, StyleSheet, View } from 'react-native';
 import { List } from 'react-native-paper';
 import BudgetTable from '../components/BudgetPage/BudgetTable';
 import { theme } from '../../theme';
+import BudgetDetails from '../components/BudgetPage/BudgetDetails';
 
 const budgetDatabase = [
   {
@@ -67,28 +68,100 @@ const budgetDatabase = [
   },
 ];
 
+const expenseDatabase = [
+  {
+    name: 'Spotify',
+    price: '5.99',
+    date: new Date('2021-12-17T10:34:23'),
+    currency: 'USD',
+    category: 'Category #25',
+  },
+  {
+    name: 'Gym',
+    price: '65.00',
+    date: new Date('2022-10-21T10:34:23'),
+    currency: 'CAD',
+    category: 'Category #41',
+  },
+  {
+    name: 'Gym',
+    price: '65.00',
+    date: new Date('2021-10-21T10:34:23'),
+    currency: 'CAD',
+    category: 'Category #41',
+  },
+  {
+    name: 'Coffee',
+    price: '4.29',
+    date: new Date('2021-10-17T10:34:23'),
+    currency: 'CAD',
+    category: 'Category #12',
+  },
+  {
+    name: 'Monitor',
+    price: '205.00',
+    date: new Date('2021-09-27T10:34:23'),
+    currency: 'CAD',
+    category: 'Category #13',
+  },
+  {
+    name: 'Mouse',
+    price: '54.99',
+    date: new Date('2021-09-05T10:34:23'),
+    currency: 'CAD',
+    category: 'Category #22',
+  },
+  {
+    name: 'Skateboard',
+    price: '80.99',
+    date: new Date('2021-08-17T10:34:23'),
+    currency: 'USD',
+    category: 'Category #25',
+  },
+  {
+    name: 'Spotify',
+    price: '5.99',
+    date: new Date('2021-07-17T10:34:23'),
+    currency: 'USD',
+    category: 'Category #25',
+  },
+  {
+    name: 'Spotify',
+    price: '5.99',
+    date: new Date('2021-06-17T10:34:23'),
+    currency: 'USD',
+    category: 'Category #25',
+  },
+  {
+    name: 'Spotify',
+    price: '5.99',
+    date: new Date('2021-05-17T10:34:23'),
+    currency: 'USD',
+    category: 'Category #25',
+  },
+  {
+    name: 'Spotify',
+    price: '5.99',
+    date: new Date('2021-04-17T10:34:23'),
+    currency: 'USD',
+    category: 'Category #25',
+  },
+  {
+    name: 'Spotify',
+    price: '5.99',
+    date: new Date('2021-10-17T10:34:23'),
+    currency: 'USD',
+    category: 'Category #41',
+  },
+];
+
 const BudgetPage = () => {
-  return (
-    <>
-      <List.Item
-        style={styles.header}
-        right={() => (
-          <View style={{ flexDirection: 'row', alignItems: 'center', height: 40 }}>
-            <View style={{ width: '40%' }}>
-              <Text style={styles.subheader}> Month</Text>
-            </View>
-            <View style={{ width: '30%' }}>
-              <List.Icon style={styles.value} color={theme.colors.green} icon="arrow-up-bold" />
-            </View>
-            <View style={{ width: '30%' }}>
-              <List.Icon style={styles.spent} color={theme.colors.red} icon="arrow-down-bold" />
-            </View>
-          </View>
-        )}
-      />
-      <BudgetTable renderList={budgetDatabase} />
-    </>
-  );
+  const [showDetails, setShowDetails] = useState(false);
+  const [chosenMonth, setChosenMonth] = useState("");
+  const [chosenYear, setChosenYear] = useState("")
+  return showDetails 
+  ? <BudgetDetails expenseDatabase = {expenseDatabase} currentMonth = {chosenMonth} currentYear = {chosenYear} isVisible = {showDetails} setVisible = {setShowDetails}/>
+  : <BudgetTable renderList={budgetDatabase} isVisible = {showDetails} setVisible = {setShowDetails} setMonth = {setChosenMonth} setYear = {setChosenYear}/> ;
 };
 
 export default BudgetPage;

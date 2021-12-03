@@ -3,34 +3,37 @@ import { List } from 'react-native-paper';
 import { StyleSheet, ScrollView, SafeAreaView, Text, View } from 'react-native';
 import { MONTHS } from '../../utils/constants';
 import { theme } from '../../../theme';
+import BudgetTableComponent from './BudgetTableComponent';
 
-const BudgetTable = ({ renderList }) => {
+const BudgetTable = ({ renderList, isVisible, setVisible, setMonth, setYear }) => {
   const componentList = renderList.map((budget, index) => (
-    <List.Item
-      key={index}
-      right={() => (
-        <View style={{ flexDirection: 'row', height: 20 }}>
-          <View style={{ width: '40%' }}>
-            <Text style={styles.month}>{MONTHS[budget.month]}</Text>
-          </View>
-          <View style={{ width: '30%' }}>
-            <Text style={styles.value}>${budget.value}</Text>
-          </View>
-          <View style={{ width: '30%' }}>
-            <Text style={styles.spent}>-${budget.spent}</Text>
-          </View>
-        </View>
-      )}
-      style={styles.listItem}
-    />
+    <BudgetTableComponent budget = {budget} index = {index} isVisible = {isVisible} setVisible = {setVisible} setMonth = {setMonth} setYear = {setYear}/>
   ));
 
   return (
-    <SafeAreaView style={styles.container}>
-      <ScrollView style={styles.scrollView}>
-        <List.Section>{componentList}</List.Section>
-      </ScrollView>
-    </SafeAreaView>
+    <>
+      <List.Item
+        style={styles.header}
+        right={() => (
+          <View style={{ flexDirection: 'row', alignItems: 'center', height: 40 }}>
+            <View style={{ width: '40%' }}>
+              <Text style={styles.subheader}> Month</Text>
+            </View>
+            <View style={{ width: '30%' , alignItems: 'center'}}>
+              <List.Icon style={styles.value} color={theme.colors.green} icon="arrow-up-bold" />
+            </View>
+            <View style={{ width: '30%' , alignItems: 'center'}}>
+              <List.Icon style={styles.spent} color={theme.colors.red} icon="arrow-down-bold" />
+            </View>
+          </View>
+        )}
+      />
+      <SafeAreaView style={styles.container}>
+        <ScrollView style={styles.scrollView}>
+          <List.Section>{componentList}</List.Section>
+        </ScrollView>
+      </SafeAreaView>
+    </>
   );
 };
 
@@ -39,6 +42,18 @@ export default BudgetTable;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+  },
+  header: {
+    fontSize: 42,
+    backgroundColor: theme.colors.primary,
+    marginTop: 8,
+    borderTopRightRadius: 10,
+    borderTopLeftRadius: 10,
+  },
+  subheader: {
+    color: theme.colors.textLight,
+    fontSize: 20,
+    fontWeight: 'bold',
   },
   scrollView: {
     backgroundColor: theme.colors.primaryBackground,
