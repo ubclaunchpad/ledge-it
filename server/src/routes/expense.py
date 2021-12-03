@@ -1,12 +1,21 @@
+from typing import List
 from fastapi import APIRouter, Body, HTTPException, status
 from fastapi.responses import JSONResponse
 from fastapi.encoders import jsonable_encoder
 from pydantic.error_wrappers import ValidationError
+
 from ..models import Expense, UpdateExpenseModel, AddExpense
 from ..database import expense_collection
 from ..utils.currency import get_exchange_rate_to_cad
 
 router = APIRouter()
+
+
+@router.get(
+    "/expenses/", response_description="Get all expenses", response_model=List[Expense]
+)
+def get_expenses():
+    return list(expense_collection.find())
 
 
 @router.get(

@@ -1,3 +1,4 @@
+from typing import List
 from fastapi import APIRouter, Body, HTTPException, status
 from fastapi.responses import JSONResponse
 from fastapi.encoders import jsonable_encoder
@@ -8,6 +9,13 @@ from ..database.database import income_collection
 from ..utils.currency import get_exchange_rate_to_cad
 
 router = APIRouter()
+
+
+@router.get(
+    "/incomes/", response_description="Get all expenses", response_model=List[Income]
+)
+def get_incomes():
+    return list(income_collection.find())
 
 
 @router.get(
