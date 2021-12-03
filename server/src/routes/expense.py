@@ -5,6 +5,7 @@ from pydantic.error_wrappers import ValidationError
 from ..models import Expense, UpdateExpenseModel, AddExpense
 from ..database import expense_collection
 from ..utils.currency import get_exchange_rate_to_cad
+from typing import List
 
 router = APIRouter()
 
@@ -89,3 +90,18 @@ def delete_expense(id):
         )
 
     raise HTTPException(status_code=404, detail=f"Expense with id {id} not found")
+
+@router.get(
+    "/allExpense/",
+    response_description = "Get all stored expenses",
+    response_model = List[Expense],
+)
+def get_allExpense():
+    if (
+        allExpense := expense_collection.find()
+    ) is not None:
+        return allExpense
+
+    raise HTTPException(
+        status_code=404, detail=f"No expenses have been found."
+    )

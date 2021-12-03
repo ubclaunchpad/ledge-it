@@ -1,9 +1,10 @@
-import React, {useState} from 'react';
+import React, { useState, useEffect } from 'react';
 import { Text, StyleSheet, View } from 'react-native';
 import { List } from 'react-native-paper';
 import BudgetTable from '../components/BudgetPage/BudgetTable';
 import { theme } from '../../theme';
 import BudgetDetails from '../components/BudgetPage/BudgetDetails';
+import axios from 'axios';
 
 const budgetDatabase = [
   {
@@ -157,11 +158,57 @@ const expenseDatabase = [
 
 const BudgetPage = () => {
   const [showDetails, setShowDetails] = useState(false);
-  const [chosenMonth, setChosenMonth] = useState("");
-  const [chosenYear, setChosenYear] = useState("")
-  return showDetails 
-  ? <BudgetDetails expenseDatabase = {expenseDatabase} currentMonth = {chosenMonth} currentYear = {chosenYear} isVisible = {showDetails} setVisible = {setShowDetails}/>
-  : <BudgetTable renderList={budgetDatabase} isVisible = {showDetails} setVisible = {setShowDetails} setMonth = {setChosenMonth} setYear = {setChosenYear}/> ;
+  const [chosenMonth, setChosenMonth] = useState('');
+  const [chosenYear, setChosenYear] = useState('');
+  const [databaseBudget, setDatabaseBudget] = useState([]);
+  const [databaseExpense, setDatabaseExpense] = useState([]);
+
+  useEffect = ( () => {
+    var tempList  = []
+    var tempList2 = []
+    axios.get('https://money-manager-dev.herokuapp.com/allBudget/')
+      .then( (response) => {
+        response.forEach((item) => {
+          tempList.push(item);
+        });
+        setDatabaseBudget(tempList);
+      })
+      .catch((err) => console.log(err));
+    // Uncomment if get all expense has been implemented.
+    // axios.all([
+    //   axios.get('https://money-manager-dev.herokuapp.com/allBudget/'),
+    //   axios.get('https://money-manager-dev.herokuapp.com/allExpense/')
+    // ])
+    //   .then( (responseArr) => {
+    //     responseArr[0].forEach((item) => {
+    //       tempList.push(item);
+    //     });
+    //     setDatabaseBudget(tempList);
+    //     responseArr[1].forEach((item) => {
+    //       tempList2.push(item);
+    //     });
+    //     setDatabaseExpense(tempList2);
+    //   })
+  }, [showDetails]);
+
+
+  return showDetails ? (
+    <BudgetDetails
+      expenseDatabase={expenseDatabase}
+      currentMonth={chosenMonth}
+      currentYear={chosenYear}
+      isVisible={showDetails}
+      setVisible={setShowDetails}
+    />
+  ) : (
+    <BudgetTable
+      renderList={budgetDatabase}
+      isVisible={showDetails}
+      setVisible={setShowDetails}
+      setMonth={setChosenMonth}
+      setYear={setChosenYear}
+    />
+  );
 };
 
 export default BudgetPage;

@@ -3,6 +3,7 @@ from fastapi.responses import JSONResponse
 from fastapi.encoders import jsonable_encoder
 from ..models import Budget, UpdateBudgetModel
 from ..database import budget_collection
+from typing import List
 
 router = APIRouter()
 
@@ -71,4 +72,19 @@ def delete_budget(month: int, year: int):
 
     raise HTTPException(
         status_code=404, detail=f"Budget with month: {month} and year: {year} not found"
+    )
+
+@router.get(
+    "/allBudget/",
+    response_description = "Get all stored budgets",
+    response_model = List[Budget],
+)
+def get_allBudget():
+    if (
+        allBudget := budget_collection.find()
+    ) is not None:
+        return allBudget
+
+    raise HTTPException(
+        status_code=404, detail=f"No budgets have been found."
     )
