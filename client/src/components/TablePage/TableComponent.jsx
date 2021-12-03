@@ -41,7 +41,7 @@ const ListInputComponent = ({ obj, type }) => {
           <View>
             <Text />
             <Text style={styles.price}>
-              {negative}${obj.price} {obj.currency}
+              {negative}${obj.price} {obj.currency.toUpperCase()}
             </Text>
           </View>
         )}
