@@ -5,6 +5,8 @@ import { Swipeable } from 'react-native-gesture-handler';
 import { MONTHS } from '../../utils/constants';
 import { theme } from '../../../theme';
 import ExpenseSummaryModal from '../../modals/ExpenseSummary';
+import IncomeSummaryModal from '../../modals/IncomeSummary';
+import ItemSummary from '../../modals/ItemSummary';
 
 const RightSwipe = () => {
   return (
@@ -15,19 +17,23 @@ const RightSwipe = () => {
 };
 
 const ListInputComponent = ({ obj, type }) => {
-  const [expenseSummaryModal, setExpenseSummaryModal] = useState(false);
+  // const [expenseSummaryModal, setExpenseSummaryModal] = useState(false);
+  // const [incomeSummaryModal, setIncomeSummaryModal] = useState(false);
+  const [itemSummaryModal, setItemSummaryModal] = useState(false);
 
   const negative = type === 'Expenses' ? '-' : '';
-  const userCategories = ['Food', 'Housing', 'Fun', 'Other', 'School'];
+  const userCategoriesExpenses = ['Food', 'Housing', 'Fun', 'Other', 'School'];
+  const userCategoriesIncomes = ['Main job', 'Part-time', 'Passive', 'Other'];
 
   return (
     <>
       <List.Item
         title={<Text style={styles.subheader}>{obj.name}</Text>}
+        // onPress={() => {
+        //   type === "Expenses" ? setExpenseSummaryModal(true) : setIncomeSummaryModal(true)
+        // }}
         onPress={() => {
-          if (type === 'Expenses') {
-            setExpenseSummaryModal(true);
-          }
+          setItemSummaryModal(true);
         }}
         description={
           <View>
@@ -47,12 +53,31 @@ const ListInputComponent = ({ obj, type }) => {
         )}
         style={styles.listItem}
       />
-      {expenseSummaryModal && (
+      {/* {expenseSummaryModal && (
         <ExpenseSummaryModal
           modalVisible={expenseSummaryModal}
           setModalVisible={setExpenseSummaryModal}
           expenseData={obj}
-          userCategories={userCategories}
+          userCategories={userCategoriesExpenses}
+        />
+      )}
+
+      {incomeSummaryModal && (
+        <IncomeSummaryModal
+          modalVisible={incomeSummaryModal}
+          setModalVisible={setIncomeSummaryModal}
+          incomeData={obj}
+          userCategories={userCategoriesIncomes}
+        />
+      )} */}
+
+      {itemSummaryModal && (
+        <ItemSummary
+          modalVisible={itemSummaryModal}
+          setModalVisible={setItemSummaryModal}
+          data={obj}
+          userCategories={type === 'Expenses' ? userCategoriesExpenses : userCategoriesIncomes}
+          type={type}
         />
       )}
     </>
