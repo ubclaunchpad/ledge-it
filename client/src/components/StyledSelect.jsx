@@ -1,50 +1,72 @@
 import DropDownPicker from 'react-native-dropdown-picker';
 import React from 'react';
 import { Dimensions, StyleSheet, Text } from 'react-native';
+import { faChevronDown, faChevronUp } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { theme } from '../../theme';
 
 const StyledSelect = ({
   label,
   required,
-  categories,
-  category,
-  setCategory,
-  categoryDropdownVisible,
-  setCategoryDropdownVisible,
+  dropdownVisible,
+  setDropdownVisible,
+  selected,
+  setSelected,
+  options,
   placeholder,
+  type, // 'line, box'
 }) => {
+  const styles = type === 'box' ? boxStyles : lineStyles;
+  const textStyle =
+    type === 'box' ? (dropdownVisible ? styles.text : styles.placeholder) : styles.text;
   return (
     <>
-      <Text style={styles.label}>
-        {label}
-        {required && '*'}
-      </Text>
+      {label && (
+        <Text style={styles.label}>
+          {label}
+          {required && '*'}
+        </Text>
+      )}
       <DropDownPicker
-        style={[styles.categorySelect, { border: 'none' }]}
-        open={categoryDropdownVisible}
-        value={category}
-        items={categories}
-        setOpen={setCategoryDropdownVisible}
-        setValue={setCategory}
+        style={[styles.choiceSelect, { border: 'none' }]}
+        open={dropdownVisible}
+        value={selected}
+        items={options}
+        setOpen={setDropdownVisible}
+        setValue={setSelected}
         placeholder={placeholder}
         placeholderStyle={styles.placeholder}
-        textStyle={styles.text}
+        textStyle={textStyle}
         dropDownContainerStyle={styles.dropDown}
         containerStyle={styles.container}
+        ArrowUpIconComponent={() => (
+          <FontAwesomeIcon
+            icon={faChevronUp}
+            color={type === 'box' ? theme.colors.white : theme.colors.primary}
+            size={type === 'box' ? 15 : 12}
+          />
+        )}
+        ArrowDownIconComponent={() => (
+          <FontAwesomeIcon
+            icon={faChevronDown}
+            color={type === 'box' ? theme.colors.white : theme.colors.primary}
+            size={type === 'box' ? 15 : 12}
+          />
+        )}
         listMode="SCROLLVIEW"
       />
     </>
   );
 };
 
-const styles = StyleSheet.create({
+const lineStyles = StyleSheet.create({
   label: {
     alignSelf: 'flex-start',
     margin: 10,
     marginBottom: 0,
     color: theme.colors.primary,
   },
-  categorySelect: {
+  choiceSelect: {
     height: 40,
     borderColor: theme.colors.primaryDark,
     color: theme.colors.primary,
@@ -72,6 +94,34 @@ const styles = StyleSheet.create({
     width: Dimensions.get('window').width - 80,
   },
   placeholder: { color: theme.colors.lightgrey },
+});
+
+const boxStyles = StyleSheet.create({
+  choiceSelect: {
+    backgroundColor: theme.colors.primary,
+    borderWidth: 0,
+    borderRadius: 20,
+    color: theme.colors.white,
+    width: 120,
+  },
+  placeholder: {
+    color: theme.colors.white,
+    fontSize: 24,
+    fontWeight: '500',
+  },
+  containerStyle: {
+    backgroundColor: theme.colors.primary,
+  },
+  dropDown: {
+    borderColor: theme.colors.primaryDark,
+    borderWidth: 3,
+    borderTopWidth: 0,
+    width: 120,
+  },
+  text: {
+    fontWeight: '500',
+    color: theme.colors.primary,
+  },
 });
 
 export default StyledSelect;

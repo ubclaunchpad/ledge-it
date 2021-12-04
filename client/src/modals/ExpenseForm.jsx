@@ -91,11 +91,11 @@ const AddExpense = ({ setModalVisible }) => {
       />
       <StyledSelect
         label="Category"
-        categories={categories}
-        category={category}
-        setCategory={setCategory}
-        categoryDropdownVisible={categoryDropdownVisible}
-        setCategoryDropdownVisible={setCategoryDropdownVisible}
+        options={categories}
+        selected={category}
+        setSelected={setCategory}
+        dropdownVisible={categoryDropdownVisible}
+        setDropdownVisible={setCategoryDropdownVisible}
         placeholder="Select a category"
         required
       />

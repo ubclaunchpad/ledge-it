@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Text, StyleSheet, View } from 'react-native';
 import { List } from 'react-native-paper';
 import BudgetTable from '../components/BudgetPage/BudgetTable';
+import BudgetHeader from '../components/BudgetPage/BudgetPageHeader';
 import { theme } from '../../theme';
 
 const budgetDatabase = [
@@ -65,11 +66,53 @@ const budgetDatabase = [
     value: 1098.63,
     spent: 906.54,
   },
+  {
+    month: 11,
+    year: 2020,
+    value: 1098.63,
+    spent: 906.54,
+  },
+  {
+    month: 10,
+    year: 2020,
+    value: 1098.63,
+    spent: 906.54,
+  },
+  {
+    month: 0,
+    year: 2019,
+    value: 1098.63,
+    spent: 906.54,
+  },
 ];
 
 const BudgetPage = () => {
+  const [sortMethod, setSortMethod] = useState('new->old');
+  const [year, setYear] = useState(2021);
+  const sortBudgets = () => {
+    if (sortMethod === 'old->new') {
+      console.log(sortMethod);
+      return budgetDatabase.sort((a, b) => {
+        return a.year + a.month / 12 - (b.year + b.month / 12);
+      });
+    } else if (sortMethod === 'high->low') {
+      return budgetDatabase.sort((a, b) => {
+        return b.value - a.value;
+      });
+    } else if (sortMethod === 'low->high') {
+      return budgetDatabase.sort((a, b) => {
+        return a.value - b.value;
+      });
+    } else {
+      return budgetDatabase.sort((a, b) => {
+        return b.year + b.month / 12 - (a.year + a.month / 12);
+      });
+    }
+  };
+
   return (
     <>
+      <BudgetHeader year={year} setYear={setYear} sortFunction={setSortMethod} />
       <List.Item
         style={styles.header}
         right={() => (
@@ -86,7 +129,7 @@ const BudgetPage = () => {
           </View>
         )}
       />
-      <BudgetTable renderList={budgetDatabase} />
+      <BudgetTable renderList={sortBudgets().filter((monthBudget) => monthBudget.year === year)} />
     </>
   );
 };

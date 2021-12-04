@@ -79,17 +79,17 @@ const ItemSummary = ({ modalVisible, setModalVisible, item, userCategories, type
         />
         <StyledSelect
           label="Category"
-          categories={userCategories.map((cat, index) => {
+          options={userCategories.map((cat, index) => {
             return {
               label: cat,
               value: cat,
               key: index,
             };
           })}
-          category={category}
-          setCategory={setCategory}
-          categoryDropdownVisible={categoryDropdownVisible}
-          setCategoryDropdownVisible={setCategoryDropdownVisible}
+          selected={category}
+          setSelected={setCategory}
+          dropdownVisible={categoryDropdownVisible}
+          setDropdownVisible={setCategoryDropdownVisible}
           placeholder={item.category}
           required
         />
