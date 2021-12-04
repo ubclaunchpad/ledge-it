@@ -49,28 +49,28 @@ const BudgetHeader = ({ year, setYear, sortFunction }) => {
             <View>
               <StyledButton
                 onTap={() => {
-                  sortBudgets('old-new');
+                  sortBudgets('old->new');
                 }}
                 customStyles={btnCustomStyles}
                 label="Sort by date (old to new)"
               />
               <StyledButton
                 onTap={() => {
-                  sortBudgets('new-old');
+                  sortBudgets('new->old');
                 }}
                 customStyles={btnCustomStyles}
                 label="Sort by date (new to old)"
               />
               <StyledButton
                 onTap={() => {
-                  sortBudgets('high-low');
+                  sortBudgets('high->low');
                 }}
                 customStyles={btnCustomStyles}
                 label="Sort by amount (high to low)"
               />
               <StyledButton
                 onTap={() => {
-                  sortBudgets('low-high');
+                  sortBudgets('low->high');
                 }}
                 customStyles={btnCustomStyles}
                 label="Sort by amount (low to high)"

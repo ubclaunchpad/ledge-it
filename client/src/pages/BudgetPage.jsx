@@ -87,12 +87,32 @@ const budgetDatabase = [
 ];
 
 const BudgetPage = () => {
+  const [sortMethod, setSortMethod] = useState('new->old');
   const [year, setYear] = useState(2021);
-  const sortBudgets = (sortMethod) => {};
+  const sortBudgets = () => {
+    if (sortMethod === 'old->new') {
+      console.log(sortMethod);
+      return budgetDatabase.sort((a, b) => {
+        return a.year + a.month / 12 - (b.year + b.month / 12);
+      });
+    } else if (sortMethod === 'high->low') {
+      return budgetDatabase.sort((a, b) => {
+        return b.value - a.value;
+      });
+    } else if (sortMethod === 'low->high') {
+      return budgetDatabase.sort((a, b) => {
+        return a.value - b.value;
+      });
+    } else {
+      return budgetDatabase.sort((a, b) => {
+        return b.year + b.month / 12 - (a.year + a.month / 12);
+      });
+    }
+  };
 
   return (
     <>
-      <BudgetHeader year={year} setYear={setYear} sortFunction={sortBudgets} />
+      <BudgetHeader year={year} setYear={setYear} sortFunction={setSortMethod} />
       <List.Item
         style={styles.header}
         right={() => (
@@ -109,7 +129,7 @@ const BudgetPage = () => {
           </View>
         )}
       />
-      <BudgetTable renderList={budgetDatabase.filter((monthBudget) => monthBudget.year === year)} />
+      <BudgetTable renderList={sortBudgets().filter((monthBudget) => monthBudget.year === year)} />
     </>
   );
 };
