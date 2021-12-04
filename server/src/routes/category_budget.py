@@ -7,6 +7,7 @@ from typing import List
 
 router = APIRouter()
 
+
 @router.get(
     "/budget/category/all",
     response_description="Get all category budgets by month and year",
@@ -14,15 +15,17 @@ router = APIRouter()
 )
 def get_all_category_budget(month: int, year: int):
     if (
-        category_budgets := list(category_budget_collection.find(
-            {"month": month, "year": year}
-        ))
+        category_budgets := list(
+            category_budget_collection.find({"month": month, "year": year})
+        )
     ) is not None:
         return category_budgets
 
     raise HTTPException(
-        status_code=404, detail=f"Category budgets with month: {month} and year: {year} not found",
+        status_code=404,
+        detail=f"Category budgets with month: {month} and year: {year} not found",
     )
+
 
 @router.get(
     "/budget/{category}/",
