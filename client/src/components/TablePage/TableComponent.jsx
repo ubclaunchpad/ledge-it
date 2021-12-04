@@ -41,7 +41,7 @@ const ListInputComponent = ({ item, type }) => {
           <View>
             <Text />
             <Text style={styles.price}>
-              {negative}${item.price} {item.currency}
+              {negative}${item.price || item.amount} {item.currency}
             </Text>
           </View>
         )}

@@ -37,11 +37,11 @@ const BudgetHeader = ({ year, setYear, sortFunction }) => {
               placeholder="2021"
             />
           </View>
-          <View style={styles.dropDownContainer}>
+          <View>
             <StyledButton
-              customStyles={sortModalVisible ? dropDownOpenStyles : dropDownClosedStyles}
+              customStyles={dropDownStyles}
               label="Sort"
-              onTap={setSortModalVisible}
+              onTap={() => setSortModalVisible(true)}
               icon={sortModalVisible ? 'chevron-up' : 'chevron-down'}
             />
           </View>
@@ -89,6 +89,7 @@ const styles = StyleSheet.create({
     zIndex: 2,
     justifyContent: 'center',
     alignItems: 'center',
+    marginTop: 25,
   },
 
   content: {
@@ -103,7 +104,7 @@ const styles = StyleSheet.create({
     borderColor: appTheme.colors.primaryDark,
     paddingHorizontal: 3,
     paddingVertical: 7,
-    width: '100%',
+    marginVertical: 5,
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -111,58 +112,33 @@ const styles = StyleSheet.create({
   headText: {
     color: appTheme.colors.primary,
     fontWeight: 'bold',
-    fontSize: 50,
+    fontSize: 38,
   },
 
   buttons: {
     flex: -1,
-    marginLeft: -7,
-    marginRight: -7,
-    width: Dimensions.get('window').width - 10,
-    paddingTop: 8,
+    marginTop: 10,
+    marginBottom: 5,
     flexDirection: 'row',
-    alignItems: 'flex-end',
+    alignItems: 'center',
     justifyContent: 'space-between',
   },
 });
 
-const dropDownClosedStyles = StyleSheet.create({
+const dropDownStyles = StyleSheet.create({
   background: {
-    borderColor: appTheme.colors.primaryDark,
     backgroundColor: appTheme.colors.primary,
-    borderWidth: 4,
-    padding: 10,
+    paddingHorizontal: 10,
     paddingVertical: 5,
     borderRadius: 20,
     height: 40,
     width: 90,
-    margin: 5,
     flexDirection: 'row',
+    alignItems: 'center',
   },
 
   text: {
     color: appTheme.colors.white,
-    fontSize: 18,
-    fontWeight: 'bold',
-  },
-});
-
-const dropDownOpenStyles = StyleSheet.create({
-  background: {
-    borderColor: appTheme.colors.primaryDark,
-    backgroundColor: appTheme.colors.white,
-    borderWidth: 4,
-    padding: 10,
-    paddingVertical: 5,
-    borderRadius: 20,
-    height: 40,
-    width: 90,
-    margin: 5,
-    flexDirection: 'row',
-  },
-
-  text: {
-    color: appTheme.colors.primary,
     fontSize: 18,
     fontWeight: 'bold',
   },
@@ -172,12 +148,14 @@ const btnCustomStyles = StyleSheet.create({
   background: {
     color: appTheme.colors.white,
     borderColor: appTheme.colors.primary,
-    borderWidth: 1.5,
+    borderWidth: 2,
     padding: 10,
     borderRadius: 20,
     backgroundColor: 'transparent',
     height: 40,
-    margin: 5,
+    margin: 8,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 
   text: {

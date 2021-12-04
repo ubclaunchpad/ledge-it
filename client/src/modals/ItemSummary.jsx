@@ -86,10 +86,10 @@ const ItemSummary = ({ modalVisible, setModalVisible, item, userCategories, type
               key: index,
             };
           })}
-          category={category}
-          setCategory={setCategory}
-          categoryDropdownVisible={categoryDropdownVisible}
-          setCategoryDropdownVisible={setCategoryDropdownVisible}
+          selected={category}
+          setSelected={setCategory}
+          dropdownVisible={categoryDropdownVisible}
+          setDropdownVisible={setCategoryDropdownVisible}
           placeholder={item.category}
           required
         />

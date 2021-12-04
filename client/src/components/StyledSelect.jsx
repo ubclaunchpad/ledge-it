@@ -2,6 +2,8 @@ import DropDownPicker from 'react-native-dropdown-picker';
 import React from 'react';
 import { Dimensions, StyleSheet, Text } from 'react-native';
 import { theme } from '../../theme';
+import { faChevronDown, faChevronUp } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 
 const StyledSelect = ({
   label,
@@ -37,6 +39,20 @@ const StyledSelect = ({
         textStyle={textStyle}
         dropDownContainerStyle={styles.dropDown}
         containerStyle={styles.container}
+        ArrowUpIconComponent={() => (
+          <FontAwesomeIcon
+            icon={faChevronUp}
+            color={type === 'box' ? theme.colors.white : theme.colors.primary}
+            size={type === 'box' ? 15 : 12}
+          />
+        )}
+        ArrowDownIconComponent={() => (
+          <FontAwesomeIcon
+            icon={faChevronDown}
+            color={type === 'box' ? theme.colors.white : theme.colors.primary}
+            size={type === 'box' ? 15 : 12}
+          />
+        )}
         listMode="SCROLLVIEW"
       />
     </>
@@ -83,8 +99,7 @@ const lineStyles = StyleSheet.create({
 const boxStyles = StyleSheet.create({
   choiceSelect: {
     backgroundColor: theme.colors.primary,
-    borderWidth: 4,
-    borderColor: theme.colors.primaryDark,
+    borderWidth: 0,
     borderRadius: 20,
     color: theme.colors.white,
     width: 120,
@@ -99,7 +114,7 @@ const boxStyles = StyleSheet.create({
   },
   dropDown: {
     borderColor: theme.colors.primaryDark,
-    borderWidth: 4,
+    borderWidth: 3,
     borderTopWidth: 0,
     width: 120,
   },
