@@ -4,9 +4,8 @@ import { StyleSheet, Text, View } from 'react-native';
 import { Swipeable } from 'react-native-gesture-handler';
 import { MONTHS } from '../../utils/constants';
 import { theme } from '../../../theme';
-import ExpenseSummaryModal from '../../modals/ExpenseSummary';
-import IncomeSummaryModal from '../../modals/IncomeSummary';
 import ItemSummary from '../../modals/ItemSummary';
+import { getDay, getMonth, getYear } from '../../utils/formatters';
 
 const RightSwipe = () => {
   return (
@@ -16,9 +15,7 @@ const RightSwipe = () => {
   );
 };
 
-const ListInputComponent = ({ obj, type }) => {
-  // const [expenseSummaryModal, setExpenseSummaryModal] = useState(false);
-  // const [incomeSummaryModal, setIncomeSummaryModal] = useState(false);
+const ListInputComponent = ({ item, type }) => {
   const [itemSummaryModal, setItemSummaryModal] = useState(false);
 
   const negative = type === 'Expenses' ? '-' : '';
@@ -28,18 +25,15 @@ const ListInputComponent = ({ obj, type }) => {
   return (
     <>
       <List.Item
-        title={<Text style={styles.subheader}>{obj.name}</Text>}
-        // onPress={() => {
-        //   type === "Expenses" ? setExpenseSummaryModal(true) : setIncomeSummaryModal(true)
-        // }}
+        title={<Text style={styles.subheader}>{item.name}</Text>}
         onPress={() => {
           setItemSummaryModal(true);
         }}
         description={
           <View>
-            <Text style={styles.text}>{obj.category}</Text>
+            <Text style={styles.text}>{item.category}</Text>
             <Text style={styles.text}>
-              {MONTHS[obj.date.getMonth()]} {obj.date.getDate()}, {obj.date.getFullYear()}
+              {MONTHS[getMonth(item.date) - 1]} {getDay(item.date)}, {getYear(item.date)}
             </Text>
           </View>
         }
@@ -47,35 +41,17 @@ const ListInputComponent = ({ obj, type }) => {
           <View>
             <Text />
             <Text style={styles.price}>
-              {negative}${obj.price} {obj.currency}
+              {negative}${item.price} {item.currency}
             </Text>
           </View>
         )}
         style={styles.listItem}
       />
-      {/* {expenseSummaryModal && (
-        <ExpenseSummaryModal
-          modalVisible={expenseSummaryModal}
-          setModalVisible={setExpenseSummaryModal}
-          expenseData={obj}
-          userCategories={userCategoriesExpenses}
-        />
-      )}
-
-      {incomeSummaryModal && (
-        <IncomeSummaryModal
-          modalVisible={incomeSummaryModal}
-          setModalVisible={setIncomeSummaryModal}
-          incomeData={obj}
-          userCategories={userCategoriesIncomes}
-        />
-      )} */}
-
       {itemSummaryModal && (
         <ItemSummary
           modalVisible={itemSummaryModal}
           setModalVisible={setItemSummaryModal}
-          data={obj}
+          item={item}
           userCategories={type === 'Expenses' ? userCategoriesExpenses : userCategoriesIncomes}
           type={type}
         />
@@ -84,10 +60,10 @@ const ListInputComponent = ({ obj, type }) => {
   );
 };
 
-const TableComponent = ({ title, subTitle, mult, type }) => {
-  const tableItems = mult.map((obj, index) => (
+const TableComponent = ({ title, subTitle, list, type }) => {
+  const tableItems = list.map((item, index) => (
     <Swipeable key={index} renderRightActions={RightSwipe}>
-      <ListInputComponent obj={obj} type={type} />
+      <ListInputComponent item={item} type={type} />
     </Swipeable>
   ));
 

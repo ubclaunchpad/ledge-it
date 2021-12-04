@@ -1,136 +1,128 @@
 import React, { useState } from 'react';
-import { StyleSheet, View, ScrollView, Text } from 'react-native';
+import { StyleSheet, View, ScrollView, Text, Dimensions } from 'react-native';
 import StyledButton from '../components/StyledButton';
 import StyledTextInput from '../components/StyledTextInput';
 import StyledSelect from '../components/StyledSelect';
 import CustomModal from '../components/CustomModal';
 import AmountBox from '../components/AmountBox';
 import { theme } from '../../theme';
+import axios from 'axios';
+import { formatDateBE, formatDateFE } from '../utils/formatters';
 
-const ItemSummary = ({ modalVisible, setModalVisible, data, userCategories, type }) => {
-  const [item, setItem] = useState(data.price);
-  const [name, setName] = useState(data.name);
-  const [date, setDate] = useState(data.date);
-  const [category, setCategory] = useState(data.category);
-  const [tag, setTag] = useState(data.sub_category);
-  const [description, setDescription] = useState(data.description);
-  const [location, setLocation] = useState(data.location);
+const ItemSummary = ({ modalVisible, setModalVisible, item, userCategories, type }) => {
+  const [price, setPrice] = useState(item.price || item.amount);
+  const [name, setName] = useState(item.name);
+  const [date, setDate] = useState(item.date);
+  const [category, setCategory] = useState(item.category);
+  const [tag, setTag] = useState(item.sub_category);
+  const [description, setDescription] = useState(item.description);
+  const [location, setLocation] = useState(item.location);
   const [categoryDropdownVisible, setCategoryDropdownVisible] = useState(false);
 
-  const labelName = type === 'Expenses' ? 'Price' : 'Amount';
-  const labelTitle = type === 'Expenses' ? 'Expense' : 'Income';
-
-  const makeReadableDate = (preProcessedDate) => {
-    return `${
-      preProcessedDate.getMonth() + 1
-    }/${preProcessedDate.getDate()}/${preProcessedDate.getFullYear()}`;
-  };
-
-  const onSave = () => {
+  const onUpdate = () => {
     const updateObject = {
-      item,
+      item: price,
       name,
       description,
-      date,
+      date: formatDateBE(date),
       category,
       sub_category: tag,
       location,
     };
     console.log(updateObject);
-    console.log(data);
 
     setModalVisible(false);
   };
 
   return (
     <CustomModal isModalVisible={modalVisible} setModalVisible={setModalVisible}>
-      <ScrollView>
-        <View style={styles.content}>
-          <Text style={styles.title}>{labelTitle} Summary</Text>
-          <AmountBox
-            fields={[
-              item || 0.0,
-              name,
-              description,
-              makeReadableDate(date),
-              category || '',
-              tag,
-              location,
-            ]}
-          />
-          <StyledTextInput
-            label={labelName}
-            onChange={(newVal) => setItem(newVal)}
-            keyboardType="numeric"
-            value={item.toString()}
-            required
-          />
-          <StyledTextInput
-            label="Name"
-            onChange={(newVal) => setName(newVal)}
-            keyboardType="default"
-            value={name}
-            required
-          />
-          <StyledTextInput
-            onChange={(newVal) => setDescription(newVal)}
-            keyboardType="default"
-            label="Description"
-            placeholder="Optional..."
-            value={description}
-            multiline
-          />
-          <StyledTextInput
-            label="Date"
-            onChange={(newVal) => setDate(newVal)}
-            keyboardType="default"
-            value={makeReadableDate(date)}
-            required
-          />
-          <StyledSelect
-            label="Category"
-            categories={userCategories.map((cat, index) => {
-              return {
-                label: cat,
-                value: cat,
-                key: index,
-              };
-            })}
-            category={category}
-            setCategory={setCategory}
-            categoryDropdownVisible={categoryDropdownVisible}
-            setCategoryDropdownVisible={setCategoryDropdownVisible}
-            placeholder={data.category}
-            required
-          />
+      <View style={styles.content}>
+        <Text style={styles.title}>{type === 'Expenses' ? 'Expense' : 'Income'} Summary</Text>
+        <AmountBox
+          fields={[
+            price || 0.0,
+            name,
+            description,
+            formatDateFE(date),
+            category || '',
+            tag,
+            location,
+          ]}
+        />
+        <StyledTextInput
+          label={type === 'Expenses' ? 'Price' : 'Amount'}
+          onChange={(newVal) => setPrice(newVal)}
+          keyboardType="numeric"
+          value={price}
+          required
+        />
+        <StyledTextInput
+          label="Name"
+          onChange={(newVal) => setName(newVal)}
+          keyboardType="default"
+          value={name}
+          required
+        />
+        <StyledTextInput
+          onChange={(newVal) => setDescription(newVal)}
+          keyboardType="default"
+          label="Description"
+          placeholder="Optional..."
+          value={description}
+          multiline
+        />
+        <StyledTextInput
+          label="Date"
+          onChange={(newVal) => setDate(newVal)}
+          keyboardType="default"
+          value={formatDateFE(date)}
+          required
+        />
+        <StyledSelect
+          label="Category"
+          categories={userCategories.map((cat, index) => {
+            return {
+              label: cat,
+              value: cat,
+              key: index,
+            };
+          })}
+          category={category}
+          setCategory={setCategory}
+          categoryDropdownVisible={categoryDropdownVisible}
+          setCategoryDropdownVisible={setCategoryDropdownVisible}
+          placeholder={item.category}
+          required
+        />
+        {type === 'Expenses' && (
           <StyledTextInput
             onChange={setTag}
             keyboardType="default"
             label="Tag"
             placeholder="Optional..."
           />
-          <StyledTextInput
-            onChange={(newVal) => setLocation(newVal)}
-            keyboardType="default"
-            label="Location"
-            placeholder="Optional..."
-            value={location}
-          />
-          <View
-            style={{
-              flexDirection: 'row',
-              justifyContent: 'center',
-              marginTop: 20,
-            }}>
-            <View style={styles.button}>
-              <StyledButton label="Cancel" onTap={() => setModalVisible(false)} />
-            </View>
-            <View style={styles.button}>
-              <StyledButton label="Save" onTap={() => onSave()} />
-            </View>
+        )}
+        <StyledTextInput
+          onChange={(newVal) => setLocation(newVal)}
+          keyboardType="default"
+          label="Location"
+          placeholder="Optional..."
+          value={location}
+        />
+        <View
+          style={{
+            flexDirection: 'row',
+            justifyContent: 'center',
+            marginTop: 20,
+          }}>
+          <View style={styles.button}>
+            <StyledButton label="Cancel" onTap={() => setModalVisible(false)} />
+          </View>
+          <View style={styles.button}>
+            <StyledButton label="Save" onTap={() => onUpdate()} />
           </View>
         </View>
-      </ScrollView>
+      </View>
     </CustomModal>
   );
 };
@@ -139,6 +131,7 @@ const styles = StyleSheet.create({
   content: {
     flexDirection: 'column',
     justifyContent: 'flex-start',
+    marginHorizontal: 20,
   },
   title: {
     textAlign: 'center',

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Dimensions, StyleSheet, View } from 'react-native';
 import TableComponent from './TableComponent';
+import { getMonth, getYear } from '../../utils/formatters';
 
 const ScrollTable = ({ type, renderList }) => {
   const [splitList, setSplitList] = useState([]);
@@ -8,8 +9,8 @@ const ScrollTable = ({ type, renderList }) => {
   useEffect(() => {
     const tempList = [];
     renderList.forEach((item) => {
-      const month = item.date.getMonth() + 1;
-      const year = item.date.getFullYear();
+      const month = getMonth(item.date);
+      const year = getYear(item.date);
       if (tempList.length === 0) {
         tempList.push({ month, year, list: [] });
       }
@@ -30,7 +31,7 @@ const ScrollTable = ({ type, renderList }) => {
           key={index}
           title={monthExp.month}
           subTitle={monthExp.year}
-          mult={monthExp.list}
+          list={monthExp.list}
           type={type}
         />
       ))}
