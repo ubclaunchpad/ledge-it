@@ -55,7 +55,8 @@ const styles = StyleSheet.create({
     alignSelf: 'flex-start',
   },
   content: {
-    margin: 10,
+    width: Dimensions.get('window').width,
+    paddingHorizontal: 10,
     marginBottom: '10%',
   },
 });
