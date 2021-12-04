@@ -6,16 +6,6 @@ import { MONTHS } from '../../utils/constants';
 import { theme } from '../../../theme';
 import { formatNumber } from '../../utils/formatters';
 
-const sampleData = [
-  { x: 'Category 1', y: 1001.25, color: theme.gradient[0] },
-  { x: 'Category 2', y: 2040, color: theme.gradient[1] },
-  { x: 'Category 3', y: 3300, color: theme.gradient[2] },
-  { x: 'Category 4', y: 4000.2, color: theme.gradient[3] },
-  { x: 'Category 5', y: 5000, color: theme.gradient[4] },
-  { x: 'Category 6', y: 1200.4, color: theme.gradient[5] },
-  { x: 'Amount Left', y: 3400.6, color: theme.colors.white },
-];
-
 const getMonth = () => {
   const d = new Date();
   return MONTHS[d.getMonth()];
