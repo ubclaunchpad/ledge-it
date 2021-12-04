@@ -80,10 +80,11 @@ const lineStyles = StyleSheet.create({
 const boxStyles = StyleSheet.create({
   choiceSelect: {
     backgroundColor: theme.colors.primary,
-    borderWidth: 0,
+    borderWidth: 4,
+    borderColor: theme.colors.primaryDark,
     borderRadius: 20,
     color: theme.colors.white,
-    width: 110,
+    width: 120,
   },
   placeholder: {
     color: theme.colors.white,
@@ -94,9 +95,10 @@ const boxStyles = StyleSheet.create({
     backgroundColor: theme.colors.primary,
   },
   dropDown: {
-    borderColor: theme.colors.primary,
-    width: 110,
-    zIndex: 1010010100,
+    borderColor: theme.colors.primaryDark,
+    borderWidth: 4,
+    borderTopWidth: 0,
+    width: 120,
   },
   text: {
     fontWeight: '500',

@@ -11,12 +11,11 @@ export default ({ label, onTap, customStyles, icon }) => {
         {
           opacity: pressed ? 0.5 : 1,
         },
-        styles.wrapperCustom,
       ]}
       onPress={onTap}>
       <View style={styles.background}>
         <Text style={styles.text}>{label}</Text>
-        {icon && <Button color={theme.colors.primary} style={{ marginRight: -30 }} icon={icon} />}
+        {icon && <Button color={styles.text.color} icon={icon} />}
       </View>
     </Pressable>
   );
