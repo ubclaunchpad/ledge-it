@@ -87,7 +87,7 @@ const budgetDatabase = [
 ];
 
 const BudgetPage = () => {
-  const [sortMethod, setSortMethod] = useState('old->new');
+  const [sortMethod, setSortMethod] = useState('new->old');
   const [year, setYear] = useState(2021);
   const sortBudgets = () => {
     if (sortMethod === 'old->new') {
