@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { SafeAreaView, ScrollView, StyleSheet } from 'react-native';
 import ScrollTable from '../components/TablePage/ScrollTable';
 import TablePageHeader from '../components/TablePage/TablePageHeader';
-import ActionButton from '../components/ActionButton';
+import DefaultActionButton from '../components/ActionButton';
 import ExpenseForm from '../modals/ExpenseForm';
 
 // Note: These are just sample data of expense/income from the database.
@@ -107,9 +107,7 @@ const TablePage = () => {
           />
         </ScrollView>
       </SafeAreaView>
-      <ActionButton>
-        <ExpenseForm />
-      </ActionButton>
+      <DefaultActionButton/>
     </>
   );
 };
