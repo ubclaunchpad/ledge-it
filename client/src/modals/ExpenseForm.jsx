@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Dimensions, StyleSheet, View, ScrollView, Text } from 'react-native';
+import { StyleSheet, View, Text } from 'react-native';
 import axios from 'axios';
 import AmountBox from '../components/AmountBox';
 import StyledTextInput from '../components/StyledTextInput';

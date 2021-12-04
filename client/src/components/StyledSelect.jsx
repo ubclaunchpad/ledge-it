@@ -1,6 +1,6 @@
 import DropDownPicker from 'react-native-dropdown-picker';
 import React from 'react';
-import { Dimensions, StyleSheet, Text, View } from 'react-native';
+import { Dimensions, StyleSheet, Text } from 'react-native';
 import { theme } from '../../theme';
 
 const StyledSelect = ({

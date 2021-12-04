@@ -1,12 +1,11 @@
 import React, { useState } from 'react';
-import { StyleSheet, View, ScrollView, Text, Dimensions } from 'react-native';
+import { StyleSheet, View, Text } from 'react-native';
 import StyledButton from '../components/StyledButton';
 import StyledTextInput from '../components/StyledTextInput';
 import StyledSelect from '../components/StyledSelect';
 import CustomModal from '../components/CustomModal';
 import AmountBox from '../components/AmountBox';
 import { theme } from '../../theme';
-import axios from 'axios';
 import { formatDateBE, formatDateFE } from '../utils/formatters';
 
 const ItemSummary = ({ modalVisible, setModalVisible, item, userCategories, type }) => {

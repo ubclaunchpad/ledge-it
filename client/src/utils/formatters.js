@@ -37,14 +37,14 @@ export const formatDateFE = (date) => {
 /**
  * "2021-12-01" -> 2021
  */
-export const getYear = (date) => Number.parseInt(date.slice(0, 4));
+export const getYear = (date) => Number.parseInt(date.slice(0, 4), 10);
 
 /**
  * "2021-12-01" -> 12
  */
-export const getMonth = (date) => Number.parseInt(date.slice(5, 7));
+export const getMonth = (date) => Number.parseInt(date.slice(5, 7), 10);
 
 /**
  * "2021-12-01" -> 1
  */
-export const getDay = (date) => Number.parseInt(date.slice(8));
+export const getDay = (date) => Number.parseInt(date.slice(8), 10);
