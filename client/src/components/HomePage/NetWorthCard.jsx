@@ -4,13 +4,28 @@ import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { faChevronDown, faChevronUp } from '@fortawesome/free-solid-svg-icons';
 import { theme } from '../../../theme';
 import { formatNumber } from '../../utils/formatters';
+import axios from 'axios';
 
-const netWorth = 150000.1212;
-const income = 2000.5;
-const expenses = 500.5;
+const netWorthId = '61ab71e8efaeac62430a1822';
 
 const NetWorthCard = () => {
+  const getNetWorthData = () => {
+    axios
+    .get(`https://money-manager-dev.herokuapp.com/net_worth/${netWorthId}`)
+    .then((res) => {
+      const data = res.data;
+      setIncome(data.all_time_income);
+      setExpenses(data.all_time_expenses);
+      setNetWorth(data.current);
+    })
+    .catch((err) => console.log(err));
+  };
+
+  const [netWorth, setNetWorth] = useState(150000.2968);
+  const [income, setIncome] = useState(2000.5);
+  const [expenses, setExpenses] = useState(500.5);
   const [isExpanded, setExpand] = useState(false);
+  getNetWorthData();
 
   return (
     <View style={styles.container}>
