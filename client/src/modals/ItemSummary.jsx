@@ -79,7 +79,7 @@ const ItemSummary = ({ modalVisible, setModalVisible, item, userCategories, type
         />
         <StyledSelect
           label="Category"
-          categories={userCategories.map((cat, index) => {
+          options={userCategories.map((cat, index) => {
             return {
               label: cat,
               value: cat,
