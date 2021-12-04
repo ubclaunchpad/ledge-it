@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, StyleSheet, Dimensions } from 'react-native';
+import { View, Text, TextInput, StyleSheet } from 'react-native';
 import { theme } from '../../theme';
 
 export default ({ keyboardType, label, placeholder, onChange, required, noClear, ...rest }) => {
@@ -11,7 +11,6 @@ export default ({ keyboardType, label, placeholder, onChange, required, noClear,
 
   return (
     <View style={styles.container}>
-      {/* <ClickToClose/> */}
       <Text style={styles.label}>
         {label}
         {required && '*'}
@@ -44,7 +43,6 @@ const styles = StyleSheet.create({
     shadowRadius: 0,
     borderBottomWidth: 1,
     borderColor: theme.colors.primaryDark,
-    width: Dimensions.get('window').width * 0.8,
     paddingBottom: 2,
     color: theme.colors.textDark,
   },
