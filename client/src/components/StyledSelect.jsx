@@ -37,6 +37,7 @@ const StyledSelect = ({
         textStyle={textStyle}
         dropDownContainerStyle={styles.dropDown}
         containerStyle={styles.container}
+        listMode="SCROLLVIEW"
       />
     </>
   );
@@ -45,9 +46,8 @@ const StyledSelect = ({
 const lineStyles = StyleSheet.create({
   label: {
     alignSelf: 'flex-start',
-    marginLeft: 10,
-    marginTop: 10,
-    marginBottom: -8,
+    margin: 10,
+    marginBottom: 0,
     color: theme.colors.primary,
   },
   choiceSelect: {
@@ -58,21 +58,25 @@ const lineStyles = StyleSheet.create({
     backgroundColor: 'transparent',
     borderWidth: 0,
     borderBottomWidth: 1,
+    borderBottomLeftRadius: 0,
+    borderBottomRightRadius: 0,
     alignSelf: 'center',
-    marginBottom: 10,
   },
   text: {
     color: theme.colors.textDark,
-    marginLeft: -6,
+    marginLeft: -10,
     marginBottom: -15,
   },
   dropDown: {
     borderColor: theme.colors.primaryDark,
-    width: Dimensions.get('window').width - 75,
+    width: '100%',
+    paddingHorizontal: 10,
+    marginBottom: 100,
   },
   container: {
-    marginTop: -5,
-    paddingTop: 0,
+    marginTop: -10,
+    margin: 10,
+    width: Dimensions.get('window').width - 80,
   },
   placeholder: { color: theme.colors.lightgrey },
 });
