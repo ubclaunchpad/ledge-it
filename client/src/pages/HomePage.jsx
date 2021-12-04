@@ -8,11 +8,11 @@ const HomePage = () => {
     <>
       <SafeAreaView style={styles.container}>
         <ScrollView style={styles.content}>
-          <CategoryPieChart /> 
-          <CategoryPieChart /> 
+          <CategoryPieChart />
+          <CategoryPieChart />
         </ScrollView>
       </SafeAreaView>
-      <DefaultActionButton/>
+      <DefaultActionButton />
     </>
   );
 };

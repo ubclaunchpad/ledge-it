@@ -107,7 +107,7 @@ const TablePage = () => {
           />
         </ScrollView>
       </SafeAreaView>
-      <DefaultActionButton/>
+      <DefaultActionButton />
     </>
   );
 };
