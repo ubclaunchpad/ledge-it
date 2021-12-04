@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import { StyleSheet, Text, SafeAreaView, View, Dimensions } from 'react-native';
 import { VictoryPie, VictoryLabel } from 'victory-native';
 import { MONTHS } from '../../utils/constants';
@@ -20,24 +21,50 @@ const getMonth = () => {
   return MONTHS[d.getMonth()];
 };
 
-const calculateExpense = {
-  total: sampleData
-    .filter((item) => item.x !== 'Amount Left')
-    .reduce((acc, item) => {
-      return acc + item.y;
-    }, 0),
-};
-
-const calculateBudget = {
-  total: sampleData.reduce((acc, item) => {
-    return acc + item.y;
-  }, 0),
-};
-
 const CategoryPieChart = () => {
   const windowWidth = Dimensions.get('window').width;
   const pieRadius = windowWidth / 4;
+
+  const [categoryBudgetData, setCategoryBudgetData] = useState([]);
+  useEffect(() => {
+    const d = new Date();
+    axios
+      .get('https://money-manager-dev.herokuapp.com/budget/category/all', {
+        params: {
+          month: d.getMonth() + 1,
+          year: d.getFullYear(),
+        },
+      })
+      .then((res) => {
+        setCategoryBudgetData(res.data);
+      })
+      .catch((e) => console.error(e));
+  }, []);
+
+  const calculateExpense = {
+    total: categoryBudgetData.reduce((acc, item) => {
+      return acc + item.spent;
+    }, 0),
+  };
+  const calculateBudget = {
+    total: categoryBudgetData.reduce((acc, item) => {
+      return acc + item.value;
+    }, 0),
+  };
   const ratio = `${Math.round((calculateExpense.total / calculateBudget.total) * 100)}%`;
+
+  const categoryData = categoryBudgetData.map((category, index) => ({
+    ...category,
+    color: theme.gradient[index],
+  }));
+
+  categoryData.push({
+    _id: toString(Math.random()),
+    value: 0,
+    spent: Math.round(calculateBudget.total - calculateExpense.total),
+    category: 'Amount Left',
+    color: theme.colors.white,
+  });
 
   return (
     <SafeAreaView style={styles.centeredView}>
@@ -45,8 +72,10 @@ const CategoryPieChart = () => {
       <VictoryPie
         radius={pieRadius}
         innerRadius={pieRadius - pieRadius / 3}
-        data={sampleData}
-        colorScale={theme.gradient.slice(0, sampleData.length - 1).concat([theme.colors.white])}
+        data={categoryData}
+        x="category"
+        y={(data) => data.spent}
+        colorScale={theme.gradient.slice(0, categoryData.length - 1).concat([theme.colors.white])}
         labels={() => null}
         style={{
           parent: {
@@ -80,21 +109,21 @@ const CategoryPieChart = () => {
         <Text style={[styles.pbarTextBudget]}>${formatNumber(calculateBudget.total, 0)}</Text>
       </View>
       <View style={styles.categoryView}>
-        {sampleData.map((item, index) => {
+        {categoryData.map((item, index) => {
           return (
             <View
               style={[
                 styles.card,
                 {
                   backgroundColor: item.color,
-                  borderBottomLeftRadius: index === sampleData.length - 1 ? 10 : 0,
-                  borderBottomRightRadius: index === sampleData.length - 1 ? 10 : 0,
-                  borderBottomWidth: index === sampleData.length - 1 ? 0 : 1,
+                  borderBottomLeftRadius: index === categoryData.length - 1 ? 10 : 0,
+                  borderBottomRightRadius: index === categoryData.length - 1 ? 10 : 0,
+                  borderBottomWidth: index === categoryData.length - 1 ? 0 : 1,
                 },
               ]}
-              key={item.x}>
-              <Text style={styles.cardText}>{item.x}</Text>
-              <Text style={styles.cardText}>${formatNumber(item.y)}</Text>
+              key={item._id}>
+              <Text style={styles.cardText}>{item.category}</Text>
+              <Text style={styles.cardText}>${formatNumber(item.spent)}</Text>
             </View>
           );
         })}
