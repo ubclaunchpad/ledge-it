@@ -1,10 +1,24 @@
 from fastapi import APIRouter, Body, HTTPException, status
 from fastapi.responses import JSONResponse
 from fastapi.encoders import jsonable_encoder
+from typing import List
+
 from ..models import Budget, UpdateBudgetModel
 from ..database import budget_collection
 
 router = APIRouter()
+
+
+@router.get(
+    "/budget/all",
+    response_description="Get all stored budgets",
+    response_model=List[Budget],
+)
+def get_all_budgets():
+    if (all_budgets := budget_collection.find()).count():
+        return [jsonable_encoder(next(all_budgets)) for _ in range(all_budgets.count())]
+
+    raise HTTPException(status_code=404, detail=f"No budgets have been found.")
 
 
 @router.get(

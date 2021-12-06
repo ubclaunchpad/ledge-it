@@ -3,6 +3,8 @@ from fastapi import APIRouter, Body, HTTPException, status
 from fastapi.responses import JSONResponse
 from fastapi.encoders import jsonable_encoder
 from pydantic.error_wrappers import ValidationError
+from typing import List
+from re import compile
 
 from ..models import Expense, UpdateExpenseModel, AddExpense
 from ..database import expense_collection
@@ -19,6 +21,23 @@ def get_expenses():
         return [jsonable_encoder(next(all_expenses)) for _ in range(all_expenses.count())]
 
     raise HTTPException(status_code=404, detail=f"No expenses have been found.")
+
+    
+@router.get(
+    "/expense/",
+    response_description="Get all expenses from the given month and year",
+    response_model=List[Expense],
+)
+def get_expenses_by_month(month: int, year: int):
+    regex = compile(f"{year}-{f'0{month}' if month < 10 else month}-" + r"\d{2}")
+
+    if (expenses := expense_collection.find({"date": {"$regex": regex}})).count():
+        return [jsonable_encoder(next(expenses)) for _ in range(expenses.count())]
+
+    raise HTTPException(
+        status_code=404,
+        detail=f"No expense have been found for the given month and year.",
+    )
 
 
 @router.get(

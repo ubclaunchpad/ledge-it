@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Dimensions, StyleSheet, Text, View } from 'react-native';
 import TableComponent from './TableComponent';
 import { theme } from '../../../theme';
+import { getMonth, getYear } from '../../utils/formatters';
 
 const ScrollTable = ({ type, renderList }) => {
   const [splitList, setSplitList] = useState([]);
@@ -9,8 +10,8 @@ const ScrollTable = ({ type, renderList }) => {
   useEffect(() => {
     const tempList = [];
     renderList.forEach((item) => {
-      const month = item.date.getMonth() + 1;
-      const year = item.date.getFullYear();
+      const month = getMonth(item.date);
+      const year = getYear(item.date);
       if (tempList.length === 0) {
         tempList.push({ month, year, list: [] });
       }
@@ -41,6 +42,7 @@ const ScrollTable = ({ type, renderList }) => {
           <Text style={styles.errorText}>No {type.toLowerCase()}</Text>
         </View>
       )}
+      <View style={{ height: 100 }} />
     </View>
   );
 };
@@ -50,7 +52,7 @@ export default ScrollTable;
 const styles = StyleSheet.create({
   scrollView: {
     paddingVertical: 10,
-    minHeight: Dimensions.get('window').height - 300,
+    minHeight: Dimensions.get('window').height - 200,
   },
   errorTextView: {
     display: 'flex',

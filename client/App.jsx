@@ -31,6 +31,7 @@ const TabNavBar = () => {
           backgroundColor: theme.colors.primary,
         },
         tabBarShowLabel: false,
+        headerShown: false,
       })}
       style={styles.container}>
       <Tab.Screen name="Home" component={HomePage} />
