@@ -1,49 +1,21 @@
 import * as React from 'react';
 import { List } from 'react-native-paper';
 import { StyleSheet, Text, View } from 'react-native';
-import { Swipeable } from 'react-native-gesture-handler';
 import { theme } from '../../../theme';
+import { getDay, getMonth, getYear } from '../../utils/formatters';
+import { MONTHS } from '../../utils/constants';
 
-const months = [
-  'January',
-  'February',
-  'March',
-  'April',
-  'May',
-  'June',
-  'July',
-  'August',
-  'September',
-  'October',
-  'November',
-  'December',
-];
-
-const RightSwipe = () => {
-  return (
-    <View style={styles.swipeBackground}>
-      <Text style={styles.swipeText}>Delete</Text>
-    </View>
-  );
-};
-
-const BudgetDetailsTableComponent = (props) => (
-  <BudgetDetailsTableComponentHelper mult={props.mult}/>
-);
-
-export default BudgetDetailsTableComponent;
-
-const BudgetDetailsTableComponentHelper = (props) => {
-  const { mult } = props;
-  const tableItems = mult.map((obj, index) => (
-    <Swipeable key={index} renderRightActions={RightSwipe}>
+const BudgetDetailsTableComponent = ({ expenses }) => (
+  <View style={styles.list}>
+    {expenses.map((expense, index) => (
       <List.Item
-        title={<Text style={styles.subheader}>{obj.name}</Text>}
+        key={index}
+        title={<Text style={styles.subheader}>{expense.name}</Text>}
         description={
           <View>
-            <Text style={styles.text}>{obj.category}</Text>
+            <Text style={styles.text}>{expense.category}</Text>
             <Text style={styles.text}>
-              {months[obj.date.getMonth()]} {obj.date.getDate()}, {obj.date.getFullYear()}
+              {MONTHS[getMonth(expense.date) - 1]} {getDay(expense.date)}, {getYear(expense.date)}
             </Text>
           </View>
         }
@@ -51,57 +23,45 @@ const BudgetDetailsTableComponentHelper = (props) => {
           <View>
             <Text />
             <Text style={styles.price}>
-              ${obj.price} {obj.currency}
+              -${expense.price || expense.amount} {expense.currency}
             </Text>
           </View>
         )}
         style={styles.listItem}
       />
-    </Swipeable>
-  ));
+    ))}
+  </View>
+);
 
-  return (
-    <View>
-      {tableItems}
-    </View>
-  );
-};
+export default BudgetDetailsTableComponent;
 
 const styles = StyleSheet.create({
+  list: {
+    marginVertical: 10,
+  },
   header: {
     fontSize: 30,
-    color: '#fff',
+    color: theme.colors.textLight,
   },
   subheader: {
-    fontSize: 20,
-    color: '#fff',
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: theme.colors.textLight,
   },
   text: {
-    fontSize: 14,
-    color: '#fff',
+    fontSize: 12,
+    color: theme.colors.textLight,
   },
   price: {
-    fontSize: 25,
-    color: '#fff',
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: theme.colors.white,
     justifyContent: 'space-evenly',
-  },
-  swipeBackground: {
-    backgroundColor: 'red',
-    justifyContent: 'center',
-    alignItems: 'flex-end',
-    borderRadius: 10,
-    marginVertical: 5,
-    marginRight: 15,
-  },
-  swipeText: {
-    color: '#fff',
-    fontWeight: '600',
-    padding: 20,
   },
   listItem: {
     backgroundColor: theme.colors.primary,
     marginHorizontal: 15,
     marginVertical: 5,
     borderRadius: 10,
-  }
+  },
 });
