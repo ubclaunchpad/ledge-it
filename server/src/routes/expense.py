@@ -13,11 +13,23 @@ router = APIRouter()
 
 
 @router.get(
-    "/expense/",
+    "/expenses/", response_description="Get all expenses", response_model=List[Expense]
+)
+def get_expenses():
+    if (all_expenses := expense_collection.find()).count():
+        return [
+            jsonable_encoder(next(all_expenses)) for _ in range(all_expenses.count())
+        ]
+
+    raise HTTPException(status_code=404, detail=f"No expenses have been found.")
+
+
+@router.get(
+    "/expense/{year}/{month}",
     response_description="Get all expenses from the given month and year",
     response_model=List[Expense],
 )
-def get_expenses_by_month(month: int, year: int):
+def get_expenses_by_month(year: int, month: int):
     regex = compile(f"{year}-{f'0{month}' if month < 10 else month}-" + r"\d{2}")
 
     if (expenses := expense_collection.find({"date": {"$regex": regex}})).count():
@@ -25,7 +37,7 @@ def get_expenses_by_month(month: int, year: int):
 
     raise HTTPException(
         status_code=404,
-        detail=f"No expense have been found for the given month and year.",
+        detail=f"No expenses have been found for the given month and year.",
     )
 
 

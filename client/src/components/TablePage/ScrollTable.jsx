@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { Dimensions, StyleSheet, View } from 'react-native';
+import { Dimensions, StyleSheet, Text, View } from 'react-native';
 import TableComponent from './TableComponent';
+import { theme } from '../../../theme';
 import { getMonth, getYear } from '../../utils/formatters';
 
 const ScrollTable = ({ type, renderList }) => {
@@ -26,15 +27,21 @@ const ScrollTable = ({ type, renderList }) => {
 
   return (
     <View style={styles.scrollView}>
-      {splitList.map((monthExp, index) => (
-        <TableComponent
-          key={index}
-          title={monthExp.month}
-          subTitle={monthExp.year}
-          list={monthExp.list}
-          type={type}
-        />
-      ))}
+      {splitList.length ? (
+        splitList.map((monthExp, index) => (
+          <TableComponent
+            key={index}
+            title={monthExp.month}
+            subTitle={monthExp.year}
+            mult={monthExp.list}
+            type={type}
+          />
+        ))
+      ) : (
+        <View style={styles.errorTextView}>
+          <Text style={styles.errorText}>No {type.toLowerCase()}</Text>
+        </View>
+      )}
       <View style={{ height: 100 }} />
     </View>
   );
@@ -46,5 +53,15 @@ const styles = StyleSheet.create({
   scrollView: {
     paddingVertical: 10,
     minHeight: Dimensions.get('window').height - 200,
+  },
+  errorTextView: {
+    display: 'flex',
+    alignItems: 'center',
+    marginVertical: 80,
+  },
+  errorText: {
+    color: theme.colors.textDark,
+    fontSize: 28,
+    fontWeight: 'bold',
   },
 });

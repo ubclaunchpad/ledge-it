@@ -1,104 +1,19 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { StyleSheet, Text, SafeAreaView, View } from 'react-native';
+import axios from 'axios';
 import { theme } from '../../../theme';
 import { formatNumber } from '../../utils/formatters';
 
-// data taken directly from "../pages/TablePage"
-const expenseDatabase = [
-  {
-    id: 0,
-    name: 'Gym',
-    price: 65.0,
-    date: new Date('2022-10-21T10:34:23'),
-    currency: 'CAD',
-    category: 'Category #41',
-  },
-  {
-    id: 1,
-    name: 'Gym',
-    price: 65.0,
-    date: new Date('2021-10-21T10:34:23'),
-    currency: 'CAD',
-    category: 'Category #41',
-  },
-  {
-    id: 2,
-    name: 'Coffee',
-    price: 4.29,
-    date: new Date('2021-10-17T10:34:23'),
-    currency: 'CAD',
-    category: 'Category #12',
-  },
-  {
-    id: 3,
-    name: 'Monitor',
-    price: 205.0,
-    date: new Date('2021-09-27T10:34:23'),
-    currency: 'CAD',
-    category: 'Category #13',
-  },
-  {
-    id: 4,
-    name: 'Mouse',
-    price: 54.9,
-    date: new Date('2021-09-05T10:34:23'),
-    currency: 'CAD',
-    category: 'Category #22',
-  },
-  {
-    id: 5,
-    name: 'Skateboard',
-    price: 80.99,
-    date: new Date('2021-08-17T10:34:23'),
-    currency: 'USD',
-    category: 'Category #25',
-  },
-];
+// TODO: move this to a .env or config file
+const url = 'https://money-manager-dev.herokuapp.com';
 
-const incomeDatabase = [
-  {
-    id: 6,
-    name: 'Part Time: Piano Lessons',
-    price: 650.0,
-    date: new Date('2021-10-21T10:34:23'),
-    currency: 'CAD',
-    category: 'Category #1',
-  },
-  {
-    id: 7,
-    name: 'Tax Refunds',
-    price: 205.0,
-    date: new Date('2021-09-27T10:34:23'),
-    currency: 'CAD',
-    category: 'Category #13',
-  },
-  {
-    id: 8,
-    name: 'Part Time: CPSC 312 TA',
-    price: 1344.99,
-    date: new Date('2021-09-05T10:34:23'),
-    currency: 'CAD',
-    category: 'Category #1',
-  },
-  {
-    id: 9,
-    name: 'Monthly Allowance',
-    price: 80.99,
-    date: new Date('2021-08-17T10:34:23'),
-    currency: 'USD',
-    category: 'Category #25',
-  },
-];
-
-const getTransactionsToDisplay = () => {
-  const expenses = expenseDatabase.slice(0, 10);
-  const incomes = incomeDatabase.slice(0, 10);
-
-  // merge two sorted arrays
+// merge two sorted arrays
+const getTransactionsToDisplay = (incomes, expenses) => {
   let i = 0,
     j = 0,
     k = 0;
   const temp = [];
+
   while (i < expenses.length && j < incomes.length && k < 10) {
     if (expenses[i].date - incomes[j].date) {
       temp[k] = expenses[i++];
@@ -112,6 +27,7 @@ const getTransactionsToDisplay = () => {
     temp[k] = expenses[i++];
     temp[k++].price *= -1;
   }
+
   while (j < incomes.length && k < 10) {
     temp[k++] = incomes[j++];
   }
@@ -122,7 +38,32 @@ const getTransactionsToDisplay = () => {
 const RecentTransactions = () => {
   // merge expense and income dataset and come up with an array sorted by date
   // only show 10 items max
-  const transactionsToDisplay = getTransactionsToDisplay();
+  const [incomeData, setIncomeData] = useState([]);
+  const [expenseData, setExpenseData] = useState([]);
+  const [displayData, setDisplayData] = useState([]);
+
+  useEffect(() => {
+    getExpenses();
+    getIncomes();
+  }, []);
+
+  useEffect(() => {
+    setDisplayData(getTransactionsToDisplay(incomeData.slice(0, 10), expenseData.slice(0, 10)));
+  }, [incomeData, expenseData]);
+
+  const getExpenses = () => {
+    axios
+      .get(`${url}/expenses`)
+      .then(({ data }) => setExpenseData(data))
+      .catch((err) => console.log(`${err}`));
+  };
+
+  const getIncomes = () => {
+    axios
+      .get(`${url}/incomes`)
+      .then(({ data }) => setIncomeData(data))
+      .catch((err) => console.log(`${err}`));
+  };
 
   return (
     <SafeAreaView style={styles.centeredView}>
@@ -133,8 +74,8 @@ const RecentTransactions = () => {
           <Text style={styles.labelText}>Category</Text>
           <Text style={styles.labelText}>Amount</Text>
         </View>
-        {transactionsToDisplay.map((item) => {
-          return (
+        {displayData.length ? (
+          displayData.map((item) => (
             <View style={styles.card} key={item.id}>
               <View style={styles.cardLeft}>
                 <Text style={styles.cardText}>{item.name}</Text>
@@ -152,8 +93,12 @@ const RecentTransactions = () => {
                 </Text>
               </View>
             </View>
-          );
-        })}
+          ))
+        ) : (
+          <View style={styles.errorTextView}>
+            <Text style={styles.errorText}>No recent transactions</Text>
+          </View>
+        )}
       </View>
     </SafeAreaView>
   );
@@ -218,6 +163,16 @@ const styles = StyleSheet.create({
   },
   expenseText: {
     color: theme.colors.red,
+  },
+  errorTextView: {
+    display: 'flex',
+    alignItems: 'center',
+    marginVertical: 20,
+  },
+  errorText: {
+    color: theme.colors.textDark,
+    fontSize: 16,
+    fontWeight: 'bold',
   },
 });
 
