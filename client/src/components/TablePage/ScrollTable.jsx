@@ -35,6 +35,7 @@ const ScrollTable = ({ type, renderList }) => {
           type={type}
         />
       ))}
+      <View style={{ height: 100 }} />
     </View>
   );
 };
@@ -44,6 +45,6 @@ export default ScrollTable;
 const styles = StyleSheet.create({
   scrollView: {
     paddingVertical: 10,
-    minHeight: Dimensions.get('window').height - 300,
+    minHeight: Dimensions.get('window').height - 200,
   },
 });
