@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { StyleSheet, Text, SafeAreaView, View } from 'react-native';
 import axios from 'axios';
+import { useFocusEffect } from '@react-navigation/native';
 import { theme } from '../../../theme';
 import { formatNumber } from '../../utils/formatters';
 
@@ -15,21 +16,23 @@ const getTransactionsToDisplay = (incomes, expenses) => {
   const temp = [];
 
   while (i < expenses.length && j < incomes.length && k < 10) {
-    if (expenses[i].date - incomes[j].date) {
-      temp[k] = expenses[i++];
-      temp[k++].price *= -1;
+    if (new Date(expenses[i].date) - new Date(incomes[j].date)) {
+      temp[k++] = { ...expenses[i], price: -expenses[i].price };
+      i++;
     } else {
-      temp[k++] = incomes[j++];
+      temp[k++] = { ...incomes[j], price: incomes[j].amount };
+      j++;
     }
   }
 
   while (i < expenses.length && k < 10) {
-    temp[k] = expenses[i++];
-    temp[k++].price *= -1;
+    temp[k++] = { ...expenses[i], price: -expenses[i].price };
+    i++;
   }
 
   while (j < incomes.length && k < 10) {
-    temp[k++] = incomes[j++];
+    temp[k++] = { ...incomes[j], price: incomes[j].amount };
+    j++;
   }
 
   return temp;
@@ -42,10 +45,12 @@ const RecentTransactions = () => {
   const [expenseData, setExpenseData] = useState([]);
   const [displayData, setDisplayData] = useState([]);
 
-  useEffect(() => {
-    getExpenses();
-    getIncomes();
-  }, []);
+  useFocusEffect(
+    useCallback(() => {
+      getExpenses();
+      getIncomes();
+    }, []),
+  );
 
   useEffect(() => {
     setDisplayData(getTransactionsToDisplay(incomeData.slice(0, 10), expenseData.slice(0, 10)));
@@ -74,9 +79,9 @@ const RecentTransactions = () => {
           <Text style={styles.labelText}>Category</Text>
           <Text style={styles.labelText}>Amount</Text>
         </View>
-        {displayData.length ? (
+        {displayData?.length ? (
           displayData.map((item) => (
-            <View style={styles.card} key={item.id}>
+            <View style={styles.card} key={item._id}>
               <View style={styles.cardLeft}>
                 <Text style={styles.cardText}>{item.name}</Text>
               </View>
@@ -89,7 +94,7 @@ const RecentTransactions = () => {
                     styles.cardText,
                     item.price < 0 ? styles.expenseText : styles.incomeText,
                   ]}>
-                  {item.price < 0 && '-'}${formatNumber(item.price)}
+                  {item.price < 0 && '-'}${formatNumber(item.price || item.amount)}
                 </Text>
               </View>
             </View>

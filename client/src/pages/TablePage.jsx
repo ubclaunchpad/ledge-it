@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { SafeAreaView, ScrollView, StyleSheet } from 'react-native';
 import axios from 'axios';
+import { useFocusEffect } from '@react-navigation/native';
 import ScrollTable from '../components/TablePage/ScrollTable';
 import TablePageHeader from '../components/TablePage/TablePageHeader';
 import ActionButton from '../components/ActionButton';
@@ -15,12 +16,14 @@ const TablePage = () => {
   const [expenseData, setExpenseData] = useState([]);
   const [incomeData, setIncomeData] = useState([]);
 
-  useEffect(() => {
-    getExpenses();
-    getIncomes();
-  }, []);
+  useFocusEffect(
+    useCallback(() => {
+      getExpenses();
+      getIncomes();
+    }, []),
+  );
 
-  // Fetch user categories from db here
+  // TODO: Fetch user categories from db here
   useEffect(() => {
     if (type === 'Expenses') {
       setCategories(['Food', 'Housing', 'Fun', 'Other']);

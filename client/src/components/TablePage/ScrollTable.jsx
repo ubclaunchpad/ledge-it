@@ -27,13 +27,13 @@ const ScrollTable = ({ type, renderList }) => {
 
   return (
     <View style={styles.scrollView}>
-      {splitList.length ? (
+      {splitList?.length ? (
         splitList.map((monthExp, index) => (
           <TableComponent
             key={index}
             title={monthExp.month}
             subTitle={monthExp.year}
-            mult={monthExp.list}
+            list={monthExp.list}
             type={type}
           />
         ))
