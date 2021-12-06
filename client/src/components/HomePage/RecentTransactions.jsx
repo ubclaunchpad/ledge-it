@@ -4,6 +4,9 @@ import axios from 'axios';
 import { theme } from '../../../theme';
 import { formatNumber } from '../../utils/formatters';
 
+// TODO: move this to a .env or config file
+const url = 'https://money-manager-dev.herokuapp.com';
+
 // merge two sorted arrays
 const getTransactionsToDisplay = (incomes, expenses) => {
   let i = 0,
@@ -39,8 +42,6 @@ const RecentTransactions = () => {
   const [expenseData, setExpenseData] = useState([]);
   const [displayData, setDisplayData] = useState([]);
 
-  const url = 'https://money-manager-dev.herokuapp.com/';
-
   useEffect(() => {
     getExpenses();
     getIncomes();
@@ -52,25 +53,15 @@ const RecentTransactions = () => {
 
   const getExpenses = () => {
     axios
-      .get(`${url}expenses`)
-      .then((res) => {
-        const exp = res.data;
-        exp.forEach((ex) => (ex.date = new Date(ex.created_at)));
-        setExpenseData(exp);
-        console.log(exp);
-      })
+      .get(`${url}/expenses`)
+      .then(({ data }) => setExpenseData(data))
       .catch((err) => console.log(`${err}`));
   };
 
   const getIncomes = () => {
     axios
-      .get(`${url}incomes`)
-      .then((res) => {
-        const inc = res.data;
-        inc.forEach((i) => (i.date = new Date(i.created_at)));
-        setIncomeData(inc);
-        console.log(inc);
-      })
+      .get(`${url}/incomes`)
+      .then(({ data }) => setIncomeData(data))
       .catch((err) => console.log(`${err}`));
   };
 
@@ -83,8 +74,8 @@ const RecentTransactions = () => {
           <Text style={styles.labelText}>Category</Text>
           <Text style={styles.labelText}>Amount</Text>
         </View>
-        {displayData.map((item) => {
-          return (
+        {displayData.length ? (
+          displayData.map((item) => (
             <View style={styles.card} key={item.id}>
               <View style={styles.cardLeft}>
                 <Text style={styles.cardText}>{item.name}</Text>
@@ -102,8 +93,12 @@ const RecentTransactions = () => {
                 </Text>
               </View>
             </View>
-          );
-        })}
+          ))
+        ) : (
+          <View style={styles.errorTextView}>
+            <Text style={styles.errorText}>No recent transactions</Text>
+          </View>
+        )}
       </View>
     </SafeAreaView>
   );
@@ -168,6 +163,16 @@ const styles = StyleSheet.create({
   },
   expenseText: {
     color: theme.colors.red,
+  },
+  errorTextView: {
+    display: 'flex',
+    alignItems: 'center',
+    marginVertical: 20,
+  },
+  errorText: {
+    color: theme.colors.textDark,
+    fontSize: 16,
+    fontWeight: 'bold',
   },
 });
 

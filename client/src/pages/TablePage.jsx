@@ -7,13 +7,13 @@ import ActionButton from '../components/ActionButton';
 import ExpenseForm from '../modals/ExpenseForm';
 import { theme } from '../../theme';
 
+const url = 'https://money-manager-dev.herokuapp.com';
+
 const TablePage = () => {
   const [type, setType] = useState('Expenses');
   const [categories, setCategories] = useState([]);
   const [expenseData, setExpenseData] = useState([]);
   const [incomeData, setIncomeData] = useState([]);
-
-  const url = 'https://money-manager-dev.herokuapp.com/';
 
   useEffect(() => {
     getExpenses();
@@ -31,23 +31,15 @@ const TablePage = () => {
 
   const getExpenses = () => {
     axios
-      .get(`${url}expenses`)
-      .then((res) => {
-        const exp = res.data;
-        exp.forEach((ex) => (ex.date = new Date(ex.created_at)));
-        setExpenseData(exp);
-      })
+      .get(`${url}/expenses`)
+      .then(({ data }) => setExpenseData(data))
       .catch((err) => console.log(`${err}`));
   };
 
   const getIncomes = () => {
     axios
-      .get(`${url}incomes`)
-      .then((res) => {
-        const inc = res.data;
-        inc.forEach((i) => (i.date = new Date(i.created_at)));
-        setIncomeData(inc);
-      })
+      .get(`${url}/incomes`)
+      .then(({ data }) => setIncomeData(data))
       .catch((err) => console.log(`${err}`));
   };
 

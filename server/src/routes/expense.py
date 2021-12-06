@@ -15,7 +15,10 @@ router = APIRouter()
     "/expenses/", response_description="Get all expenses", response_model=List[Expense]
 )
 def get_expenses():
-    return list(expense_collection.find())
+    if (all_expenses := expense_collection.find()).count():
+        return [jsonable_encoder(next(all_expenses)) for _ in range(all_expenses.count())]
+
+    raise HTTPException(status_code=404, detail=f"No expenses have been found.")
 
 
 @router.get(

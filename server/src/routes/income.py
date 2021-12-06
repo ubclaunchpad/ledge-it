@@ -3,7 +3,6 @@ from fastapi import APIRouter, Body, HTTPException, status
 from fastapi.responses import JSONResponse
 from fastapi.encoders import jsonable_encoder
 from pydantic.error_wrappers import ValidationError
-from pymongo.message import update
 from ..models.income import Income, UpdateIncomeModel, AddIncome
 from ..database.database import income_collection
 from ..utils.currency import get_exchange_rate_to_cad
@@ -15,7 +14,10 @@ router = APIRouter()
     "/incomes/", response_description="Get all expenses", response_model=List[Income]
 )
 def get_incomes():
-    return list(income_collection.find())
+    if (all_incomes := income_collection.find()).count():
+        return [jsonable_encoder(next(all_incomes)) for _ in range(all_incomes.count())]
+
+    raise HTTPException(status_code=404, detail=f"No incomes have been found.")
 
 
 @router.get(
