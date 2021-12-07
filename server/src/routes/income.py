@@ -2,7 +2,8 @@ from fastapi import APIRouter, Body, HTTPException, status
 from fastapi.responses import JSONResponse
 from fastapi.encoders import jsonable_encoder
 from pydantic.error_wrappers import ValidationError
-from pymongo.message import update
+
+from .net_worth import update_net_worth
 from ..models.income import Income, UpdateIncomeModel, AddIncome
 from ..database.database import income_collection
 from ..database.database import net_worth_collection
@@ -26,8 +27,7 @@ def create_income(income: AddIncome = Body(...)):
     if (net_worth_to_update := net_worth_collection.find_one()) is None:
         raise HTTPException(status_code=404, detail=f"Net worths not found")
 
-    updated_current = net_worth_to_update["current"] + income.amount
-    updated_all_time_income = net_worth_to_update["all_time_income"] + income.amount
+    update_net_worth(net_worth_to_update["_id"], abs(income.amount), income.date)
 
     if income.currency.lower() == "cad":
         income.exchange_rate = 1
@@ -44,14 +44,6 @@ def create_income(income: AddIncome = Body(...)):
             content=jsonable_encoder({"detail": exc.errors()}),
         )
 
-    net_worth_collection.update_one(
-        {"_id": net_worth_to_update["_id"]},
-        {
-            "$set": jsonable_encoder(
-                {"current": updated_current, "all_time_income": updated_all_time_income}
-            )
-        },
-    )
     insert_income = jsonable_encoder(insert_income)
     new_income = income_collection.insert_one(insert_income)
     created_income = income_collection.find_one({"_id": new_income.inserted_id})
@@ -67,25 +59,15 @@ def delete_income_by_id(id):
     if (net_worth_to_update := net_worth_collection.find_one()) is None:
         raise HTTPException(status_code=404, detail=f"Net worths not found")
 
-    updated_current = net_worth_to_update["current"] - income_to_delete["amount"]
-    updated_all_time_income = (
-        net_worth_to_update["all_time_income"] - income_to_delete["amount"]
+    update_net_worth(
+        net_worth_to_update["_id"],
+        -abs(income_to_delete["amount"]),
+        income_to_delete["date"],
     )
 
     delete_result = income_collection.delete_one({"_id": id})
 
     if delete_result.deleted_count == 1:
-        net_worth_collection.update_one(
-            {"_id": net_worth_to_update["_id"]},
-            {
-                "$set": jsonable_encoder(
-                    {
-                        "current": updated_current,
-                        "all_time_income": updated_all_time_income,
-                    }
-                )
-            },
-        )
         return JSONResponse(
             status_code=status.HTTP_200_OK,
             content=f"Income with id {id} was successfully deleted",
@@ -106,8 +88,7 @@ def update_income(id, income: UpdateIncomeModel = Body(...)):
         raise HTTPException(status_code=404, detail=f"Net worths not found")
 
     amount_change = income.amount - income_to_update["amount"]
-    updated_current = net_worth_to_update["current"] + amount_change
-    updated_all_time_income = net_worth_to_update["all_time_income"] + amount_change
+    update_net_worth(net_worth_to_update["_id"], amount_change, income.date)
 
     if income.currency is not None:
         if income.currency.lower() == "cad":
@@ -129,17 +110,6 @@ def update_income(id, income: UpdateIncomeModel = Body(...)):
 
         if update_result.modified_count == 1:
             if (updated_income := income_collection.find_one({"_id": id})) is not None:
-                net_worth_collection.update_one(
-                    {"_id": net_worth_to_update["_id"]},
-                    {
-                        "$set": jsonable_encoder(
-                            {
-                                "current": updated_current,
-                                "all_time_income": updated_all_time_income,
-                            }
-                        )
-                    },
-                )
                 return updated_income
 
     if (existing_income := income_collection.find_one({"_id": id})) is not None:

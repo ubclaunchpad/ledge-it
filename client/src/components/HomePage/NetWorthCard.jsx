@@ -1,19 +1,25 @@
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { StyleSheet, View, Text, Dimensions, TouchableOpacity } from 'react-native';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { faChevronDown, faChevronUp } from '@fortawesome/free-solid-svg-icons';
 import axios from 'axios';
+import { useFocusEffect } from '@react-navigation/native';
 import { theme } from '../../../theme';
 import { formatNumber } from '../../utils/formatters';
 
-const netWorthId = '61ab71e8efaeac62430a1822';
+// TODO: remove this once user support is added
+const NET_WORTH_ID = '61ab71e8efaeac62430a1822';
 
 const NetWorthCard = () => {
+  const [netWorth, setNetWorth] = useState(0);
+  const [income, setIncome] = useState(0);
+  const [expenses, setExpenses] = useState(0);
+  const [isExpanded, setExpand] = useState(false);
+
   const getNetWorthData = () => {
     axios
-      .get(`https://money-manager-dev.herokuapp.com/net_worth/${netWorthId}`)
-      .then((res) => {
-        const { data } = res;
+      .get(`https://money-manager-dev.herokuapp.com/net_worth/${NET_WORTH_ID}`)
+      .then(({ data }) => {
         setIncome(data.all_time_income);
         setExpenses(data.all_time_expenses);
         setNetWorth(data.current);
@@ -21,11 +27,11 @@ const NetWorthCard = () => {
       .catch((err) => console.log(err));
   };
 
-  const [netWorth, setNetWorth] = useState(150000.2968);
-  const [income, setIncome] = useState(2000.5);
-  const [expenses, setExpenses] = useState(500.5);
-  const [isExpanded, setExpand] = useState(false);
-  getNetWorthData();
+  useFocusEffect(
+    useCallback(() => {
+      getNetWorthData();
+    }, []),
+  );
 
   return (
     <View style={styles.container}>

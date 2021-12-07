@@ -1,7 +1,4 @@
-from datetime import date
 from .mongo_db_model import MongoDBModel
-from typing import List, Tuple
-from datetime import date
 
 
 class NetWorth(MongoDBModel):

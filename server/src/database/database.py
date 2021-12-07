@@ -9,7 +9,7 @@ docker_db_uri = "mongodb://dev-user:dev-user@db:27017/?retryWrites=true&w=majori
 class Connect(object):
     @staticmethod
     def get_connection():
-        return MongoClient(test_db_uri, tls=True, tlsAllowInvalidCertificates=True)
+        return MongoClient(test_db_uri)
 
 
 connection: MongoClient = Connect.get_connection()
