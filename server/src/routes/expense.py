@@ -7,6 +7,7 @@ from typing import List
 from re import compile
 
 from .net_worth import update_net_worth
+from .. import update_category_budget_spent
 from ..models import Expense, UpdateExpenseModel, AddExpense
 from ..database import expense_collection
 from ..database import net_worth_collection
@@ -71,6 +72,9 @@ def create_expense(expense: AddExpense = Body(...)):
     update_net_worth(
         net_worth_to_update["_id"], -abs(expense.price), expense.date, is_expense=True
     )
+    update_category_budget_spent(
+        expense.date.month, expense.date.year, expense.category, expense.price
+    )
 
     if expense.currency.lower() == "cad":
         expense.exchange_rate = 1
@@ -105,6 +109,9 @@ def update_expense(id, expense: UpdateExpenseModel = Body(...)):
     price_change = expense_to_update["price"] - expense.price
     update_net_worth(
         net_worth_to_update["_id"], price_change, expense.date, is_expense=True
+    )
+    update_category_budget_spent(
+        expense.date.month, expense.date.year, expense.category, -price_change
     )
 
     if expense.currency is not None:
@@ -149,6 +156,12 @@ def delete_expense(id):
         expense_to_delete["price"],
         expense_to_delete["date"],
         is_expense=True,
+    )
+    update_category_budget_spent(
+        expense_to_delete["date"].month,
+        expense_to_delete["date"].year,
+        expense_to_delete["category"],
+        -expense_to_delete["price"],
     )
 
     delete_result = expense_collection.delete_one({"_id": expense_to_delete["_id"]})

@@ -123,3 +123,21 @@ def delete_category_budget(month: int, year: int, category: str):
         status_code=404,
         detail=f"Category budget with month: {month} and year: {year} and category: {category} not found",
     )
+
+
+def update_category_budget_spent(month: int, year: int, category: str, change: float):
+    if (
+        category_budget := category_budget_collection.find_one(
+            {"month": month, "year": year, "category": category}
+        )
+    ) is not None:
+        category_budget["spent"] += change
+        category_budget_collection.update_one(
+            {"month": month, "year": year, "category": category},
+            {"$set": category_budget},
+        )
+
+    raise HTTPException(
+        status_code=404,
+        detail=f"Category budget with month: {month} and year: {year} and category: {category} not found",
+    )
