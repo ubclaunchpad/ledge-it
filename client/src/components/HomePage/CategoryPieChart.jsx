@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useCallback } from 'react';
 import axios from 'axios';
 import { StyleSheet, Text, SafeAreaView, View, Dimensions } from 'react-native';
 import { VictoryPie, VictoryLabel } from 'victory-native';
+import { useFocusEffect } from '@react-navigation/native';
 import { MONTHS } from '../../utils/constants';
 import { theme } from '../../../theme';
 import { formatNumber } from '../../utils/formatters';
@@ -12,11 +13,18 @@ const getMonth = () => {
 };
 
 const CategoryPieChart = () => {
+  const [categoryBudgetData, setCategoryBudgetData] = useState([]);
+
   const windowWidth = Dimensions.get('window').width;
   const pieRadius = windowWidth / 4;
 
-  const [categoryBudgetData, setCategoryBudgetData] = useState([]);
-  useEffect(() => {
+  useFocusEffect(
+    useCallback(() => {
+      getCategoryBudgets();
+    }, []),
+  );
+
+  const getCategoryBudgets = () => {
     const d = new Date();
     axios
       .get('https://money-manager-dev.herokuapp.com/budget/category/all', {
@@ -29,7 +37,7 @@ const CategoryPieChart = () => {
         setCategoryBudgetData(res.data);
       })
       .catch((e) => console.error(e));
-  }, []);
+  };
 
   const calculateExpense = {
     total: categoryBudgetData.reduce((acc, item) => {
@@ -49,7 +57,7 @@ const CategoryPieChart = () => {
   }));
 
   categoryData.push({
-    _id: toString(Math.random()),
+    _id: String(Math.random()),
     value: 0,
     spent: Math.round(calculateBudget.total - calculateExpense.total),
     category: 'Amount Left',
@@ -96,7 +104,7 @@ const CategoryPieChart = () => {
           ]}>
           <Text style={styles.pbarTextExpense}>{ratio}</Text>
         </View>
-        <Text style={[styles.pbarTextBudget]}>${formatNumber(calculateBudget.total, 0)}</Text>
+        <Text style={[styles.pbarTextBudget]}>${formatNumber(calculateBudget.total || 0, 0)}</Text>
       </View>
       <View style={styles.categoryView}>
         {categoryData.map((item, index) => {

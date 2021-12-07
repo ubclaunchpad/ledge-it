@@ -1,3 +1,4 @@
+import pymongo
 from fastapi import APIRouter, Body, HTTPException, status
 from fastapi.responses import JSONResponse
 from fastapi.encoders import jsonable_encoder
@@ -15,11 +16,14 @@ router = APIRouter()
 )
 def get_all_category_budget(month: int, year: int):
     if (
-        category_budgets := list(
-            category_budget_collection.find({"month": month, "year": year})
-        )
-    ) is not None:
-        return category_budgets
+        category_budgets := category_budget_collection.find(
+            {"month": month, "year": year}
+        ).sort([("year", pymongo.DESCENDING), ("month", pymongo.DESCENDING)])
+    ).count() is not None:
+        return [
+            jsonable_encoder(next(category_budgets))
+            for _ in range(category_budgets.count())
+        ]
 
     raise HTTPException(
         status_code=404,
