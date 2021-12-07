@@ -20,7 +20,7 @@ const ItemSummary = ({ modalVisible, setModalVisible, item, userCategories, type
 
   const onUpdate = () => {
     const updateObject = {
-      item: price,
+      price,
       name,
       description,
       date: formatDateBE(date),
@@ -52,7 +52,7 @@ const ItemSummary = ({ modalVisible, setModalVisible, item, userCategories, type
           label={type === 'Expenses' ? 'Price' : 'Amount'}
           onChange={(newVal) => setPrice(newVal)}
           keyboardType="numeric"
-          value={price}
+          value={String(price)}
           required
         />
         <StyledTextInput

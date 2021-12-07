@@ -41,7 +41,7 @@ const ListInputComponent = ({ item, type }) => {
           <View>
             <Text />
             <Text style={styles.price}>
-              {negative}${item.price || item.amount} {item.currency}
+              {negative}${item.price || item.amount} {item.currency.toUpperCase()}
             </Text>
           </View>
         )}
@@ -61,18 +61,16 @@ const ListInputComponent = ({ item, type }) => {
 };
 
 const TableComponent = ({ title, subTitle, list, type }) => {
-  const tableItems = list.map((item, index) => (
-    <Swipeable key={index} renderRightActions={RightSwipe}>
-      <ListInputComponent item={item} type={type} />
-    </Swipeable>
-  ));
-
   return (
     <List.Section style={styles.container}>
       <List.Subheader style={styles.header}>
         {MONTHS[title - 1]} {subTitle}
       </List.Subheader>
-      {tableItems}
+      {list.map((item, index) => (
+        <Swipeable key={index} renderRightActions={RightSwipe}>
+          <ListInputComponent item={item} type={type} />
+        </Swipeable>
+      ))}
     </List.Section>
   );
 };

@@ -1,3 +1,4 @@
+from typing import List
 from fastapi import APIRouter, Body, HTTPException, status
 from fastapi.responses import JSONResponse
 from fastapi.encoders import jsonable_encoder
@@ -10,6 +11,16 @@ from ..database.database import net_worth_collection
 from ..utils.currency import get_exchange_rate_to_cad
 
 router = APIRouter()
+
+
+@router.get(
+    "/incomes/", response_description="Get all expenses", response_model=List[Income]
+)
+def get_incomes():
+    if (all_incomes := income_collection.find()).count():
+        return [jsonable_encoder(next(all_incomes)) for _ in range(all_incomes.count())]
+
+    raise HTTPException(status_code=404, detail=f"No incomes have been found.")
 
 
 @router.get(
