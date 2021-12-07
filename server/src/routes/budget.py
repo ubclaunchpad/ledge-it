@@ -1,3 +1,4 @@
+import pymongo
 from fastapi import APIRouter, Body, HTTPException, status
 from fastapi.responses import JSONResponse
 from fastapi.encoders import jsonable_encoder
@@ -15,7 +16,11 @@ router = APIRouter()
     response_model=List[Budget],
 )
 def get_all_budgets():
-    if (all_budgets := budget_collection.find()).count():
+    if (
+        all_budgets := budget_collection.find().sort(
+            [("year", pymongo.DESCENDING), ("month", pymongo.DESCENDING)]
+        )
+    ).count():
         return [jsonable_encoder(next(all_budgets)) for _ in range(all_budgets.count())]
 
     raise HTTPException(status_code=404, detail=f"No budgets have been found.")

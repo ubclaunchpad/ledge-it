@@ -1,3 +1,4 @@
+import pymongo
 from fastapi import APIRouter, Body, HTTPException, status
 from fastapi.responses import JSONResponse
 from fastapi.encoders import jsonable_encoder
@@ -18,7 +19,11 @@ router = APIRouter()
     "/expenses/", response_description="Get all expenses", response_model=List[Expense]
 )
 def get_expenses():
-    if (all_expenses := expense_collection.find()).count():
+    if (
+        all_expenses := expense_collection.find().sort(
+            [("date", pymongo.DESCENDING), ("updated_at", pymongo.DESCENDING)]
+        )
+    ).count():
         return [
             jsonable_encoder(next(all_expenses)) for _ in range(all_expenses.count())
         ]
@@ -34,7 +39,11 @@ def get_expenses():
 def get_expenses_by_month(year: int, month: int):
     regex = compile(f"{year}-{f'0{month}' if month < 10 else month}-" + r"\d{2}")
 
-    if (expenses := expense_collection.find({"date": {"$regex": regex}})).count():
+    if (
+        (expenses := expense_collection.find({"date": {"$regex": regex}}))
+        .sort([("date", pymongo.DESCENDING), ("updated_at", pymongo.DESCENDING)])
+        .count()
+    ):
         return [jsonable_encoder(next(expenses)) for _ in range(expenses.count())]
 
     raise HTTPException(
