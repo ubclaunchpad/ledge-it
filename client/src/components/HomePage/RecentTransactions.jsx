@@ -16,7 +16,12 @@ const getTransactionsToDisplay = (incomes, expenses) => {
   const temp = [];
 
   while (i < expenses.length && j < incomes.length && k < 10) {
-    if (new Date(expenses[i].date) - new Date(incomes[j].date)) {
+    const compareDates = new Date(expenses[i].date) - new Date(incomes[j].date);
+    if (
+      compareDates === 0
+        ? new Date(expenses[i].created_at) - new Date(incomes[j].created_at)
+        : compareDates
+    ) {
       temp[k++] = { ...expenses[i], price: -expenses[i].price };
       i++;
     } else {
