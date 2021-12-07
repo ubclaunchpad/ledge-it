@@ -40,10 +40,10 @@ def get_expenses_by_month(year: int, month: int):
     regex = compile(f"{year}-{f'0{month}' if month < 10 else month}-" + r"\d{2}")
 
     if (
-        (expenses := expense_collection.find({"date": {"$regex": regex}}))
-        .sort([("date", pymongo.DESCENDING), ("updated_at", pymongo.DESCENDING)])
-        .count()
-    ):
+        expenses := expense_collection.find({"date": {"$regex": regex}}).sort(
+            [("date", pymongo.DESCENDING), ("updated_at", pymongo.DESCENDING)]
+        )
+    ).count():
         return [jsonable_encoder(next(expenses)) for _ in range(expenses.count())]
 
     raise HTTPException(

@@ -19,7 +19,7 @@ def get_all_category_budget(month: int, year: int):
         category_budgets := category_budget_collection.find(
             {"month": month, "year": year}
         ).sort([("year", pymongo.DESCENDING), ("month", pymongo.DESCENDING)])
-    ).count() is not None:
+    ).count():
         return [
             jsonable_encoder(next(category_budgets))
             for _ in range(category_budgets.count())

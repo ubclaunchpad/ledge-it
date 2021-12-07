@@ -36,7 +36,7 @@ const CategoryPieChart = () => {
       .then((res) => {
         setCategoryBudgetData(res.data);
       })
-      .catch((e) => console.error(e));
+      .catch((e) => console.log(e));
   };
 
   const calculateExpense = {
