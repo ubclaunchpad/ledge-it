@@ -3,8 +3,11 @@ from fastapi import APIRouter, Body, HTTPException, status
 from fastapi.responses import JSONResponse
 from fastapi.encoders import jsonable_encoder
 from pydantic.error_wrappers import ValidationError
+
+from .net_worth import update_net_worth
 from ..models.income import Income, UpdateIncomeModel, AddIncome
 from ..database.database import income_collection
+from ..database.database import net_worth_collection
 from ..utils.currency import get_exchange_rate_to_cad
 
 router = APIRouter()
@@ -32,6 +35,11 @@ def get_income_by_id(id):
 
 @router.post("/income/", response_description="Add new income", response_model=Income)
 def create_income(income: AddIncome = Body(...)):
+    if (net_worth_to_update := net_worth_collection.find_one()) is None:
+        raise HTTPException(status_code=404, detail=f"Net worths not found")
+
+    update_net_worth(net_worth_to_update["_id"], abs(income.amount), income.date)
+
     if income.currency.lower() == "cad":
         income.exchange_rate = 1
     else:
@@ -57,6 +65,17 @@ def create_income(income: AddIncome = Body(...)):
     "/income/{id}", response_description="Delete income by id", response_model=Income
 )
 def delete_income_by_id(id):
+    if (income_to_delete := income_collection.find_one({"_id": id})) is None:
+        raise HTTPException(status_code=404, detail=f"Expense with id {id} not found")
+    if (net_worth_to_update := net_worth_collection.find_one()) is None:
+        raise HTTPException(status_code=404, detail=f"Net worths not found")
+
+    update_net_worth(
+        net_worth_to_update["_id"],
+        -abs(income_to_delete["amount"]),
+        income_to_delete["date"],
+    )
+
     delete_result = income_collection.delete_one({"_id": id})
 
     if delete_result.deleted_count == 1:
@@ -74,6 +93,14 @@ def delete_income_by_id(id):
     response_model=Income,
 )
 def update_income(id, income: UpdateIncomeModel = Body(...)):
+    if (income_to_update := income_collection.find_one({"_id": id})) is None:
+        raise HTTPException(status_code=404, detail=f"Expense with id {id} not found")
+    if (net_worth_to_update := net_worth_collection.find_one()) is None:
+        raise HTTPException(status_code=404, detail=f"Net worths not found")
+
+    amount_change = income.amount - income_to_update["amount"]
+    update_net_worth(net_worth_to_update["_id"], amount_change, income.date)
+
     if income.currency is not None:
         if income.currency.lower() == "cad":
             income.exchange_rate = 1
