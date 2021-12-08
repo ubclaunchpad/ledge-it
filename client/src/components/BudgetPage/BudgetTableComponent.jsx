@@ -24,7 +24,7 @@ const BudgetTableComponent = ({ budget, isVisible, setVisible, setMonth, setYear
         )}
         onPress={() => {
           setVisible(!isVisible);
-          setMonth(budget.month + 1);
+          setMonth(budget.month);
           setYear(budget.year);
         }}
         style={styles.listItem}

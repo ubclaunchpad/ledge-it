@@ -136,6 +136,7 @@ def update_category_budget_spent(month: int, year: int, category: str, change: f
             {"month": month, "year": year, "category": category},
             {"$set": category_budget},
         )
+        return category_budget
 
     raise HTTPException(
         status_code=404,
