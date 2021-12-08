@@ -98,7 +98,7 @@ def update_budget_spent(month: int, year: int, change: float):
         budget := budget_collection.find_one({"month": month, "year": year})
     ) is not None:
         budget["spent"] += change
-        budget.update_one(
+        budget_collection.update_one(
             {"month": month, "year": year},
             {"$set": budget},
         )
