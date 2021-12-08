@@ -13,7 +13,7 @@ const BudgetDetails = ({ expenseDatabase, currentMonth, currentYear, isVisible, 
           <Ionicons name="arrow-back-outline" color={theme.colors.primaryDark} size={35} />
         </Pressable>
         <View style={{ alignItems: 'center', marginBottom: 10 }}>
-          <Text style={styles.title}>{MONTHS[currentMonth-1]}</Text>
+          <Text style={styles.title}>{MONTHS[currentMonth - 1]}</Text>
         </View>
       </View>
       {expenseDatabase.length > 0 ? (

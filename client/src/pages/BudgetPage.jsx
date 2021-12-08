@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import BudgetTable from '../components/BudgetPage/BudgetTable';
 import BudgetDetails from '../components/BudgetPage/BudgetDetails';
-import axios from 'axios';
 
 const BudgetPage = () => {
   const [showDetails, setShowDetails] = useState(false);
@@ -10,10 +10,9 @@ const BudgetPage = () => {
   const [databaseBudget, setDatabaseBudget] = useState([]);
   const [databaseExpense, setDatabaseExpense] = useState([]);
 
-  useEffect (() => {
-    var tempList = [];
-    var tempList2 = [];
-    console.log('https://money-manager-dev.herokuapp.com/expense/' + year + '/'+ month)
+  useEffect(() => {
+    const tempList = [];
+    const tempList2 = [];
     axios
       .get('https://money-manager-dev.herokuapp.com/budget/all')
       .then((response) => {
@@ -24,11 +23,11 @@ const BudgetPage = () => {
       })
       .catch((err) => {
         setDatabaseBudget(tempList);
-        console.log(err)
+        console.log(err);
       });
 
     axios
-      .get('https://money-manager-dev.herokuapp.com/expense/' + year + '/'+ month)
+      .get(`https://money-manager-dev.herokuapp.com/expense/${year}/${month}`)
       .then((response) => {
         response.data.forEach((item) => {
           tempList2.push(item);
@@ -37,9 +36,9 @@ const BudgetPage = () => {
       })
       .catch((err) => {
         setDatabaseExpense(tempList2);
-        console.log(err)
+        console.log(err);
       });
-  }, [showDetails]);
+  }, [showDetails, month, year]);
 
   return (
     <>
