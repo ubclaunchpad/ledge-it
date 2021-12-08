@@ -1,9 +1,12 @@
 import React, { useState } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
 import AmountBox from '../components/AmountBox';
 import StyledTextInput from '../components/StyledTextInput';
 import StyledButton from '../components/StyledButton';
 import StyledSelect from '../components/StyledSelect';
+import axios from 'axios';
+import { formatDateBE } from '../utils/formatters';
+import { theme } from '../../theme';
 
 const categories = [
   { label: 'Salary', value: 'Salary' },
@@ -15,7 +18,7 @@ const getCurrentDate = () => {
   return `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`;
 };
 
-const AddIncome = () => {
+const AddIncome = ({ setModalVisible, setIncomeModalVisible }) => {
   const currency = 'CAD';
   const [amount, setAmount] = useState(undefined);
   const [name, setName] = useState(undefined);
@@ -26,85 +29,112 @@ const AddIncome = () => {
   const [location, setLocation] = useState(undefined);
 
   const submitIncome = async () => {
-    console.log({
-      name,
-      description,
-      date: date ? date.replace('.', '-').replace('.', '-') : undefined,
-      amount,
-      currency,
-      exchange_rate: 0,
-      location,
-      category,
-    });
+    axios
+      .post(
+        'https://money-manager-dev.herokuapp.com/income/',
+        JSON.stringify({
+          name,
+          description,
+          date: formatDateBE(date),
+          amount,
+          currency,
+          exchange_rate: 0,
+          location,
+          category,
+        }),
+        {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        },
+      )
+      .then(({ data }) => console.log(data))
+      .catch((err) => console.log(err));
+    setIncomeModalVisible(false);
+    setModalVisible(false);
   };
 
   return (
-    <View style={styles.centeredView}>
+    <View style={styles.content}>
+      <Text style={styles.title}>Add Income</Text>
       <AmountBox fields={[amount || 0.0, date, category || '', description, location]} />
-      <View style={styles.form}>
-        <StyledTextInput
-          onChange={setAmount}
-          keyboardType="numeric"
-          label="Amount"
-          placeholder="$$$"
-          required
-        />
-        <StyledTextInput
-          onChange={setName}
-          keyboardType="default"
-          label="Income Source"
-          placeholder="Salary"
-          required
-        />
-        <StyledTextInput
-          onChange={setDate}
-          keyboardType="default"
-          label="Date"
-          placeholder="DD/MM/YYYY"
-          defaultValue={getCurrentDate()}
-          required
-        />
-        <StyledSelect
-          label="Category"
-          categories={categories}
-          category={category}
-          setCategory={setCategory}
-          categoryDropdownVisible={categoryDropdownVisible}
-          setCategoryDropdownVisible={setCategoryDropdownVisible}
-          required
-        />
-        <StyledTextInput
-          onChange={setDesc}
-          keyboardType="default"
-          label="Description"
-          placeholder="optional..."
-          multiline
-        />
-        <StyledTextInput
-          onChange={setLocation}
-          keyboardType="default"
-          label="Location"
-          placeholder="optional..."
-        />
+      <StyledTextInput
+        onChange={setAmount}
+        keyboardType="numeric"
+        label="Amount"
+        placeholder="$$$"
+        required
+      />
+      <StyledTextInput
+        onChange={setName}
+        keyboardType="default"
+        label="Income Source"
+        placeholder="Salary"
+        required
+      />
+      <StyledTextInput
+        onChange={setDesc}
+        keyboardType="default"
+        label="Description"
+        placeholder="Optional..."
+        multiline
+      />
+      <StyledTextInput
+        onChange={setDate}
+        keyboardType="default"
+        label="Date"
+        placeholder="DD/MM/YYYY"
+        defaultValue={getCurrentDate()}
+        required
+      />
+      <StyledSelect
+        label="Category"
+        options={categories}
+        selected={category}
+        setSelected={setCategory}
+        dropdownVisible={categoryDropdownVisible}
+        setDropdownVisible={setCategoryDropdownVisible}
+        placeholder="Select a category"
+        required
+      />
+      <StyledTextInput
+        onChange={setLocation}
+        keyboardType="default"
+        label="Location"
+        placeholder="Optional..."
+      />
+      <View
+        style={{
+          flexDirection: 'row',
+          justifyContent: 'center',
+          marginTop: 20,
+        }}>
+        <View style={styles.button}>
+          <StyledButton label="Cancel" onTap={() => setIncomeModalVisible(false)} />
+        </View>
+        <View style={styles.button}>
+          <StyledButton label="Add" onTap={submitIncome} />
+        </View>
       </View>
-      <StyledButton label="Add" onTap={submitIncome} />
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  centeredView: {
-    flex: 1,
+  content: {
+    flexDirection: 'column',
     justifyContent: 'flex-start',
-    alignItems: 'center',
-    marginTop: 0,
-    padding: 10,
+    marginHorizontal: 20,
   },
-  form: {
-    justifyContent: 'flex-start',
-    alignItems: 'center',
-    marginTop: 10,
+  title: {
+    textAlign: 'center',
+    fontSize: 24,
     marginBottom: 20,
+    fontWeight: 'bold',
+    color: theme.colors.primary,
+  },
+  button: {
+    marginHorizontal: 20,
   },
 });
 

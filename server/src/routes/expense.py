@@ -7,7 +7,7 @@ from typing import List
 from re import compile
 
 from .net_worth import update_net_worth
-from .. import update_category_budget_spent
+from .category_budget import update_category_budget_spent
 from ..models import Expense, UpdateExpenseModel, AddExpense
 from ..database import expense_collection
 from ..database import net_worth_collection

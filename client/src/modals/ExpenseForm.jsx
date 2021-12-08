@@ -19,7 +19,7 @@ const getCurrentDate = () => {
   return `${date.getMonth() + 1}/${date.getDate()}/${date.getFullYear()}`;
 };
 
-const AddExpense = ({ setModalVisible }) => {
+const AddExpense = ({ setModalVisible, setExpenseModalVisible }) => {
   const currency = 'CAD';
   const [price, setPrice] = useState(undefined);
   const [name, setName] = useState(undefined);
@@ -53,6 +53,7 @@ const AddExpense = ({ setModalVisible }) => {
       )
       .then(({ data }) => console.log(data))
       .catch((err) => console.log(err));
+    setExpenseModalVisible(false);
     setModalVisible(false);
   };
 
@@ -63,7 +64,7 @@ const AddExpense = ({ setModalVisible }) => {
       <StyledTextInput
         onChange={setPrice}
         keyboardType="numeric"
-        label="Amount"
+        label="Price"
         placeholder="$$$"
         required
       />
@@ -118,7 +119,7 @@ const AddExpense = ({ setModalVisible }) => {
           marginTop: 20,
         }}>
         <View style={styles.button}>
-          <StyledButton label="Cancel" onTap={() => setModalVisible(false)} />
+          <StyledButton label="Cancel" onTap={() => setExpenseModalVisible(false)} />
         </View>
         <View style={styles.button}>
           <StyledButton label="Add" onTap={submitExpense} />

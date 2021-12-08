@@ -6,19 +6,24 @@ import ExpenseForm from '../modals/ExpenseForm';
 import IncomeForm from '../modals/IncomeForm';
 import { theme } from '../../theme';
 
-const DefaultActionButton = ({ children }) => {
+const DefaultActionButton = () => {
   const [isModalVisible, setModalVisible] = useState(false);
   const [isIncomeModalVisible, setIncomeModalVisible] = useState(false);
   const [isExpenseModalVisible, setExpenseModalVisible] = useState(false);
   return (
     <View style={styles.centeredView}>
       <Modal isModalVisible={isModalVisible} setModalVisible={setModalVisible}>
-        {React.isValidElement(children) && React.cloneElement(children, { setModalVisible })}
         <Modal isModalVisible={isIncomeModalVisible} setModalVisible={setIncomeModalVisible}>
-          <IncomeForm />
+          <IncomeForm
+            setModalVisible={setModalVisible}
+            setIncomeModalVisible={setIncomeModalVisible}
+          />
         </Modal>
         <Modal isModalVisible={isExpenseModalVisible} setModalVisible={setExpenseModalVisible}>
-          <ExpenseForm />
+          <ExpenseForm
+            setModalVisible={setModalVisible}
+            setExpenseModalVisible={setExpenseModalVisible}
+          />
         </Modal>
         <Button
           style={styles.button}
@@ -52,11 +57,11 @@ const styles = StyleSheet.create({
     position: 'absolute',
     margin: 20,
     right: 0,
-    bottom: 0,
+    bottom: 20,
     backgroundColor: theme.colors.primaryDark,
   },
   button: {
-    backgroundColor: '#24838f',
+    backgroundColor: theme.colors.primaryDark,
     margin: 5,
     paddingBottom: 2,
     paddingLeft: 11,
@@ -65,11 +70,11 @@ const styles = StyleSheet.create({
     borderRadius: 20,
   },
   incomeButton: {
-    backgroundColor: 'green',
+    backgroundColor: theme.colors.green,
     margin: 5,
   },
   expenseButton: {
-    backgroundColor: 'red',
+    backgroundColor: theme.colors.red,
     margin: 5,
   },
 });
