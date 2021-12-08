@@ -70,9 +70,9 @@ const TableComponent = ({ title, subTitle, list, type }) => {
       .catch((err) => console.log(err));
   };
 
-  const RightSwipeComponent = () => {
+  const RightSwipeComponent = (id) => {
     return (
-      <Pressable style={styles.swipeBackground} onPress={handleDelete}>
+      <Pressable style={styles.swipeBackground} onPress={() => handleDelete(id)}>
         <Text style={styles.swipeText}>Delete</Text>
       </Pressable>
     );
@@ -84,7 +84,7 @@ const TableComponent = ({ title, subTitle, list, type }) => {
         {MONTHS[title - 1]} {subTitle}
       </List.Subheader>
       {list.map((item, index) => (
-        <Swipeable key={index} renderRightActions={RightSwipeComponent(item._id)}>
+        <Swipeable key={index} renderRightActions={() => RightSwipeComponent(item._id)}>
           <ListInputComponent item={item} type={type} />
         </Swipeable>
       ))}
