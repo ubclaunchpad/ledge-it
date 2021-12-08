@@ -8,6 +8,7 @@ from re import compile
 
 from .net_worth import update_net_worth
 from .category_budget import update_category_budget_spent
+from .. import update_budget_spent
 from ..models import Expense, UpdateExpenseModel, AddExpense
 from ..database import expense_collection
 from ..database import net_worth_collection
@@ -72,6 +73,7 @@ def create_expense(expense: AddExpense = Body(...)):
     update_net_worth(
         net_worth_to_update["_id"], -abs(expense.price), expense.date, is_expense=True
     )
+    update_budget_spent(expense.date.month, expense.date.year, expense.price)
     update_category_budget_spent(
         expense.date.month, expense.date.year, expense.category, expense.price
     )
@@ -110,6 +112,7 @@ def update_expense(id, expense: UpdateExpenseModel = Body(...)):
     update_net_worth(
         net_worth_to_update["_id"], price_change, expense.date, is_expense=True
     )
+    update_budget_spent(expense.date.month, expense.date.year, -price_change)
     update_category_budget_spent(
         expense.date.month, expense.date.year, expense.category, -price_change
     )
@@ -156,6 +159,11 @@ def delete_expense(id):
         expense_to_delete["price"],
         expense_to_delete["date"],
         is_expense=True,
+    )
+    update_budget_spent(
+        expense_to_delete["date"].month,
+        expense_to_delete["date"].year,
+        -expense_to_delete["price"],
     )
     update_category_budget_spent(
         expense_to_delete["date"].month,
