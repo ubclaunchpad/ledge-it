@@ -23,7 +23,7 @@ const BudgetDetailsTableComponent = ({ expenses }) => (
           <View>
             <Text />
             <Text style={styles.price}>
-              -${expense.price || expense.amount} {expense.currency}
+              -${expense.price || expense.amount} {expense.currency.toUpperCase()}
             </Text>
           </View>
         )}
