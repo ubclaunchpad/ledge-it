@@ -4,6 +4,7 @@ import { FAB, Button } from 'react-native-paper';
 import Modal from './CustomModal';
 import ExpenseForm from '../modals/ExpenseForm';
 import IncomeForm from '../modals/IncomeForm';
+import { theme } from '../../theme';
 
 const DefaultActionButton = ({ children }) => {
   const [isModalVisible, setModalVisible] = useState(false);
@@ -34,7 +35,6 @@ const DefaultActionButton = ({ children }) => {
           Add Expense
         </Button>
       </Modal>
-
       <FAB style={styles.fab} medium icon="plus" onPress={() => setModalVisible(true)} />
     </View>
   );
@@ -50,10 +50,10 @@ const styles = StyleSheet.create({
   },
   fab: {
     position: 'absolute',
-    margin: 30,
+    margin: 20,
     right: 0,
     bottom: 0,
-    backgroundColor: '#24838f',
+    backgroundColor: theme.colors.primaryDark,
   },
   button: {
     backgroundColor: '#24838f',

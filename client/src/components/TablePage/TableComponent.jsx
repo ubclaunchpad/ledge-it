@@ -1,8 +1,11 @@
-import * as React from 'react';
+import React, { useState } from 'react';
 import { List } from 'react-native-paper';
 import { StyleSheet, Text, View } from 'react-native';
 import { Swipeable } from 'react-native-gesture-handler';
 import { MONTHS } from '../../utils/constants';
+import { theme } from '../../../theme';
+import ItemSummary from '../../modals/ItemSummary';
+import { getDay, getMonth, getYear } from '../../utils/formatters';
 
 const RightSwipe = () => {
   return (
@@ -12,18 +15,25 @@ const RightSwipe = () => {
   );
 };
 
-const TableComponent = ({ title, subTitle, mult, type }) => {
-  const negative = type === 'Expenses' ? '-' : '';
+const ListInputComponent = ({ item, type }) => {
+  const [itemSummaryModal, setItemSummaryModal] = useState(false);
 
-  const tableItems = mult.map((obj, index) => (
-    <Swipeable key={index} renderRightActions={RightSwipe}>
+  const negative = type === 'Expenses' ? '-' : '';
+  const userCategoriesExpenses = ['Food', 'Housing', 'Fun', 'Other', 'School'];
+  const userCategoriesIncomes = ['Main job', 'Part-time', 'Passive', 'Other'];
+
+  return (
+    <>
       <List.Item
-        title={<Text style={styles.subheader}>{obj.name}</Text>}
+        title={<Text style={styles.subheader}>{item.name}</Text>}
+        onPress={() => {
+          setItemSummaryModal(true);
+        }}
         description={
           <View>
-            <Text style={styles.text}>{obj.category}</Text>
+            <Text style={styles.text}>{item.category}</Text>
             <Text style={styles.text}>
-              {MONTHS[obj.date.getMonth()]} {obj.date.getDate()}, {obj.date.getFullYear()}
+              {MONTHS[getMonth(item.date) - 1]} {getDay(item.date)}, {getYear(item.date)}
             </Text>
           </View>
         }
@@ -31,21 +41,36 @@ const TableComponent = ({ title, subTitle, mult, type }) => {
           <View>
             <Text />
             <Text style={styles.price}>
-              {negative}${obj.price} {obj.currency}
+              {negative}${item.price || item.amount} {item.currency.toUpperCase()}
             </Text>
           </View>
         )}
         style={styles.listItem}
       />
-    </Swipeable>
-  ));
+      {itemSummaryModal && (
+        <ItemSummary
+          modalVisible={itemSummaryModal}
+          setModalVisible={setItemSummaryModal}
+          item={item}
+          userCategories={type === 'Expenses' ? userCategoriesExpenses : userCategoriesIncomes}
+          type={type}
+        />
+      )}
+    </>
+  );
+};
 
+const TableComponent = ({ title, subTitle, list, type }) => {
   return (
     <List.Section style={styles.container}>
       <List.Subheader style={styles.header}>
         {MONTHS[title - 1]} {subTitle}
       </List.Subheader>
-      {tableItems}
+      {list.map((item, index) => (
+        <Swipeable key={index} renderRightActions={RightSwipe}>
+          <ListInputComponent item={item} type={type} />
+        </Swipeable>
+      ))}
     </List.Section>
   );
 };
@@ -57,27 +82,28 @@ const styles = StyleSheet.create({
     marginVertical: 0,
     paddingBottom: 12,
     borderBottomWidth: 1,
-    borderBottomColor: '#6072a6',
+    borderBottomColor: theme.colors.grey,
   },
   header: {
     fontSize: 20,
-    color: '#fff',
+    fontWeight: 'bold',
+    color: theme.colors.textLight,
     marginTop: -5,
     marginBottom: -10,
   },
   subheader: {
     fontSize: 16,
     fontWeight: 'bold',
-    color: '#fff',
+    color: theme.colors.textLight,
   },
   text: {
     fontSize: 12,
-    color: '#fff',
+    color: theme.colors.textLight,
   },
   price: {
     fontSize: 20,
     fontWeight: 'bold',
-    color: '#fff',
+    color: theme.colors.textLight,
     justifyContent: 'space-evenly',
   },
   swipeBackground: {
@@ -89,12 +115,12 @@ const styles = StyleSheet.create({
     marginRight: 15,
   },
   swipeText: {
-    color: '#fff',
+    color: theme.colors.textLight,
     fontWeight: '600',
     padding: 20,
   },
   listItem: {
-    backgroundColor: '#4993ec',
+    backgroundColor: theme.colors.primary,
     marginHorizontal: 15,
     marginVertical: 5,
     borderRadius: 10,

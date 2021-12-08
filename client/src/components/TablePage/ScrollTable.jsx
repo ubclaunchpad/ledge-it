@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, ScrollView, SafeAreaView, StatusBar } from 'react-native';
+import { Dimensions, StyleSheet, Text, View } from 'react-native';
 import TableComponent from './TableComponent';
+import { theme } from '../../../theme';
+import { getMonth, getYear } from '../../utils/formatters';
 
 const ScrollTable = ({ type, renderList }) => {
   const [splitList, setSplitList] = useState([]);
@@ -8,8 +10,8 @@ const ScrollTable = ({ type, renderList }) => {
   useEffect(() => {
     const tempList = [];
     renderList.forEach((item) => {
-      const month = item.date.getMonth() + 1;
-      const year = item.date.getFullYear();
+      const month = getMonth(item.date);
+      const year = getYear(item.date);
       if (tempList.length === 0) {
         tempList.push({ month, year, list: [] });
       }
@@ -24,33 +26,42 @@ const ScrollTable = ({ type, renderList }) => {
   }, [renderList]);
 
   return (
-    <SafeAreaView style={styles.container}>
-      <ScrollView style={styles.scrollView}>
-        {splitList.map((monthExp, index) => (
+    <View style={styles.scrollView}>
+      {splitList?.length ? (
+        splitList.map((monthExp, index) => (
           <TableComponent
             key={index}
             title={monthExp.month}
             subTitle={monthExp.year}
-            mult={monthExp.list}
+            list={monthExp.list}
             type={type}
           />
-        ))}
-      </ScrollView>
-    </SafeAreaView>
+        ))
+      ) : (
+        <View style={styles.errorTextView}>
+          <Text style={styles.errorText}>No {type.toLowerCase()}</Text>
+        </View>
+      )}
+      <View style={{ height: 100 }} />
+    </View>
   );
 };
 
 export default ScrollTable;
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    paddingTop: StatusBar.currentHeight,
-  },
   scrollView: {
-    backgroundColor: '#244fad',
-    borderTopRightRadius: 10,
-    borderTopLeftRadius: 10,
     paddingVertical: 10,
+    minHeight: Dimensions.get('window').height - 200,
+  },
+  errorTextView: {
+    display: 'flex',
+    alignItems: 'center',
+    marginVertical: 80,
+  },
+  errorText: {
+    color: theme.colors.textDark,
+    fontSize: 28,
+    fontWeight: 'bold',
   },
 });

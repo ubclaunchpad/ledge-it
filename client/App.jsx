@@ -8,6 +8,7 @@ import TablePage from './src/pages/TablePage';
 import BudgetPage from './src/pages/BudgetPage';
 import AnalyticsPage from './src/pages/AnalyticsPage';
 import SettingsPage from './src/pages/SettingsPage';
+import { theme } from './theme';
 
 const App = () => {
   return (
@@ -24,9 +25,13 @@ const TabNavBar = () => {
     <Tab.Navigator
       screenOptions={({ route }) => ({
         tabBarIcon: ({ color }) => screenOptions(route, color),
-        tabBarActiveTintColor: '#7ad7f0',
-        tabBarInactiveTintColor: '#0D50B4',
+        tabBarActiveTintColor: theme.colors.accentDark,
+        tabBarInactiveTintColor: theme.colors.primaryLight,
+        tabBarStyle: {
+          backgroundColor: theme.colors.primary,
+        },
         tabBarShowLabel: false,
+        headerShown: false,
       })}
       style={styles.container}>
       <Tab.Screen name="Home" component={HomePage} />
@@ -62,13 +67,13 @@ const screenOptions = (route, color) => {
   return <Ionicons name={iconName} color={color} size={26} />;
 };
 
-export default App;
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: theme.colors.primary,
     alignItems: 'center',
     justifyContent: 'center',
   },
 });
+
+export default App;

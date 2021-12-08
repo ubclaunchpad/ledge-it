@@ -1,12 +1,56 @@
+import pymongo
 from fastapi import APIRouter, Body, HTTPException, status
 from fastapi.responses import JSONResponse
 from fastapi.encoders import jsonable_encoder
 from pydantic.error_wrappers import ValidationError
+from typing import List
+from re import compile
+
+from .net_worth import update_net_worth
+from .. import update_category_budget_spent
 from ..models import Expense, UpdateExpenseModel, AddExpense
 from ..database import expense_collection
+from ..database import net_worth_collection
 from ..utils.currency import get_exchange_rate_to_cad
 
 router = APIRouter()
+
+
+@router.get(
+    "/expenses/", response_description="Get all expenses", response_model=List[Expense]
+)
+def get_expenses():
+    if (
+        all_expenses := expense_collection.find().sort(
+            [("date", pymongo.DESCENDING), ("updated_at", pymongo.DESCENDING)]
+        )
+    ).count():
+        return [
+            jsonable_encoder(next(all_expenses)) for _ in range(all_expenses.count())
+        ]
+
+    raise HTTPException(status_code=404, detail=f"No expenses have been found.")
+
+
+@router.get(
+    "/expense/{year}/{month}",
+    response_description="Get all expenses from the given month and year",
+    response_model=List[Expense],
+)
+def get_expenses_by_month(year: int, month: int):
+    regex = compile(f"{year}-{f'0{month}' if month < 10 else month}-" + r"\d{2}")
+
+    if (
+        expenses := expense_collection.find({"date": {"$regex": regex}}).sort(
+            [("date", pymongo.DESCENDING), ("updated_at", pymongo.DESCENDING)]
+        )
+    ).count():
+        return [jsonable_encoder(next(expenses)) for _ in range(expenses.count())]
+
+    raise HTTPException(
+        status_code=404,
+        detail=f"No expenses have been found for the given month and year.",
+    )
 
 
 @router.get(
@@ -23,6 +67,15 @@ def get_expense_by_id(id):
     "/expense/", response_description="Add new expense", response_model=Expense
 )
 def create_expense(expense: AddExpense = Body(...)):
+    if (net_worth_to_update := net_worth_collection.find_one()) is None:
+        raise HTTPException(status_code=404, detail=f"Net worths not found")
+    update_net_worth(
+        net_worth_to_update["_id"], -abs(expense.price), expense.date, is_expense=True
+    )
+    update_category_budget_spent(
+        expense.date.month, expense.date.year, expense.category, expense.price
+    )
+
     if expense.currency.lower() == "cad":
         expense.exchange_rate = 1
     else:
@@ -48,6 +101,19 @@ def create_expense(expense: AddExpense = Body(...)):
     "/expense/{id}", response_description="Update an expense", response_model=Expense
 )
 def update_expense(id, expense: UpdateExpenseModel = Body(...)):
+    if (expense_to_update := expense_collection.find_one({"_id": id})) is None:
+        raise HTTPException(status_code=404, detail=f"Expense with id {id} not found")
+    if (net_worth_to_update := net_worth_collection.find_one()) is None:
+        raise HTTPException(status_code=404, detail=f"Net worths not found")
+
+    price_change = expense_to_update["price"] - expense.price
+    update_net_worth(
+        net_worth_to_update["_id"], price_change, expense.date, is_expense=True
+    )
+    update_category_budget_spent(
+        expense.date.month, expense.date.year, expense.category, -price_change
+    )
+
     if expense.currency is not None:
         if expense.currency.lower() == "cad":
             expense.exchange_rate = 1
@@ -80,7 +146,25 @@ def update_expense(id, expense: UpdateExpenseModel = Body(...)):
 
 @router.delete("/expense/{id}", response_description="Delete an expense")
 def delete_expense(id):
-    delete_result = expense_collection.delete_one({"_id": id})
+    if (expense_to_delete := expense_collection.find_one({"_id": id})) is None:
+        raise HTTPException(status_code=404, detail=f"Expense with id {id} not found")
+    if (net_worth_to_update := net_worth_collection.find_one()) is None:
+        raise HTTPException(status_code=404, detail=f"Net worth not found")
+
+    update_net_worth(
+        net_worth_to_update["_id"],
+        expense_to_delete["price"],
+        expense_to_delete["date"],
+        is_expense=True,
+    )
+    update_category_budget_spent(
+        expense_to_delete["date"].month,
+        expense_to_delete["date"].year,
+        expense_to_delete["category"],
+        -expense_to_delete["price"],
+    )
+
+    delete_result = expense_collection.delete_one({"_id": expense_to_delete["_id"]})
 
     if delete_result.deleted_count == 1:
         return JSONResponse(

@@ -1,10 +1,34 @@
+import pymongo
 from fastapi import APIRouter, Body, HTTPException, status
 from fastapi.responses import JSONResponse
 from fastapi.encoders import jsonable_encoder
 from ..models import CategoryBudget, UpdateCategoryBudgetModel
 from ..database import category_budget_collection
+from typing import List
 
 router = APIRouter()
+
+
+@router.get(
+    "/budget/category/all",
+    response_description="Get all category budgets by month and year",
+    response_model=List[CategoryBudget],
+)
+def get_all_category_budget(month: int, year: int):
+    if (
+        category_budgets := category_budget_collection.find(
+            {"month": month, "year": year}
+        ).sort([("year", pymongo.DESCENDING), ("month", pymongo.DESCENDING)])
+    ).count():
+        return [
+            jsonable_encoder(next(category_budgets))
+            for _ in range(category_budgets.count())
+        ]
+
+    raise HTTPException(
+        status_code=404,
+        detail=f"Category budgets with month: {month} and year: {year} not found",
+    )
 
 
 @router.get(
@@ -93,6 +117,24 @@ def delete_category_budget(month: int, year: int, category: str):
         return JSONResponse(
             status_code=status.HTTP_200_OK,
             content=f"Category budget with month: {month} and year: {year} and category: {category} was successfully deleted",
+        )
+
+    raise HTTPException(
+        status_code=404,
+        detail=f"Category budget with month: {month} and year: {year} and category: {category} not found",
+    )
+
+
+def update_category_budget_spent(month: int, year: int, category: str, change: float):
+    if (
+        category_budget := category_budget_collection.find_one(
+            {"month": month, "year": year, "category": category}
+        )
+    ) is not None:
+        category_budget["spent"] += change
+        category_budget_collection.update_one(
+            {"month": month, "year": year, "category": category},
+            {"$set": category_budget},
         )
 
     raise HTTPException(

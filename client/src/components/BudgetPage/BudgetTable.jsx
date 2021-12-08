@@ -1,35 +1,71 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { List } from 'react-native-paper';
-import { StyleSheet, ScrollView, SafeAreaView, StatusBar, Text, View } from 'react-native';
-import { MONTHS } from '../../utils/constants';
+import { StyleSheet, ScrollView, SafeAreaView, Text, View } from 'react-native';
+import { theme } from '../../../theme';
+import BudgetTableComponent from './BudgetTableComponent';
+import BudgetHeader from './BudgetPageHeader';
 
-const BudgetTable = ({ renderList }) => {
-  const componentList = renderList.map((budget, index) => (
-    <List.Item
-      key={index}
-      right={() => (
-        <View style={{ flexDirection: 'row', height: 20 }}>
-          <View style={{ width: '40%' }}>
-            <Text style={styles.month}>{MONTHS[budget.month]}</Text>
-          </View>
-          <View style={{ width: '30%' }}>
-            <Text style={styles.value}>${budget.value}</Text>
-          </View>
-          <View style={{ width: '30%' }}>
-            <Text style={styles.spent}>-${budget.spent}</Text>
-          </View>
-        </View>
-      )}
-      style={styles.listItem}
-    />
-  ));
+const BudgetTable = ({ renderList, isVisible, setVisible, setMonth, year, setYear }) => {
+  const [sortMethod, setSortMethod] = useState('new->old');
+
+  const sortBudgets = () => {
+    if (sortMethod === 'old->new') {
+      return renderList.sort((a, b) => {
+        return a.year + a.month / 12 - (b.year + b.month / 12);
+      });
+    } else if (sortMethod === 'high->low') {
+      return renderList.sort((a, b) => {
+        return b.value - a.value;
+      });
+    } else if (sortMethod === 'low->high') {
+      return renderList.sort((a, b) => {
+        return a.value - b.value;
+      });
+    } else {
+      return renderList.sort((a, b) => {
+        return b.year + b.month / 12 - (a.year + a.month / 12);
+      });
+    }
+  };
 
   return (
-    <SafeAreaView style={styles.container}>
-      <ScrollView style={styles.scrollView}>
-        <List.Section>{componentList}</List.Section>
-      </ScrollView>
-    </SafeAreaView>
+    <>
+      <BudgetHeader year={year} setYear={setYear} sortFunction={setSortMethod} />
+      <List.Item
+        style={styles.header}
+        right={() => (
+          <View style={{ flexDirection: 'row', alignItems: 'center', height: 40 }}>
+            <View style={{ width: '40%' }}>
+              <Text style={styles.subheader}> Month</Text>
+            </View>
+            <View style={{ width: '30%', alignItems: 'center' }}>
+              <List.Icon style={styles.value} color={theme.colors.green} icon="arrow-up-bold" />
+            </View>
+            <View style={{ width: '30%', alignItems: 'center' }}>
+              <List.Icon style={styles.spent} color={theme.colors.red} icon="arrow-down-bold" />
+            </View>
+          </View>
+        )}
+      />
+      <SafeAreaView style={styles.container}>
+        <ScrollView style={styles.scrollView}>
+          <List.Section>
+            {sortBudgets()
+              .filter((monthBudget) => monthBudget.year === year)
+              .map((budget) => (
+                <BudgetTableComponent
+                  key={`${budget.month}-${budget.year}`}
+                  budget={budget}
+                  isVisible={isVisible}
+                  setVisible={setVisible}
+                  setMonth={setMonth}
+                  setYear={setYear}
+                />
+              ))}
+          </List.Section>
+        </ScrollView>
+      </SafeAreaView>
+    </>
   );
 };
 
@@ -37,28 +73,35 @@ export default BudgetTable;
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    paddingTop: StatusBar.currentHeight,
+    display: 'flex',
+    overflow: 'scroll',
+  },
+  header: {
+    fontSize: 42,
+    backgroundColor: theme.colors.primary,
+    marginTop: 8,
+    borderTopRightRadius: 10,
+    borderTopLeftRadius: 10,
+  },
+  subheader: {
+    color: theme.colors.textLight,
+    fontSize: 20,
+    fontWeight: 'bold',
   },
   scrollView: {
-    backgroundColor: 'white',
-  },
-  listItem: {
-    borderBottomColor: '#24838f',
-    borderBottomWidth: 1,
-    marginBottom: 9,
+    backgroundColor: theme.colors.primaryBackground,
   },
   month: {
-    color: 'black',
+    color: theme.colors.textDark,
     fontSize: 16,
   },
   value: {
-    color: 'green',
+    color: theme.colors.green,
     fontSize: 16,
     textAlign: 'center',
   },
   spent: {
-    color: 'red',
+    color: theme.colors.red,
     fontSize: 16,
     textAlign: 'center',
   },
