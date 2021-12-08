@@ -9,9 +9,12 @@ import { formatDateBE } from '../utils/formatters';
 import { theme } from '../../theme';
 
 const categories = [
-  { label: 'Groceries', value: 'Groceries' },
-  { label: 'Housing', value: 'Housing' },
-  { label: 'Restaurants', value: 'Restaurants' },
+  { value: 'Housing', label: 'Housing' },
+  { value: 'Food', label: 'Food' },
+  { value: 'Transport', label: 'Transport' },
+  { value: 'Clothes', label: 'Clothes' },
+  { value: 'Entertainment', label: 'Entertainment' },
+  { value: 'Other', label: 'Other' },
 ];
 
 const getCurrentDate = () => {

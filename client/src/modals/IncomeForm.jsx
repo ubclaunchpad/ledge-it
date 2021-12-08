@@ -10,7 +10,9 @@ import { theme } from '../../theme';
 
 const categories = [
   { label: 'Salary', value: 'Salary' },
-  { label: 'Other income', value: 'Other income' },
+  { label: 'Investments', value: 'Investments' },
+  { label: 'Business', value: 'Business' },
+  { label: 'Other', value: 'Other' },
 ];
 
 const getCurrentDate = () => {

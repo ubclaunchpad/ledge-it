@@ -25,9 +25,9 @@ const TablePage = () => {
   // TODO: Fetch user categories from db here
   useEffect(() => {
     if (type === 'Expenses') {
-      setCategories(['Food', 'Housing', 'Fun', 'Other']);
+      setCategories(['Housing', 'Food', 'Transport', 'Clothes', 'Entertainment', 'Other']);
     } else {
-      setCategories(['Main job', 'Part-time', 'Passive', 'Other']);
+      setCategories(['Salary', 'Investments', 'Business', 'Other']);
     }
   }, [type]);
 

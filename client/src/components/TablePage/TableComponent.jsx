@@ -12,8 +12,15 @@ const ListInputComponent = ({ item, type }) => {
   const [itemSummaryModal, setItemSummaryModal] = useState(false);
 
   const negative = type === 'Expenses' ? '-' : '';
-  const userCategoriesExpenses = ['Food', 'Housing', 'Fun', 'Other', 'School'];
-  const userCategoriesIncomes = ['Main job', 'Part-time', 'Passive', 'Other'];
+  const userCategoriesExpenses = [
+    'Housing',
+    'Food',
+    'Transport',
+    'Clothes',
+    'Entertainment',
+    'Other',
+  ];
+  const userCategoriesIncomes = ['Salary', 'Investments', 'Business', 'Other'];
 
   return (
     <>
