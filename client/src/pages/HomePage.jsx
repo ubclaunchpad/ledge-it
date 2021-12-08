@@ -2,7 +2,6 @@ import React from 'react';
 import { StyleSheet, ScrollView, SafeAreaView, View } from 'react-native';
 import DefaultActionButton from '../components/ActionButton';
 import CategoryPieChart from '../components/HomePage/CategoryPieChart';
-import ExpenseForm from '../modals/ExpenseForm';
 import ToggleCard from '../components/HomePage/ToggleCard';
 import NetWorthCard from '../components/HomePage/NetWorthCard';
 import RecentTransactions from '../components/HomePage/RecentTransactions';

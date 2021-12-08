@@ -5,7 +5,6 @@ import { useFocusEffect } from '@react-navigation/native';
 import ScrollTable from '../components/TablePage/ScrollTable';
 import TablePageHeader from '../components/TablePage/TablePageHeader';
 import DefaultActionButton from '../components/ActionButton';
-import ExpenseForm from '../modals/ExpenseForm';
 import { theme } from '../../theme';
 
 const url = 'https://money-manager-dev.herokuapp.com';
