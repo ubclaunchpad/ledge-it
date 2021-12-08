@@ -46,23 +46,23 @@ def update_net_worth(
             nwm["all_time_income"] += change
 
         # TODO: fix slight bug when updating past expenses
-        if len(nwm["history"]) == 0 or added_date > date.fromisoformat(
+        if len(nwm["history"]) == 0 or date.fromisoformat(str(added_date)) > date.fromisoformat(
             nwm["history"][-1]["date"]
         ):
             nwm["history"].append({"date": str(added_date), "value": nwm["current"]})
-        elif added_date == date.fromisoformat(nwm["history"][-1]["date"]):
+        elif date.fromisoformat(str(added_date)) == date.fromisoformat(nwm["history"][-1]["date"]):
             nwm["history"][-1]["value"] = nwm["current"]
         else:
             index = len(nwm["history"]) - 1
             while (
                 index >= 0
-                and date.fromisoformat(nwm["history"][index]["date"]) >= added_date
+                and date.fromisoformat(nwm["history"][index]["date"]) >= date.fromisoformat(str(added_date))
             ):
                 nwm["history"][index]["value"] = (
                     float(nwm["history"][index]["value"]) + change
                 )
                 index -= 1
-            if index == -1 or nwm["history"][index + 1]["date"] != added_date:
+            if index == -1 or nwm["history"][index + 1]["date"] != date.fromisoformat(str(added_date)):
                 nwm["history"].insert(
                     index + 1,
                     {

@@ -67,11 +67,6 @@ const TableComponent = ({ title, subTitle, list, type }) => {
         `https://money-manager-dev.herokuapp.com/${
           type === 'Expenses' ? 'expense' : 'income'
         }/${id}`,
-        {
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        },
       )
       .then(({ data }) => console.log(data))
       .catch((err) => console.log(err));

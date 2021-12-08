@@ -12,7 +12,7 @@ const BudgetTableComponent = ({ budget, isVisible, setVisible, setMonth, setYear
         right={() => (
           <View style={{ flexDirection: 'row', height: 20 }}>
             <View style={{ width: '40%' }}>
-              <Text style={styles.month}>{MONTHS[budget.month]}</Text>
+              <Text style={styles.month}>{MONTHS[budget.month - 1]}</Text>
             </View>
             <View style={{ width: '30%' }}>
               <Text style={styles.value}>${budget.value}</Text>

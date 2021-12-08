@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { List } from 'react-native-paper';
-import { StyleSheet, ScrollView, SafeAreaView, Text, View } from 'react-native';
+import { StyleSheet, ScrollView, SafeAreaView, Text, View, Dimensions } from 'react-native';
 import { theme } from '../../../theme';
 import BudgetTableComponent from './BudgetTableComponent';
 import BudgetHeader from './BudgetPageHeader';
@@ -63,6 +63,7 @@ const BudgetTable = ({ renderList, isVisible, setVisible, setMonth, year, setYea
                 />
               ))}
           </List.Section>
+          <View style={{ height: 300 }} />
         </ScrollView>
       </SafeAreaView>
     </>
@@ -88,7 +89,9 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: 'bold',
   },
-  scrollView: {},
+  scrollView: {
+    minHeight: Dimensions.get('window').height - 200,
+  },
   month: {
     color: theme.colors.textDark,
     fontSize: 16,
