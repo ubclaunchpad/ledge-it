@@ -88,9 +88,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: 'bold',
   },
-  scrollView: {
-    backgroundColor: theme.colors.primaryBackground,
-  },
+  scrollView: {},
   month: {
     color: theme.colors.textDark,
     fontSize: 16,
