@@ -4,8 +4,7 @@ import axios from 'axios';
 import { useFocusEffect } from '@react-navigation/native';
 import ScrollTable from '../components/TablePage/ScrollTable';
 import TablePageHeader from '../components/TablePage/TablePageHeader';
-import ActionButton from '../components/ActionButton';
-import ExpenseForm from '../modals/ExpenseForm';
+import DefaultActionButton from '../components/ActionButton';
 import { theme } from '../../theme';
 
 const url = 'https://money-manager-dev.herokuapp.com';
@@ -54,9 +53,7 @@ const TablePage = () => {
           <ScrollTable renderList={type === 'Expenses' ? expenseData : incomeData} type={type} />
         </ScrollView>
       </SafeAreaView>
-      <ActionButton>
-        <ExpenseForm />
-      </ActionButton>
+      <DefaultActionButton />
     </>
   );
 };

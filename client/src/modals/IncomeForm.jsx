@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { StyleSheet, View, Text } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
 import axios from 'axios';
 import AmountBox from '../components/AmountBox';
 import StyledTextInput from '../components/StyledTextInput';
@@ -9,41 +9,38 @@ import { formatDateBE } from '../utils/formatters';
 import { theme } from '../../theme';
 
 const categories = [
-  { label: 'Groceries', value: 'Groceries' },
-  { label: 'Housing', value: 'Housing' },
-  { label: 'Restaurants', value: 'Restaurants' },
+  { label: 'Salary', value: 'Salary' },
+  { label: 'Other income', value: 'Other income' },
 ];
 
 const getCurrentDate = () => {
   const date = new Date();
-  return `${date.getMonth() + 1}/${date.getDate()}/${date.getFullYear()}`;
+  return `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`;
 };
 
-const AddExpense = ({ setModalVisible, setExpenseModalVisible }) => {
+const AddIncome = ({ setModalVisible, setIncomeModalVisible }) => {
   const currency = 'CAD';
-  const [price, setPrice] = useState(undefined);
+  const [amount, setAmount] = useState(undefined);
   const [name, setName] = useState(undefined);
   const [date, setDate] = useState(getCurrentDate());
   const [category, setCategory] = useState(undefined);
   const [categoryDropdownVisible, setCategoryDropdownVisible] = useState(false);
-  const [tag, setTag] = useState(undefined);
   const [description, setDesc] = useState(undefined);
   const [location, setLocation] = useState(undefined);
 
-  const submitExpense = async () => {
+  const submitIncome = async () => {
     axios
       .post(
-        'https://money-manager-dev.herokuapp.com/expense/',
+        'https://money-manager-dev.herokuapp.com/income/',
         JSON.stringify({
           name,
           description,
           date: formatDateBE(date),
-          price,
+          amount,
           currency,
           exchange_rate: 0,
           location,
           category,
-          sub_category: tag,
         }),
         {
           headers: {
@@ -53,26 +50,26 @@ const AddExpense = ({ setModalVisible, setExpenseModalVisible }) => {
       )
       .then(({ data }) => console.log(data))
       .catch((err) => console.log(err));
-    setExpenseModalVisible(false);
+    setIncomeModalVisible(false);
     setModalVisible(false);
   };
 
   return (
     <View style={styles.content}>
-      <Text style={styles.title}>Add Expense</Text>
-      <AmountBox fields={[price || 0.0, name, description, date, category || '', tag, location]} />
+      <Text style={styles.title}>Add Income</Text>
+      <AmountBox fields={[amount || 0.0, date, category || '', description, location]} />
       <StyledTextInput
-        onChange={setPrice}
+        onChange={setAmount}
         keyboardType="numeric"
-        label="Price"
+        label="Amount"
         placeholder="$$$"
         required
       />
       <StyledTextInput
         onChange={setName}
         keyboardType="default"
-        label="Name"
-        placeholder="Amazon"
+        label="Income Source"
+        placeholder="Salary"
         required
       />
       <StyledTextInput
@@ -86,7 +83,7 @@ const AddExpense = ({ setModalVisible, setExpenseModalVisible }) => {
         onChange={setDate}
         keyboardType="default"
         label="Date"
-        placeholder="MM/DD/YYYY"
+        placeholder="DD/MM/YYYY"
         defaultValue={getCurrentDate()}
         required
       />
@@ -101,12 +98,6 @@ const AddExpense = ({ setModalVisible, setExpenseModalVisible }) => {
         required
       />
       <StyledTextInput
-        onChange={setTag}
-        keyboardType="default"
-        label="Tag"
-        placeholder="Optional..."
-      />
-      <StyledTextInput
         onChange={setLocation}
         keyboardType="default"
         label="Location"
@@ -119,10 +110,10 @@ const AddExpense = ({ setModalVisible, setExpenseModalVisible }) => {
           marginTop: 20,
         }}>
         <View style={styles.button}>
-          <StyledButton label="Cancel" onTap={() => setExpenseModalVisible(false)} />
+          <StyledButton label="Cancel" onTap={() => setIncomeModalVisible(false)} />
         </View>
         <View style={styles.button}>
-          <StyledButton label="Add" onTap={submitExpense} />
+          <StyledButton label="Add" onTap={submitIncome} />
         </View>
       </View>
     </View>
@@ -147,4 +138,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default AddExpense;
+export default AddIncome;
