@@ -1,11 +1,24 @@
-import React from 'react';
+import React, { useCallback, useState } from 'react';
 import { Text, View, Pressable, StyleSheet, SafeAreaView } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import { useFocusEffect } from '@react-navigation/native';
+import axios from 'axios';
 import BudgetDetailsTable from './BudgetDetailsTable';
 import { theme } from '../../../theme';
 import { MONTHS } from '../../utils/constants';
 
-const BudgetDetails = ({ expenseDatabase, currentMonth, currentYear, isVisible, setVisible }) => {
+const BudgetDetails = ({ currentMonth, currentYear, isVisible, setVisible }) => {
+  const [databaseExpense, setDatabaseExpense] = useState([]);
+
+  useFocusEffect(
+    useCallback(() => {
+      axios
+        .get(`https://money-manager-dev.herokuapp.com/expense/${currentYear}/${currentMonth}`)
+        .then(({ data }) => setDatabaseExpense(data))
+        .catch((err) => console.log(err));
+    }, [currentYear, currentMonth]),
+  );
+
   return (
     <SafeAreaView style={styles.listContainer}>
       <View style={styles.header}>
@@ -16,8 +29,8 @@ const BudgetDetails = ({ expenseDatabase, currentMonth, currentYear, isVisible, 
           <Text style={styles.title}>{MONTHS[currentMonth - 1]}</Text>
         </View>
       </View>
-      {expenseDatabase.length > 0 ? (
-        <BudgetDetailsTable renderList={expenseDatabase} />
+      {databaseExpense.length > 0 ? (
+        <BudgetDetailsTable renderList={databaseExpense} />
       ) : (
         <View>
           <Text style={styles.message}>No expenses in this month</Text>

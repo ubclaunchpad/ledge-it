@@ -55,7 +55,6 @@ const styles = StyleSheet.create({
     height: Dimensions.get('window').height - 100,
   },
   scrollView: {
-    backgroundColor: theme.colors.primaryLight,
     borderTopRightRadius: 10,
     borderTopLeftRadius: 10,
   },

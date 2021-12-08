@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useCallback } from 'react';
 import axios from 'axios';
+import { useFocusEffect } from '@react-navigation/native';
 import BudgetTable from '../components/BudgetPage/BudgetTable';
 import BudgetDetails from '../components/BudgetPage/BudgetDetails';
 
@@ -8,43 +9,20 @@ const BudgetPage = () => {
   const [month, setMonth] = useState(new Date().getMonth() + 1);
   const [year, setYear] = useState(new Date().getFullYear());
   const [databaseBudget, setDatabaseBudget] = useState([]);
-  const [databaseExpense, setDatabaseExpense] = useState([]);
 
-  useEffect(() => {
-    const tempList = [];
-    const tempList2 = [];
-    axios
-      .get('https://money-manager-dev.herokuapp.com/budget/all')
-      .then((response) => {
-        response.data.forEach((item) => {
-          tempList.push(item);
-        });
-        setDatabaseBudget(tempList);
-      })
-      .catch((err) => {
-        setDatabaseBudget(tempList);
-        console.log(err);
-      });
-
-    axios
-      .get(`https://money-manager-dev.herokuapp.com/expense/${year}/${month}`)
-      .then((response) => {
-        response.data.forEach((item) => {
-          tempList2.push(item);
-        });
-        setDatabaseExpense(tempList2);
-      })
-      .catch((err) => {
-        setDatabaseExpense(tempList2);
-        console.log(err);
-      });
-  }, [showDetails, month, year]);
+  useFocusEffect(
+    useCallback(() => {
+      axios
+        .get('https://money-manager-dev.herokuapp.com/budget/all')
+        .then(({ data }) => setDatabaseBudget(data))
+        .catch((err) => console.log(err));
+    }, []),
+  );
 
   return (
     <>
       {showDetails ? (
         <BudgetDetails
-          expenseDatabase={databaseExpense}
           currentMonth={month}
           currentYear={year}
           isVisible={showDetails}
