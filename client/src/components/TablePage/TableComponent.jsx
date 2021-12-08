@@ -1,19 +1,12 @@
 import React, { useState } from 'react';
 import { List } from 'react-native-paper';
-import { StyleSheet, Text, View } from 'react-native';
+import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { Swipeable } from 'react-native-gesture-handler';
 import { MONTHS } from '../../utils/constants';
 import { theme } from '../../../theme';
 import ItemSummary from '../../modals/ItemSummary';
 import { getDay, getMonth, getYear } from '../../utils/formatters';
-
-const RightSwipe = () => {
-  return (
-    <View style={styles.swipeBackground}>
-      <Text style={styles.swipeText}>Delete</Text>
-    </View>
-  );
-};
+import axios from 'axios';
 
 const ListInputComponent = ({ item, type }) => {
   const [itemSummaryModal, setItemSummaryModal] = useState(false);
@@ -61,13 +54,37 @@ const ListInputComponent = ({ item, type }) => {
 };
 
 const TableComponent = ({ title, subTitle, list, type }) => {
+  const handleDelete = (id) => {
+    axios
+      .delete(
+        `https://money-manager-dev.herokuapp.com/${
+          type === 'Expenses' ? 'expense' : 'income'
+        }/${id}`,
+        {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        },
+      )
+      .then(({ data }) => console.log(data))
+      .catch((err) => console.log(err));
+  };
+
+  const RightSwipeComponent = () => {
+    return (
+      <Pressable style={styles.swipeBackground} onPress={handleDelete}>
+        <Text style={styles.swipeText}>Delete</Text>
+      </Pressable>
+    );
+  };
+
   return (
     <List.Section style={styles.container}>
       <List.Subheader style={styles.header}>
         {MONTHS[title - 1]} {subTitle}
       </List.Subheader>
       {list.map((item, index) => (
-        <Swipeable key={index} renderRightActions={RightSwipe}>
+        <Swipeable key={index} renderRightActions={RightSwipeComponent(item._id)}>
           <ListInputComponent item={item} type={type} />
         </Swipeable>
       ))}

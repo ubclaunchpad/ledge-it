@@ -7,6 +7,7 @@ import CustomModal from '../components/CustomModal';
 import AmountBox from '../components/AmountBox';
 import { theme } from '../../theme';
 import { formatDateBE, formatDateFE } from '../utils/formatters';
+import axios from 'axios';
 
 const ItemSummary = ({ modalVisible, setModalVisible, item, userCategories, type }) => {
   const [price, setPrice] = useState(item.price || item.amount);
@@ -19,17 +20,25 @@ const ItemSummary = ({ modalVisible, setModalVisible, item, userCategories, type
   const [categoryDropdownVisible, setCategoryDropdownVisible] = useState(false);
 
   const onUpdate = () => {
-    const updateObject = {
-      price,
-      name,
-      description,
-      date: formatDateBE(date),
-      category,
-      sub_category: tag,
-      location,
-    };
-    console.log(updateObject);
-
+    axios
+      .put(
+        `https://money-manager-dev.herokuapp.com/${type === 'Expenses' ? 'expense' : 'income'}`,
+        JSON.stringify({
+          name,
+          description,
+          date: formatDateBE(date),
+          [type === 'Expenses' ? 'price' : 'amount']: price,
+          location,
+          category,
+        }),
+        {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        },
+      )
+      .then(({ data }) => console.log(data))
+      .catch((err) => console.log(err));
     setModalVisible(false);
   };
 
