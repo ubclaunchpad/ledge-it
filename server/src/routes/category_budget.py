@@ -126,12 +126,11 @@ def delete_category_budget(month: int, year: int, category: str):
 
 
 def update_category_budget_spent(month: int, year: int, category: str, change: float):
-    if (
-        category_budget := category_budget_collection.find_one(
-            {"month": month, "year": year, "category": category}
-        )
-    ) is not None:
-        category_budget["spent"] += change
+    category_budget: CategoryBudget = category_budget_collection.find_one(
+        {"month": month, "year": year, "category": category}
+    )
+    if category_budget is not None:
+        category_budget.spent += change
         category_budget_collection.update_one(
             {"month": month, "year": year, "category": category},
             {"$set": category_budget},

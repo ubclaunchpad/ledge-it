@@ -94,10 +94,9 @@ def delete_budget(month: int, year: int):
 
 
 def update_budget_spent(month: int, year: int, change: float):
-    if (
-        budget := budget_collection.find_one({"month": month, "year": year})
-    ) is not None:
-        budget["spent"] += change
+    budget: Budget = budget_collection.find_one({"month": month, "year": year})
+    if budget is not None:
+        budget.spent += change
         budget_collection.update_one(
             {"month": month, "year": year},
             {"$set": budget},

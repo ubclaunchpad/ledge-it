@@ -69,7 +69,7 @@ def get_expense_by_id(id):
 )
 def create_expense(expense: AddExpense = Body(...)):
     if (net_worth_to_update := net_worth_collection.find_one()) is None:
-        raise HTTPException(status_code=404, detail=f"Net worths not found")
+        raise HTTPException(status_code=404, detail=f"Net worth not found")
     update_net_worth(
         net_worth_to_update["_id"], -abs(expense.price), expense.date, is_expense=True
     )
@@ -95,8 +95,7 @@ def create_expense(expense: AddExpense = Body(...)):
 
     insert_expense = jsonable_encoder(insert_expense)
     new_expense = expense_collection.insert_one(insert_expense)
-    created_expense = expense_collection.find_one({"_id": new_expense.inserted_id})
-    return JSONResponse(status_code=status.HTTP_201_CREATED, content=created_expense)
+    return JSONResponse(status_code=status.HTTP_201_CREATED, content=new_expense)
 
 
 @router.put(
@@ -106,7 +105,7 @@ def update_expense(id, expense: UpdateExpenseModel = Body(...)):
     if (expense_to_update := expense_collection.find_one({"_id": id})) is None:
         raise HTTPException(status_code=404, detail=f"Expense with id {id} not found")
     if (net_worth_to_update := net_worth_collection.find_one()) is None:
-        raise HTTPException(status_code=404, detail=f"Net worths not found")
+        raise HTTPException(status_code=404, detail=f"Net worth not found")
 
     price_change = expense_to_update["price"] - expense.price
     update_net_worth(
@@ -121,13 +120,7 @@ def update_expense(id, expense: UpdateExpenseModel = Body(...)):
         if expense.currency.lower() == "cad":
             expense.exchange_rate = 1
         else:
-            try:
-                expense.exchange_rate = get_exchange_rate_to_cad(expense.currency)
-            except ValidationError as exc:
-                return JSONResponse(
-                    status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
-                    content=jsonable_encoder({"detail": exc.errors()}),
-                )
+            expense.exchange_rate = get_exchange_rate_to_cad(expense.currency)
 
     expense = {k: v for k, v in expense.dict().items() if v is not None}
     expense = jsonable_encoder(expense)
@@ -149,27 +142,28 @@ def update_expense(id, expense: UpdateExpenseModel = Body(...)):
 
 @router.delete("/expense/{id}", response_description="Delete an expense")
 def delete_expense(id):
-    if (expense_to_delete := expense_collection.find_one({"_id": id})) is None:
+    expense_to_delete: Expense = expense_collection.find_one({"_id": id})
+    if expense_to_delete is None:
         raise HTTPException(status_code=404, detail=f"Expense with id {id} not found")
     if (net_worth_to_update := net_worth_collection.find_one()) is None:
         raise HTTPException(status_code=404, detail=f"Net worth not found")
 
     update_net_worth(
         net_worth_to_update["_id"],
-        expense_to_delete["price"],
-        expense_to_delete["date"],
+        expense_to_delete.price,
+        expense_to_delete.date,
         is_expense=True,
     )
     update_budget_spent(
-        expense_to_delete["date"].month,
-        expense_to_delete["date"].year,
-        -expense_to_delete["price"],
+        expense_to_delete.date.month,
+        expense_to_delete.date.year,
+        -expense_to_delete.price,
     )
     update_category_budget_spent(
-        expense_to_delete["date"].month,
-        expense_to_delete["date"].year,
-        expense_to_delete["category"],
-        -expense_to_delete["price"],
+        expense_to_delete.date.month,
+        expense_to_delete.date.year,
+        expense_to_delete.category,
+        -expense_to_delete.price,
     )
 
     delete_result = expense_collection.delete_one({"_id": expense_to_delete["_id"]})
