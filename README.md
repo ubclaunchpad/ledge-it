@@ -1,4 +1,4 @@
-# Money Management App
+# Ledge-it
 
 ### Description
 
