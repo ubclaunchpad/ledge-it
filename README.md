@@ -2,6 +2,23 @@
 
 ### Description
 
+Ledge-it is an app targeted to help students take control of their finances as seamlessly as possible. Users can:
+- Quickly input and categorize expenses or income
+- Set budgets for each month and also for specific categories
+- View and sort by name, category, date, etc.
+- Visualize spending patterns through graphs and charts
+- And much more...
+
+
+### Getting Started
+
+Clone the repo: `git clone https://github.com/ubclaunchpad/money-manager.git`
+
+Checkout `/client` for the React Native app
+and `/server` for the FastAPI Python server.
+
+### Docker Instructions
+
 To run the backend in docker, you need to first install [docker](https://docs.docker.com/get-docker/) and 
 [docker-compose](https://docs.docker.com/compose/install/). The run the following from the root directory:
 
@@ -10,13 +27,6 @@ To run the backend in docker, you need to first install [docker](https://docs.do
 `docker-compose up` to start the backend server
 
 `docker-compose down` to delete the containers
-
-### Getting Started
-
-Clone the repo: `git clone https://github.com/ubclaunchpad/money-manager.git`
-
-Checkout `/client` for the React Native app
-and `/server` for the FastAPI Python server.
 
 ### Contributing
 
