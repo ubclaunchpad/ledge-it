@@ -6,8 +6,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import SortMenu from './SortMenu';
 import { theme } from '../../../theme';
 
-const TablePageHeader = ({ categories, type, setType }) => {
-  const [searchQuery, setSearchQuery] = useState('');
+const TablePageHeader = ({ categories, searchQuery, setSearchQuery, type, setType }) => {
   const [selectedLookup, setSelectedLookup] = useState({});
   const [allButton, setAllButton] = useState(true);
 
