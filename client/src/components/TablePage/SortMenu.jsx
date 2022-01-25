@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { View, StyleSheet } from 'react-native';
 import { Button, Menu, Provider } from 'react-native-paper';
+import { theme } from '../../../theme';
 
 const RNPMenu = () => {
   const [visible, setVisible] = useState(false);
@@ -11,12 +12,12 @@ const RNPMenu = () => {
 
   return (
     <Provider>
-      <View style={styles.sortMenuStyles}>
+      <View style={styles.sortMenu}>
         <Menu
           visible={visible}
           onDismiss={closeMenu}
           anchor={
-            <Button onPress={openMenu} color="black">
+            <Button onPress={openMenu} color="white">
               Sort
             </Button>
           }>
@@ -31,11 +32,13 @@ const RNPMenu = () => {
 };
 
 const styles = StyleSheet.create({
-  sortMenuStyles: {
-    paddingTop: 10,
-    paddingRight: 10,
-    flexDirection: 'row',
-    justifyContent: 'flex-end',
+  sortMenu: {
+    backgroundColor: theme.colors.primary,
+    borderRadius: 20,
+    marginTop: 3,
+    marginRight: 10,
+    marginLeft: 10,
+    width: 80,
   },
 });
 
