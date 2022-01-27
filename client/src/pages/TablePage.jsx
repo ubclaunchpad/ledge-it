@@ -47,10 +47,11 @@ const TablePage = () => {
   };
 
   const filterEntries = () => {
+    const noCap = (nm) => nm.replaceAll(' ', '').toLowerCase();
     if (type === 'Expenses') {
-      return expenseData.filter((entry) => entry.name.includes(searchQuery));
+      return expenseData.filter((entry) => noCap(entry.name).includes(noCap(searchQuery)));
     } else if (type === 'Income') {
-      return incomeData.filter((entry) => entry.name.includes(searchQuery));
+      return incomeData.filter((entry) => noCap(entry.name).includes(noCap(searchQuery)));
     }
   };
 
