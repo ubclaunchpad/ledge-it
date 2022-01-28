@@ -3,7 +3,7 @@ from fastapi import APIRouter, Body, HTTPException, status
 from fastapi.responses import JSONResponse
 from fastapi.encoders import jsonable_encoder
 from pydantic.error_wrappers import ValidationError
-from typing import List
+from typing import List, Optional
 from re import compile
 
 from .net_worth import update_net_worth
@@ -175,3 +175,48 @@ def delete_expense(id):
         )
 
     raise HTTPException(status_code=404, detail=f"Expense with id {id} not found")
+
+@router.get("/expense/limited/", response_description = "Returns limited number of expenses sorted by date", response_model=List[Expense])
+# default limit and offset is set as 0 
+def limited_expenses(limit: int = 0, offset: int=0):
+    if (
+        all_expenses := expense_collection.find(limit = limit, skip = offset).sort(
+            [("date", pymongo.DESCENDING), ("updated_at", pymongo.DESCENDING)]
+        )
+    ).count():
+        return [
+            jsonable_encoder(next(all_expenses)) for _ in range(all_expenses.count())
+        ]
+
+    raise HTTPException(status_code=404, detail=f"No expenses have been found with the given conditions.")
+
+@router.get("/expense/ranged/{startTime}/{endTime}", response_description = "Returns expenses that have a date between the start date and end date", response_model = List[Expense])
+def ranged_expenses(startTime: str, endTime: str):
+    # need to make a check that the startTime and endTime provided are actual date strings
+    # regex = compile(f"{year}-{f'0{month}' if month < 10 else month}-" + r"\d{2}")
+
+    if (
+        expenses := expense_collection.find({"createdAt": {"$gte" :ISODate("2021-01-01"), "$lt" :ISODate("2020-05-01")}}).sort(
+            [("date", pymongo.DESCENDING), ("updated_at", pymongo.DESCENDING)]
+        )
+    ).count():
+        return [jsonable_encoder(next(expenses)) for _ in range(expenses.count())]
+
+    raise HTTPException(
+        status_code=404,
+        detail=f"No expenses have been found between the given dates.",
+    )
+
+@router.get("/expense/specify/{fieldName}/{value}", response_description = "Returns expenses that have the specified value in the specified field name", response_model = List[Expense])
+def specified_expenses(fieldName: str, value: str):
+    if (
+        expenses := expense_collection.find({fieldName: value}).sort(
+            [("date", pymongo.DESCENDING), ("updated_at", pymongo.DESCENDING)]
+        )
+    ).count():
+        return [jsonable_encoder(next(expenses)) for _ in range(expenses.count())]
+
+    raise HTTPException(
+        status_code=404,
+        detail=f"No expenses have been found for the given field name and value.",
+    )
