@@ -47,7 +47,7 @@ const TablePage = () => {
   };
 
   const filterEntries = () => {
-    const noCap = (nm) => nm.replaceAll(' ', '').toLowerCase();
+    const noCap = (nm) => nm.trim().toLowerCase();
     if (type === 'Expenses') {
       return expenseData.filter((entry) => noCap(entry.name).includes(noCap(searchQuery)));
     } else if (type === 'Income') {
