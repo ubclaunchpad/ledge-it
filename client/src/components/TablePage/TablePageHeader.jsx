@@ -1,15 +1,16 @@
 import React, { useState, useEffect } from 'react';
-import { View, ScrollView, StyleSheet, Text, TouchableOpacity } from 'react-native';
+import { View, ScrollView, StyleSheet, Text, TouchableOpacity, Dimensions } from 'react-native';
 import { Searchbar, Chip } from 'react-native-paper';
 import { faChevronRight } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
+import { FontAwesome5 } from '@expo/vector-icons';
 import SortMenu from './SortMenu';
 import { theme } from '../../../theme';
 
-const TablePageHeader = ({ categories, type, setType }) => {
-  const [searchQuery, setSearchQuery] = useState('');
+const TablePageHeader = ({ categories, searchQuery, setSearchQuery, type, setType }) => {
   const [selectedLookup, setSelectedLookup] = useState({});
   const [allButton, setAllButton] = useState(true);
+  const [searchBarVisible, setSearchBarVisible] = useState(false);
 
   const onChangeSearch = (query) => setSearchQuery(query);
   const onToggleSwitch = () => setType(type === 'Expenses' ? 'Income' : 'Expenses');
@@ -58,12 +59,6 @@ const TablePageHeader = ({ categories, type, setType }) => {
 
   return (
     <View style={styles.headerContainer}>
-      <Searchbar
-        placeholder="Search"
-        onChangeText={onChangeSearch}
-        value={searchQuery}
-        style={{ shadowOpacity: 0.1 }}
-      />
       <View style={styles.container}>
         <TouchableOpacity
           style={styles.toggleButton}
@@ -72,7 +67,23 @@ const TablePageHeader = ({ categories, type, setType }) => {
           <Text style={styles.toggleButtonText}>{type}</Text>
           <FontAwesomeIcon icon={faChevronRight} color={theme.colors.white} size={24} />
         </TouchableOpacity>
+      </View>
+      <View style={styles.container}>
         <SortMenu />
+        {searchBarVisible && (
+          <Searchbar
+            placeholder="Search"
+            onChangeText={onChangeSearch}
+            value={searchQuery}
+            style={styles.searchBar}
+          />
+        )}
+        <FontAwesome5
+          name="search"
+          size={24}
+          style={styles.searchIcon}
+          onPress={() => setSearchBarVisible(!searchBarVisible)}
+        />
       </View>
       <View>
         <ScrollView horizontal={true} style={styles.chipContainer}>
@@ -121,7 +132,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     marginHorizontal: 5,
-    marginVertical: 10,
+    marginTop: 5,
     paddingHorizontal: 20,
     borderRadius: 25,
     shadowRadius: 5,
@@ -141,6 +152,7 @@ const styles = StyleSheet.create({
   },
   container: {
     marginTop: 10,
+    marginBottom: 15,
     flexDirection: 'row',
     justifyContent: 'center',
   },
@@ -150,11 +162,23 @@ const styles = StyleSheet.create({
   },
   chipContainer: {
     paddingTop: 5,
-    paddingBottom: 10,
+    paddingBottom: 15,
   },
   text: {
     fontWeight: 'bold',
     color: theme.colors.white,
+  },
+  searchBar: {
+    shadowOpacity: 0.1,
+    width: Dimensions.get('window').width - 150,
+    height: 38,
+    marginRight: 10,
+    borderRadius: 15,
+  },
+  searchIcon: {
+    marginRight: 20,
+    color: theme.colors.primary,
+    marginTop: 5,
   },
 });
 

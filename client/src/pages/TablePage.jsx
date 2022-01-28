@@ -7,13 +7,14 @@ import TablePageHeader from '../components/TablePage/TablePageHeader';
 import DefaultActionButton from '../components/ActionButton';
 import { theme } from '../../theme';
 
-const url = 'https://money-manager-dev.herokuapp.com';
+const url = 'https://ledge-it.herokuapp.com';
 
 const TablePage = () => {
   const [type, setType] = useState('Expenses');
   const [categories, setCategories] = useState([]);
   const [expenseData, setExpenseData] = useState([]);
   const [incomeData, setIncomeData] = useState([]);
+  const [searchQuery, setSearchQuery] = useState('');
 
   useFocusEffect(
     useCallback(() => {
@@ -45,12 +46,27 @@ const TablePage = () => {
       .catch((err) => console.log(`${err}`));
   };
 
+  const filterEntries = () => {
+    const noCap = (nm) => nm.trim().toLowerCase();
+    if (type === 'Expenses') {
+      return expenseData.filter((entry) => noCap(entry.name).includes(noCap(searchQuery)));
+    } else if (type === 'Income') {
+      return incomeData.filter((entry) => noCap(entry.name).includes(noCap(searchQuery)));
+    }
+  };
+
   return (
     <>
       <SafeAreaView style={styles.container}>
-        <TablePageHeader categories={categories} type={type} setType={setType} />
+        <TablePageHeader
+          categories={categories}
+          searchQuery={searchQuery}
+          setSearchQuery={setSearchQuery}
+          type={type}
+          setType={setType}
+        />
         <ScrollView style={styles.content}>
-          <ScrollTable renderList={type === 'Expenses' ? expenseData : incomeData} type={type} />
+          <ScrollTable renderList={filterEntries()} type={type} />
         </ScrollView>
       </SafeAreaView>
       <DefaultActionButton />
