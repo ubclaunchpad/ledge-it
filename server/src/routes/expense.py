@@ -3,8 +3,9 @@ from fastapi import APIRouter, Body, HTTPException, status
 from fastapi.responses import JSONResponse
 from fastapi.encoders import jsonable_encoder
 from pydantic.error_wrappers import ValidationError
-from typing import List
+from typing import List, Optional
 from re import compile
+from datetime import date
 
 from .net_worth import update_net_worth
 from .category_budget import update_category_budget_spent
@@ -175,3 +176,87 @@ def delete_expense(id):
         )
 
     raise HTTPException(status_code=404, detail=f"Expense with id {id} not found")
+
+
+@router.get(
+    "/expense/limited/",
+    response_description="Returns limited number of expenses sorted by date",
+    response_model=List[Expense],
+)
+def limited_expenses(limit: int = 10, offset: int = 0):
+    if (
+        all_expenses := expense_collection.find(limit=limit, skip=offset).sort(
+            [("date", pymongo.DESCENDING), ("updated_at", pymongo.DESCENDING)]
+        )
+    ).count(with_limit_and_skip=True):
+        return [
+            jsonable_encoder(next(all_expenses))
+            for _ in range(all_expenses.count(with_limit_and_skip=True))
+        ]
+
+    raise HTTPException(
+        status_code=404,
+        detail=f"No expenses have been found with the given conditions.",
+    )
+
+
+@router.get(
+    "/expense/ranged/{start_time}/{end_time}",
+    response_description="Returns expenses that have a date between the start date and end date",
+    response_model=List[Expense],
+)
+def ranged_expenses(start_time: date, end_time: date):
+    if (
+        expenses := expense_collection.find(
+            {"date": {"$gte": str(start_time), "$lt": str(end_time)}}
+        ).sort([("date", pymongo.DESCENDING), ("updated_at", pymongo.DESCENDING)])
+    ).count():
+        return [jsonable_encoder(next(expenses)) for _ in range(expenses.count())]
+
+    raise HTTPException(
+        status_code=404,
+        detail=f"No expenses have been found between the given dates.",
+    )
+
+
+@router.get(
+    "/expense/specify/",
+    response_description="Returns expenses that have the specified value in the specified field name",
+    response_model=List[Expense],
+)
+def specified_expenses(
+    expense_name: str = None,
+    expense_description: str = None,
+    expense_date: date = None,
+    expense_price: float = None,
+    expense_currency: str = None,
+    expense_exchange_rate: float = None,
+    expense_category: str = None,
+):
+    specified_expense = {}
+    if expense_name:
+        specified_expense["name"] = expense_name
+    if expense_description:
+        specified_expense["description"] = expense_description
+    if expense_date:
+        specified_expense["date"] = str(expense_date)
+    if expense_price:
+        specified_expense["price"] = expense_price
+    if expense_currency:
+        specified_expense["currency"] = expense_currency
+    if expense_exchange_rate:
+        specified_expense["exchange_rate"] = expense_exchange_rate
+    if expense_category:
+        specified_expense["currency"] = expense_category
+
+    if (
+        expenses := expense_collection.find(specified_expense).sort(
+            [("date", pymongo.DESCENDING), ("updated_at", pymongo.DESCENDING)]
+        )
+    ).count():
+        return [jsonable_encoder(next(expenses)) for _ in range(expenses.count())]
+
+    raise HTTPException(
+        status_code=404,
+        detail=f"No expenses have been found for the given field name and value.",
+    )
