@@ -74,11 +74,7 @@ def update_net_worth(
                 else:
                     value_to_add = nwm.history[index]["value"] + change
                 nwm.history.insert(
-                    index + 1,
-                    {
-                        "date": str(added_date),
-                        "value": value_to_add,
-                    },
+                    index + 1, {"date": str(added_date), "value": value_to_add,},
                 )
 
         net_worth_collection.update_one({"_id": id}, {"$set": nwm})
