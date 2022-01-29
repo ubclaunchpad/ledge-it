@@ -183,7 +183,6 @@ def delete_expense(id):
     response_description="Returns limited number of expenses sorted by date",
     response_model=List[Expense],
 )
-# default limit and offset is set as 0
 def limited_expenses(limit: int = 10, offset: int = 0):
     if (
         all_expenses := expense_collection.find(limit=limit, skip=offset).sort(
@@ -207,9 +206,6 @@ def limited_expenses(limit: int = 10, offset: int = 0):
     response_model=List[Expense],
 )
 def ranged_expenses(start_time: date, end_time: date):
-    # need to make a check that the startTime and endTime provided are actual date strings
-    # regex = compile(f"{year}-{f'0{month}' if month < 10 else month}-" + r"\d{2}")
-
     if (
         expenses := expense_collection.find(
             {"date": {"$gte": str(start_time), "$lt": str(end_time)}}
@@ -218,7 +214,8 @@ def ranged_expenses(start_time: date, end_time: date):
         return [jsonable_encoder(next(expenses)) for _ in range(expenses.count())]
 
     raise HTTPException(
-        status_code=404, detail=f"No expenses have been found between the given dates.",
+        status_code=404,
+        detail=f"No expenses have been found between the given dates.",
     )
 
 
