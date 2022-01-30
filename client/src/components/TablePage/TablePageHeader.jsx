@@ -13,11 +13,11 @@ const TablePageHeader = ({
   setSearchQuery,
   type,
   setType,
-  selectedCategory,
-  setSelectedCategory,
+  allButton,
+  setAllButton,
+  selectedCategories,
+  setSelectedCategories,
 }) => {
-  const [selectedLookup, setSelectedLookup] = useState({});
-  const [allButton, setAllButton] = useState(true);
   const [searchBarVisible, setSearchBarVisible] = useState(false);
 
   const onChangeSearch = (query) => setSearchQuery(query);
@@ -25,36 +25,44 @@ const TablePageHeader = ({
 
   useEffect(() => {
     setAllButton(true);
-    setSelectedLookup((sl) => {
+    setSelectedCategories((sl) => {
       const copyOfSelectedLookup = sl;
       categories.forEach((category) => {
-        copyOfSelectedLookup[category] = false;
+        copyOfSelectedLookup[category] = true;
       });
       return { ...copyOfSelectedLookup };
     });
-  }, [categories]);
+  }, [categories, setAllButton, setSelectedCategories]);
 
   const allButtonPressLogic = () => {
-    setSelectedCategory('');
     if (allButton) {
-      setSelectedLookup(() => {
+      setSelectedCategories(() => {
+        const temp = {};
         categories.forEach((category) => {
-          selectedLookup[category] = false;
+          temp[category] = false;
         });
-        return { ...selectedLookup };
+        return { ...temp };
       });
       setAllButton(false);
+    } else {
+      setSelectedCategories(() => {
+        const temp = {};
+        categories.forEach((category) => {
+          temp[category] = true;
+        });
+        return { ...temp };
+      });
+      setAllButton(true);
     }
   };
 
   const categoryButtonPressLogic = (category) => {
-    setSelectedCategory(category);
-    setSelectedLookup((s) => {
+    setSelectedCategories((s) => {
       const copyOfS = s;
-      // copyOfS[category] = !copyOfS[category];
+      copyOfS[category] = !copyOfS[category];
       return { ...copyOfS };
     });
-    setAllButton(categories.every((item) => selectedLookup[item]));
+    setAllButton(categories.every((item) => selectedCategories[item]));
   };
 
   const emptyIcon = () => null;
@@ -104,14 +112,14 @@ const TablePageHeader = ({
               style={[
                 styles.chip,
                 {
-                  backgroundColor: selectedLookup[category]
+                  backgroundColor: selectedCategories[category]
                     ? theme.colors.primary
                     : theme.colors.primaryLight,
                 },
               ]}
               icon={emptyIcon}
               key={category}
-              selected={selectedLookup[category]}
+              selected={selectedCategories[category]}
               onPress={() => categoryButtonPressLogic(category)}>
               <Text style={styles.text}>{category}</Text>
             </Chip>
