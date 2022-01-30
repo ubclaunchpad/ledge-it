@@ -7,9 +7,17 @@ import { FontAwesome5 } from '@expo/vector-icons';
 import SortMenu from './SortMenu';
 import { theme } from '../../../theme';
 
-const TablePageHeader = ({ categories, searchQuery, setSearchQuery, type, setType }) => {
-  const [selectedLookup, setSelectedLookup] = useState({});
-  const [allButton, setAllButton] = useState(true);
+const TablePageHeader = ({
+  categories,
+  searchQuery,
+  setSearchQuery,
+  type,
+  setType,
+  allButton,
+  setAllButton,
+  selectedCategories,
+  setSelectedCategories,
+}) => {
   const [searchBarVisible, setSearchBarVisible] = useState(false);
 
   const onChangeSearch = (query) => setSearchQuery(query);
@@ -17,42 +25,44 @@ const TablePageHeader = ({ categories, searchQuery, setSearchQuery, type, setTyp
 
   useEffect(() => {
     setAllButton(true);
-    setSelectedLookup((sl) => {
+    setSelectedCategories((sl) => {
       const copyOfSelectedLookup = sl;
       categories.forEach((category) => {
         copyOfSelectedLookup[category] = true;
       });
       return { ...copyOfSelectedLookup };
     });
-  }, [categories]);
+  }, [categories, setAllButton, setSelectedCategories]);
 
   const allButtonPressLogic = () => {
     if (allButton) {
-      setSelectedLookup(() => {
+      setSelectedCategories(() => {
+        const temp = {};
         categories.forEach((category) => {
-          selectedLookup[category] = false;
+          temp[category] = false;
         });
-        return { ...selectedLookup };
+        return { ...temp };
       });
       setAllButton(false);
     } else {
-      setSelectedLookup(() => {
+      setSelectedCategories(() => {
+        const temp = {};
         categories.forEach((category) => {
-          selectedLookup[category] = true;
+          temp[category] = true;
         });
-        return { ...selectedLookup };
+        return { ...temp };
       });
       setAllButton(true);
     }
   };
 
   const categoryButtonPressLogic = (category) => {
-    setSelectedLookup((s) => {
+    setSelectedCategories((s) => {
       const copyOfS = s;
       copyOfS[category] = !copyOfS[category];
       return { ...copyOfS };
     });
-    setAllButton(categories.every((item) => selectedLookup[item]));
+    setAllButton(categories.every((item) => selectedCategories[item]));
   };
 
   const emptyIcon = () => null;
@@ -102,14 +112,14 @@ const TablePageHeader = ({ categories, searchQuery, setSearchQuery, type, setTyp
               style={[
                 styles.chip,
                 {
-                  backgroundColor: selectedLookup[category]
+                  backgroundColor: selectedCategories[category]
                     ? theme.colors.primary
                     : theme.colors.primaryLight,
                 },
               ]}
               icon={emptyIcon}
               key={category}
-              selected={selectedLookup[category]}
+              selected={selectedCategories[category]}
               onPress={() => categoryButtonPressLogic(category)}>
               <Text style={styles.text}>{category}</Text>
             </Chip>

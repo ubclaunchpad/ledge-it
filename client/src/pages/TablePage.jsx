@@ -6,6 +6,7 @@ import ScrollTable from '../components/TablePage/ScrollTable';
 import TablePageHeader from '../components/TablePage/TablePageHeader';
 import DefaultActionButton from '../components/ActionButton';
 import { theme } from '../../theme';
+import { formatString } from '../utils/formatters';
 
 const url = 'https://ledge-it.herokuapp.com';
 
@@ -15,6 +16,36 @@ const TablePage = () => {
   const [expenseData, setExpenseData] = useState([]);
   const [incomeData, setIncomeData] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
+  const [allButton, setAllButton] = useState(true);
+  const [selectedCategories, setSelectedCategories] = useState({});
+
+  const getExpenses = () => {
+    axios
+      .get(`${url}/expenses`)
+      .then(({ data }) => setExpenseData(data))
+      .catch((err) => console.log(`${err}`));
+  };
+
+  const getIncomes = () => {
+    axios
+      .get(`${url}/incomes`)
+      .then(({ data }) => setIncomeData(data))
+      .catch((err) => console.log(`${err}`));
+  };
+
+  const filterEntries = () => {
+    if (type === 'Expenses') {
+      return expenseData.filter((entry) =>
+        formatString(entry.name).includes(formatString(searchQuery)),
+      );
+    } else if (type === 'Income') {
+      return incomeData.filter((entry) =>
+        formatString(entry.name).includes(formatString(searchQuery)),
+      );
+    }
+  };
+
+  const filterCategories = (data) => data.filter((entry) => !!selectedCategories[entry.category]);
 
   useFocusEffect(
     useCallback(() => {
@@ -32,28 +63,16 @@ const TablePage = () => {
     }
   }, [type]);
 
-  const getExpenses = () => {
-    axios
-      .get(`${url}/expenses`)
-      .then(({ data }) => setExpenseData(data))
-      .catch((err) => console.log(`${err}`));
-  };
-
-  const getIncomes = () => {
-    axios
-      .get(`${url}/incomes`)
-      .then(({ data }) => setIncomeData(data))
-      .catch((err) => console.log(`${err}`));
-  };
-
-  const filterEntries = () => {
-    const noCap = (nm) => nm.trim().toLowerCase();
-    if (type === 'Expenses') {
-      return expenseData.filter((entry) => noCap(entry.name).includes(noCap(searchQuery)));
-    } else if (type === 'Income') {
-      return incomeData.filter((entry) => noCap(entry.name).includes(noCap(searchQuery)));
-    }
-  };
+  useEffect(() => {
+    setAllButton(true);
+    setSelectedCategories((sl) => {
+      const copyOfSelectedLookup = sl;
+      categories.forEach((category) => {
+        copyOfSelectedLookup[category] = true;
+      });
+      return { ...copyOfSelectedLookup };
+    });
+  }, [categories]);
 
   return (
     <>
@@ -64,9 +83,13 @@ const TablePage = () => {
           setSearchQuery={setSearchQuery}
           type={type}
           setType={setType}
+          allButton={allButton}
+          setAllButton={setAllButton}
+          selectedCategories={selectedCategories}
+          setSelectedCategories={setSelectedCategories}
         />
         <ScrollView style={styles.content}>
-          <ScrollTable renderList={filterEntries()} type={type} />
+          <ScrollTable renderList={filterCategories(filterEntries())} type={type} />
         </ScrollView>
       </SafeAreaView>
       <DefaultActionButton />
