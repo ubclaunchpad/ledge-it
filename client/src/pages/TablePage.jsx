@@ -15,6 +15,7 @@ const TablePage = () => {
   const [expenseData, setExpenseData] = useState([]);
   const [incomeData, setIncomeData] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState('');
 
   useFocusEffect(
     useCallback(() => {
@@ -55,6 +56,11 @@ const TablePage = () => {
     }
   };
 
+  const filterCategories = (data) => {
+    const noCap = (nm) => nm.trim().toLowerCase();
+    return data.filter((entry) => noCap(entry.category).includes(noCap(selectedCategory)));
+  };
+
   return (
     <>
       <SafeAreaView style={styles.container}>
@@ -64,9 +70,11 @@ const TablePage = () => {
           setSearchQuery={setSearchQuery}
           type={type}
           setType={setType}
+          selectedCategory={selectedCategory}
+          setSelectedCategory={setSelectedCategory}
         />
         <ScrollView style={styles.content}>
-          <ScrollTable renderList={filterEntries()} type={type} />
+          <ScrollTable renderList={filterCategories(filterEntries())} type={type} />
         </ScrollView>
       </SafeAreaView>
       <DefaultActionButton />

@@ -7,7 +7,15 @@ import { FontAwesome5 } from '@expo/vector-icons';
 import SortMenu from './SortMenu';
 import { theme } from '../../../theme';
 
-const TablePageHeader = ({ categories, searchQuery, setSearchQuery, type, setType }) => {
+const TablePageHeader = ({
+  categories,
+  searchQuery,
+  setSearchQuery,
+  type,
+  setType,
+  selectedCategory,
+  setSelectedCategory,
+}) => {
   const [selectedLookup, setSelectedLookup] = useState({});
   const [allButton, setAllButton] = useState(true);
   const [searchBarVisible, setSearchBarVisible] = useState(false);
@@ -20,13 +28,14 @@ const TablePageHeader = ({ categories, searchQuery, setSearchQuery, type, setTyp
     setSelectedLookup((sl) => {
       const copyOfSelectedLookup = sl;
       categories.forEach((category) => {
-        copyOfSelectedLookup[category] = true;
+        copyOfSelectedLookup[category] = false;
       });
       return { ...copyOfSelectedLookup };
     });
   }, [categories]);
 
   const allButtonPressLogic = () => {
+    setSelectedCategory('');
     if (allButton) {
       setSelectedLookup(() => {
         categories.forEach((category) => {
@@ -35,21 +44,14 @@ const TablePageHeader = ({ categories, searchQuery, setSearchQuery, type, setTyp
         return { ...selectedLookup };
       });
       setAllButton(false);
-    } else {
-      setSelectedLookup(() => {
-        categories.forEach((category) => {
-          selectedLookup[category] = true;
-        });
-        return { ...selectedLookup };
-      });
-      setAllButton(true);
     }
   };
 
   const categoryButtonPressLogic = (category) => {
+    setSelectedCategory(category);
     setSelectedLookup((s) => {
       const copyOfS = s;
-      copyOfS[category] = !copyOfS[category];
+      // copyOfS[category] = !copyOfS[category];
       return { ...copyOfS };
     });
     setAllButton(categories.every((item) => selectedLookup[item]));
