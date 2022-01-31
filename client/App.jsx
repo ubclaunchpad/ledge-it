@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { StyleSheet } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
@@ -8,14 +8,43 @@ import TablePage from './src/pages/TablePage';
 import BudgetPage from './src/pages/BudgetPage';
 import AnalyticsPage from './src/pages/AnalyticsPage';
 import SettingsPage from './src/pages/SettingsPage';
+import AuthPage from './src/auth/AuthPage';
+import BlankPage from './src/auth/BlankPage';
 import { theme } from './theme';
+import { getToken } from './src/utils/auth';
 
 const App = () => {
-  return (
-    <NavigationContainer>
-      <TabNavBar />
-    </NavigationContainer>
-  );
+  const [loggedIn, setLoggedIn] = useState(undefined);
+
+  useEffect(() => {
+    const checkForToken = async () => {
+      const token = await getToken();
+      if (token !== null) {
+        setLoggedIn(true);
+      } else {
+        setLoggedIn(false);
+      }
+    }
+    checkForToken();
+  }, []);
+
+  if (loggedIn === true) {
+    return (
+      <NavigationContainer>
+        <TabNavBar />
+      </NavigationContainer>      
+    );
+  } else if (loggedIn === false) {
+    return (
+      <AuthPage
+        setLoggedIn={setLoggedIn}
+      />
+    );
+  } else {
+    return (
+      <BlankPage/>
+    );
+  }
 };
 
 const Tab = createBottomTabNavigator();
