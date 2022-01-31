@@ -4,6 +4,8 @@ import { useFocusEffect } from '@react-navigation/native';
 import BudgetTable from '../components/BudgetPage/BudgetTable';
 import BudgetDetails from '../components/BudgetPage/BudgetDetails';
 
+const { SERVER_URL } = process.env;
+
 const BudgetPage = () => {
   const [showDetails, setShowDetails] = useState(false);
   const [month, setMonth] = useState(new Date().getMonth() + 1);
@@ -13,7 +15,7 @@ const BudgetPage = () => {
   useFocusEffect(
     useCallback(() => {
       axios
-        .get('https://money-manager-dev.herokuapp.com/budget/all')
+        .get(`${SERVER_URL}/budget/all`)
         .then(({ data }) => setDatabaseBudget(data))
         .catch((err) => console.log(err));
     }, []),

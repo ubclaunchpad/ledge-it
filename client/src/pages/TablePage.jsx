@@ -8,7 +8,7 @@ import DefaultActionButton from '../components/ActionButton';
 import { theme } from '../../theme';
 import { formatString } from '../utils/formatters';
 
-const url = 'https://ledge-it.herokuapp.com';
+const { SERVER_URL } = process.env;
 
 const TablePage = () => {
   const [type, setType] = useState('Expenses');
@@ -21,14 +21,14 @@ const TablePage = () => {
 
   const getExpenses = () => {
     axios
-      .get(`${url}/expenses`)
+      .get(`${SERVER_URL}/expenses`)
       .then(({ data }) => setExpenseData(data))
       .catch((err) => console.log(`${err}`));
   };
 
   const getIncomes = () => {
     axios
-      .get(`${url}/incomes`)
+      .get(`${SERVER_URL}/incomes`)
       .then(({ data }) => setIncomeData(data))
       .catch((err) => console.log(`${err}`));
   };

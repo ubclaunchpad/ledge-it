@@ -8,6 +8,8 @@ import StyledSelect from '../components/StyledSelect';
 import { formatDateBE } from '../utils/formatters';
 import { theme } from '../../theme';
 
+const { SERVER_URL } = process.env;
+
 const categories = [
   { label: 'Salary', value: 'Salary' },
   { label: 'Investments', value: 'Investments' },
@@ -33,7 +35,7 @@ const AddIncome = ({ setModalVisible, setIncomeModalVisible }) => {
   const submitIncome = async () => {
     axios
       .post(
-        'https://money-manager-dev.herokuapp.com/income/',
+        `${SERVER_URL}/income/`,
         JSON.stringify({
           name,
           description,

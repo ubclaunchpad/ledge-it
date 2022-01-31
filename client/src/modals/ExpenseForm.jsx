@@ -8,6 +8,8 @@ import StyledSelect from '../components/StyledSelect';
 import { formatDateBE } from '../utils/formatters';
 import { theme } from '../../theme';
 
+const { SERVER_URL } = process.env;
+
 const categories = [
   { value: 'Housing', label: 'Housing' },
   { value: 'Food', label: 'Food' },
@@ -36,7 +38,7 @@ const AddExpense = ({ setModalVisible, setExpenseModalVisible }) => {
   const submitExpense = async () => {
     axios
       .post(
-        'https://money-manager-dev.herokuapp.com/expense/',
+        `${SERVER_URL}/expense/`,
         JSON.stringify({
           name,
           description,

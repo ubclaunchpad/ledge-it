@@ -10,6 +10,8 @@ import { formatNumber } from '../../utils/formatters';
 // TODO: remove this once user support is added
 const NET_WORTH_ID = '61ab71e8efaeac62430a1822';
 
+const { SERVER_URL } = process.env;
+
 const NetWorthCard = () => {
   const [netWorth, setNetWorth] = useState(0);
   const [income, setIncome] = useState(0);
@@ -18,7 +20,7 @@ const NetWorthCard = () => {
 
   const getNetWorthData = () => {
     axios
-      .get(`https://money-manager-dev.herokuapp.com/net_worth/${NET_WORTH_ID}`)
+      .get(`${SERVER_URL}/net_worth/${NET_WORTH_ID}`)
       .then(({ data }) => {
         setIncome(data.all_time_income);
         setExpenses(data.all_time_expenses);

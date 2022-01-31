@@ -5,8 +5,7 @@ import { useFocusEffect } from '@react-navigation/native';
 import { theme } from '../../../theme';
 import { formatNumber } from '../../utils/formatters';
 
-// TODO: move this to a .env or config file
-const url = 'https://money-manager-dev.herokuapp.com';
+const { SERVER_URL } = process.env;
 
 // merge two sorted arrays
 const getTransactionsToDisplay = (incomes, expenses) => {
@@ -63,14 +62,14 @@ const RecentTransactions = () => {
 
   const getExpenses = () => {
     axios
-      .get(`${url}/expenses`)
+      .get(`${SERVER_URL}/expenses`)
       .then(({ data }) => setExpenseData(data))
       .catch((err) => console.log(`${err}`));
   };
 
   const getIncomes = () => {
     axios
-      .get(`${url}/incomes`)
+      .get(`${SERVER_URL}/incomes`)
       .then(({ data }) => setIncomeData(data))
       .catch((err) => console.log(`${err}`));
   };

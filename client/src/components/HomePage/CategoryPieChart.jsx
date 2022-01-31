@@ -7,6 +7,8 @@ import { MONTHS } from '../../utils/constants';
 import { theme } from '../../../theme';
 import { formatNumber } from '../../utils/formatters';
 
+const { SERVER_URL } = process.env;
+
 const getMonth = () => {
   const d = new Date();
   return MONTHS[d.getMonth()];
@@ -27,7 +29,7 @@ const CategoryPieChart = () => {
   const getCategoryBudgets = () => {
     const d = new Date();
     axios
-      .get('https://money-manager-dev.herokuapp.com/budget/category/all', {
+      .get(`${SERVER_URL}/budget/category/all`, {
         params: {
           month: d.getMonth() + 1,
           year: d.getFullYear(),

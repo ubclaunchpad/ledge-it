@@ -9,6 +9,8 @@ import AmountBox from '../components/AmountBox';
 import { theme } from '../../theme';
 import { formatDateBE, formatDateFE } from '../utils/formatters';
 
+const { SERVER_URL } = process.env;
+
 const ItemSummary = ({ modalVisible, setModalVisible, item, userCategories, type }) => {
   const [price, setPrice] = useState(item.price || item.amount);
   const [name, setName] = useState(item.name);
@@ -22,7 +24,7 @@ const ItemSummary = ({ modalVisible, setModalVisible, item, userCategories, type
   const onUpdate = () => {
     axios
       .put(
-        `https://money-manager-dev.herokuapp.com/${type === 'Expenses' ? 'expense' : 'income'}`,
+        `${SERVER_URL}/${type === 'Expenses' ? 'expense' : 'income'}`,
         JSON.stringify({
           name,
           description,
