@@ -1,21 +1,22 @@
 import React from 'react';
-import { View, Text, StyleSheet, Pressable, TouchableHighlight } from 'react-native';
-import { Button } from 'react-native-paper';
-import { theme } from '../../theme';
+import { View, Text, StyleSheet, TouchableHighlight } from 'react-native';
 import { Entypo } from '@expo/vector-icons';
+import { theme } from '../../theme';
 
 export default ({ label, onTap, customStyles, iconName, iconSize, iconColor, activeOpacity }) => {
   const styles = customStyles || defaultStyles;
   return (
-    <View
-      style={styles.pressable}>
+    <View style={styles.pressable}>
       <TouchableHighlight
         activeOpacity={activeOpacity || 0.65}
+        T
         underlayColor={theme.colors.white}
         onPress={onTap}>
         <View style={styles.background}>
           <Text style={styles.text}>{label}</Text>
-          {iconName && <Entypo name={iconName} size={iconSize || 20} color={iconColor || theme.colors.white} />}
+          {iconName && (
+            <Entypo name={iconName} size={iconSize || 20} color={iconColor || theme.colors.white} />
+          )}
         </View>
       </TouchableHighlight>
     </View>

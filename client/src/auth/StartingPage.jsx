@@ -1,22 +1,18 @@
-import React from "react";
-import { View, Text, StyleSheet, Dimensions } from "react-native";
-import theme from "../../theme";
+import React from 'react';
+import { View, Text, StyleSheet, Dimensions } from 'react-native';
+import { theme } from '../../theme';
+import LoginButton from '../components/AuthPage/LoginButton';
+import SignUpButton from '../components/AuthPage/SignUpButton';
 
 const StartingPage = ({ setPage }) => {
   return (
     <>
       <View style={styles.header}>
-        <Text style={styles.headerText}>
-          Welcome to Ledge-It
-        </Text>
+        <Text style={styles.headerText}>Welcome to Ledge-It</Text>
       </View>
       <View style={styles.body}>
-        <LoginButton
-          onPress={()=>setPage('loginPage')}
-        />
-        <SignUpButton
-          onPress={()=>setPage('signUpPage')}
-        />
+        <LoginButton onPress={() => setPage('loginPage')} />
+        <SignUpButton onPress={() => setPage('signUpPage')} />
       </View>
     </>
   );
@@ -29,11 +25,13 @@ const styles = StyleSheet.create({
     paddingTop: Dimensions.get('window').height * 0.15,
     paddingLeft: Dimensions.get('window').width * 0.05,
   },
+
   headerText: {
     color: theme.colors.primary,
     fontSize: 50,
     fontWeight: '500',
   },
+
   body: {
     display: 'flex',
     alignSelf: 'center',

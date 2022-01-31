@@ -1,11 +1,9 @@
 import React, { useState } from 'react';
 import { View, StyleSheet, Dimensions } from 'react-native';
 import StyledTextInput from '../components/StyledTextInput';
-import axios from 'axios';
 import BackArrow from '../components/AuthPage/BackArrow';
 import LoginButton from '../components/AuthPage/LoginButton';
 import { login } from '../utils/auth';
-
 
 // ({ keyboardType, label, placeholder, onChange, required, noClear, ...rest }) => {
 
@@ -16,7 +14,6 @@ const LoginPage = ({ setPage, setLoggedIn }) => {
   const submitLogin = () => {
     login(email, password)
       .then(({ data }) => {
-        
         // TODO: store the key locally
         setLoggedIn(true);
       })
@@ -26,25 +23,13 @@ const LoginPage = ({ setPage, setLoggedIn }) => {
   return (
     <>
       <View style={styles.body}>
-        <StyledTextInput
-          label='Email'
-          value={email}
-          onChange={setEmail}
-        />
-        <StyledTextInput
-          label='Password'
-          value={password}
-          onChange={setPassword}
-        />
+        <StyledTextInput label="Email" value={email} onChange={setEmail} />
+        <StyledTextInput label="Password" value={password} onChange={setPassword} />
         <View style={styles.btnContainer}>
-          <LoginButton
-            onPress={submitLogin}
-          />
-        </View>      
+          <LoginButton onPress={submitLogin} />
+        </View>
       </View>
-      <BackArrow
-        onPress={()=>setPage('startingPage')}
-      />
+      <BackArrow onPress={() => setPage('startingPage')} />
     </>
   );
 };
@@ -64,7 +49,7 @@ const styles = StyleSheet.create({
     paddingTop: 80,
     display: 'flex',
     alignSelf: 'center',
-  }, 
+  },
 });
 
 export default LoginPage;

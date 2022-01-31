@@ -2,7 +2,16 @@ import React, { useState } from 'react';
 import { View, Text, TextInput, StyleSheet } from 'react-native';
 import { theme } from '../../theme';
 
-export default ({ keyboardType, label, placeholder, onChange, required, noClear, errorMsg, ...rest }) => {
+export default ({
+  keyboardType,
+  label,
+  placeholder,
+  onChange,
+  required,
+  noClear,
+  errorMsg,
+  ...rest
+}) => {
   const [value, setValue] = useState(null);
   const updateValue = (newVal) => {
     setValue(newVal);
@@ -27,13 +36,11 @@ export default ({ keyboardType, label, placeholder, onChange, required, noClear,
           {...rest}
         />
       </>
-      {errorMsg &&
-      <View>
-        <Text style={styles.errorText}>
-          {errorMsg}  
-        </Text>
-      </View>
-      }
+      {errorMsg && (
+        <View>
+          <Text style={styles.errorText}>{errorMsg}</Text>
+        </View>
+      )}
     </View>
   );
 };
@@ -62,5 +69,5 @@ const styles = StyleSheet.create({
     // alignContent: 'flex-end',
     color: 'orangered',
     position: 'absolute',
-  }
+  },
 });

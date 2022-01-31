@@ -24,7 +24,7 @@ const App = () => {
       } else {
         setLoggedIn(false);
       }
-    }
+    };
     checkForToken();
   }, []);
 
@@ -32,18 +32,12 @@ const App = () => {
     return (
       <NavigationContainer>
         <TabNavBar />
-      </NavigationContainer>      
+      </NavigationContainer>
     );
   } else if (loggedIn === false) {
-    return (
-      <AuthPage
-        setLoggedIn={setLoggedIn}
-      />
-    );
+    return <AuthPage setLoggedIn={setLoggedIn} />;
   } else {
-    return (
-      <BlankPage/>
-    );
+    return <BlankPage />;
   }
 };
 
