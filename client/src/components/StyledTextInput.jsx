@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { View, Text, TextInput, StyleSheet } from 'react-native';
 import { theme } from '../../theme';
 
-export default ({ keyboardType, label, placeholder, onChange, required, noClear, ...rest }) => {
+export default ({ keyboardType, label, placeholder, onChange, required, noClear, errorMsg, ...rest }) => {
   const [value, setValue] = useState(null);
   const updateValue = (newVal) => {
     setValue(newVal);
@@ -11,20 +11,29 @@ export default ({ keyboardType, label, placeholder, onChange, required, noClear,
 
   return (
     <View style={styles.container}>
-      <Text style={styles.label}>
-        {label}
-        {required && '*'}
-      </Text>
-      <TextInput
-        style={styles.text}
-        onChangeText={updateValue}
-        value={value}
-        keyboardType={keyboardType}
-        placeholder={placeholder}
-        placeholderTextColor={theme.colors.lightgrey}
-        clearButtonMode={noClear ? 'never' : 'while-editing'}
-        {...rest}
-      />
+      <>
+        <Text style={styles.label}>
+          {label}
+          {required && '*'}
+        </Text>
+        <TextInput
+          style={styles.text}
+          onChangeText={updateValue}
+          value={value}
+          keyboardType={keyboardType}
+          placeholder={placeholder}
+          placeholderTextColor={theme.colors.lightgrey}
+          clearButtonMode={noClear ? 'never' : 'while-editing'}
+          {...rest}
+        />
+      </>
+      {errorMsg &&
+      <View>
+        <Text style={styles.errorText}>
+          {errorMsg}  
+        </Text>
+      </View>
+      }
     </View>
   );
 };
@@ -32,6 +41,7 @@ export default ({ keyboardType, label, placeholder, onChange, required, noClear,
 const styles = StyleSheet.create({
   container: {
     margin: 10,
+    display: 'flex',
   },
   label: {
     color: theme.colors.primary,
@@ -46,4 +56,11 @@ const styles = StyleSheet.create({
     paddingBottom: 2,
     color: theme.colors.textDark,
   },
+  errorText: {
+    display: 'flex',
+    alignSelf: 'flex-end',
+    // alignContent: 'flex-end',
+    color: 'orangered',
+    position: 'absolute',
+  }
 });
