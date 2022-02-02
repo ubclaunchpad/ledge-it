@@ -98,7 +98,8 @@ def update_budget_spent(month: int, year: int, change: float):
     if budget is not None:
         budget.spent += change
         budget_collection.update_one(
-            {"month": month, "year": year}, {"$set": budget},
+            {"month": month, "year": year}, 
+            {"$set": budget},
         )
         return budget
 
