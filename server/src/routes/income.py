@@ -5,6 +5,7 @@ from fastapi import APIRouter, Body, HTTPException, status
 from fastapi.responses import JSONResponse
 from fastapi.encoders import jsonable_encoder
 from pydantic.error_wrappers import ValidationError
+from datetime import date
 
 from .net_worth import update_net_worth
 from ..models.income import Income, UpdateIncomeModel, AddIncome
@@ -127,3 +128,88 @@ def delete_income_by_id(id):
         )
 
     raise HTTPException(status_code=404, detail=f"Income with id {id} not found")
+
+
+@router.get(
+    "/income/limited/",
+    response_description="Returns limited number of incomes sorted by date",
+    response_model=List[Income],
+)
+def limited_income(limit: int = 10, offset: int = 0):
+    if (
+        all_incomes := income_collection.find(limit=limit, skip=offset).sort(
+            [("date", pymongo.DESCENDING), ("updated_at", pymongo.DESCENDING)]
+        )
+    ).count(with_limit_and_skip=True):
+        return [
+            jsonable_encoder(next(all_incomes))
+            for _ in range(all_incomes.count(with_limit_and_skip=True))
+        ]
+
+    raise HTTPException(
+        status_code=404,
+        detail=f"No incomes have been found with the given conditions.",
+    )
+
+
+@router.get(
+    "/income/ranged/{start_time}/{end_time}",
+    response_description="Returns incomes that have a date between the start date and end date",
+    response_model=List[Income],
+)
+def ranged_income(start_time: date, end_time: date):
+    if (
+        incomes := income_collection.find(
+            {"date": {"$gte": str(start_time), "$lt": str(end_time)}}
+        ).sort([("date", pymongo.DESCENDING), ("updated_at", pymongo.DESCENDING)])
+    ).count():
+        return [jsonable_encoder(next(incomes)) for _ in range(incomes.count())]
+
+    raise HTTPException(
+        status_code=404,
+        detail=f"No incomes have been found between the given dates.",
+    )
+
+
+@router.get(
+    "/income/specify/",
+    response_description="Returns incomes that have the specified value in the specified field name",
+    response_model=List[Income],
+)
+def specified_incomes(
+    income_name: str = None,
+    income_description: str = None,
+    income_date: date = None,
+    income_amount: float = None,
+    income_currency: str = None,
+    income_exchange_rate: float = None,
+    income_category: str = None,
+):
+
+    specified_income = {}
+    if income_name:
+        specified_income["name"] = income_name
+    if income_description:
+        specified_income["description"] = income_description
+    if income_date:
+        specified_income["date"] = str(income_date)
+    if income_amount:
+        specified_income["amount"] = income_amount
+    if income_currency:
+        specified_income["currency"] = income_currency
+    if income_exchange_rate:
+        specified_income["exchange_rate"] = income_exchange_rate
+    if income_category:
+        specified_income["currency"] = income_category
+
+    if (
+        incomes := income_collection.find(specified_income).sort(
+            [("date", pymongo.DESCENDING), ("updated_at", pymongo.DESCENDING)]
+        )
+    ).count():
+        return [jsonable_encoder(next(incomes)) for _ in range(incomes.count())]
+
+    raise HTTPException(
+        status_code=404,
+        detail=f"No incomes have been found for the given field name and value.",
+    )
