@@ -7,7 +7,7 @@ import { MONTHS } from '../../utils/constants';
 import { theme } from '../../../theme';
 import { formatNumber } from '../../utils/formatters';
 
-const { SERVER_URL } = process.env;
+const URL = process.env.SERVER_URL;
 
 const getMonth = () => {
   const d = new Date();
@@ -29,7 +29,7 @@ const CategoryPieChart = () => {
   const getCategoryBudgets = () => {
     const d = new Date();
     axios
-      .get(`${SERVER_URL}/budget/category/all`, {
+      .get(`${URL}/budget/category/all`, {
         params: {
           month: d.getMonth() + 1,
           year: d.getFullYear(),
@@ -51,7 +51,7 @@ const CategoryPieChart = () => {
       return acc + item.value;
     }, 0),
   };
-  const ratio = `${Math.round((calculateExpense.total / calculateBudget.total) * 100)}%`;
+  const ratio = `${Math.round((calculateExpense.total / calculateBudget.total) * 100) || 0}%`;
 
   const categoryData = categoryBudgetData.map((category, index) => ({
     ...category,
@@ -69,35 +69,41 @@ const CategoryPieChart = () => {
   return (
     <SafeAreaView style={styles.centeredView}>
       <Text style={styles.title}>{getMonth()}&apos;s Spending</Text>
-      <VictoryPie
-        radius={pieRadius}
-        innerRadius={pieRadius - pieRadius / 3}
-        data={categoryData}
-        x="category"
-        y={(data) => data.spent}
-        colorScale={theme.gradient.slice(0, categoryData.length - 1).concat([theme.colors.white])}
-        labels={() => null}
-        style={{
-          parent: {
-            marginVertical: -pieRadius,
-            alignSelf: 'center',
-          },
-          data: {
-            stroke: theme.colors.grey,
-            strokeWidth: 1,
-          },
-        }}
-        labelComponent={
-          <VictoryLabel
-            textAnchor="middle"
-            verticalAnchor="middle"
-            x={windowWidth / 2}
-            y={windowWidth / 2 + pieRadius / 7}
-            style={[styles.labelMaj, styles.labelMin]}
-            text={[`$${formatNumber(calculateExpense.total, 0)}`, `Spent in ${getMonth()}`]}
-          />
-        }
-      />
+      {calculateExpense?.total ? (
+        <VictoryPie
+          radius={pieRadius}
+          innerRadius={pieRadius - pieRadius / 3}
+          data={categoryData}
+          x="category"
+          y={(data) => data.spent}
+          colorScale={theme.gradient.slice(0, categoryData.length - 1).concat([theme.colors.white])}
+          labels={() => null}
+          style={{
+            parent: {
+              marginVertical: -pieRadius,
+              alignSelf: 'center',
+            },
+            data: {
+              stroke: theme.colors.grey,
+              strokeWidth: 1,
+            },
+          }}
+          labelComponent={
+            <VictoryLabel
+              textAnchor="middle"
+              verticalAnchor="middle"
+              x={windowWidth / 2}
+              y={windowWidth / 2 + pieRadius / 7}
+              style={[styles.labelMaj, styles.labelMin]}
+              text={[`$${formatNumber(calculateExpense.total, 0)}`, `Spent in ${getMonth()}`]}
+            />
+          }
+        />
+      ) : (
+        <View style={styles.errorTextView}>
+          <Text style={styles.errorText}>No spending this month</Text>
+        </View>
+      )}
       <View style={styles.pbar} key="pbar">
         <View
           style={[
@@ -109,24 +115,28 @@ const CategoryPieChart = () => {
         <Text style={[styles.pbarTextBudget]}>${formatNumber(calculateBudget.total || 0, 0)}</Text>
       </View>
       <View style={styles.categoryView}>
-        {categoryData.map((item, index) => {
-          return (
-            <View
-              style={[
-                styles.card,
-                {
-                  backgroundColor: item.color,
-                  borderBottomLeftRadius: index === categoryData.length - 1 ? 10 : 0,
-                  borderBottomRightRadius: index === categoryData.length - 1 ? 10 : 0,
-                  borderBottomWidth: index === categoryData.length - 1 ? 0 : 1,
-                },
-              ]}
-              key={item._id}>
-              <Text style={styles.cardText}>{item.category}</Text>
-              <Text style={styles.cardText}>${formatNumber(item.spent)}</Text>
-            </View>
-          );
-        })}
+        {calculateExpense?.total ? (
+          categoryData.map((item, index) => {
+            return (
+              <View
+                style={[
+                  styles.card,
+                  {
+                    backgroundColor: item.color,
+                    borderBottomLeftRadius: index === categoryData.length - 1 ? 10 : 0,
+                    borderBottomRightRadius: index === categoryData.length - 1 ? 10 : 0,
+                    borderBottomWidth: index === categoryData.length - 1 ? 0 : 1,
+                  },
+                ]}
+                key={item._id}>
+                <Text style={styles.cardText}>{item.category}</Text>
+                <Text style={styles.cardText}>${formatNumber(item.spent)}</Text>
+              </View>
+            );
+          })
+        ) : (
+          <></>
+        )}
       </View>
     </SafeAreaView>
   );
@@ -200,6 +210,16 @@ const styles = StyleSheet.create({
   cardText: {
     fontSize: 16,
     fontWeight: '600',
+  },
+  errorTextView: {
+    display: 'flex',
+    alignItems: 'center',
+    marginVertical: 10,
+  },
+  errorText: {
+    color: theme.colors.textDark,
+    fontSize: 16,
+    fontWeight: 'bold',
   },
 });
 
