@@ -129,6 +129,7 @@ def delete_income_by_id(id):
 
     raise HTTPException(status_code=404, detail=f"Income with id {id} not found")
 
+
 @router.get(
     "/income/limited/",
     response_description="Returns limited number of incomes sorted by date",
@@ -165,8 +166,7 @@ def ranged_income(start_time: date, end_time: date):
         return [jsonable_encoder(next(incomes)) for _ in range(incomes.count())]
 
     raise HTTPException(
-        status_code=404,
-        detail=f"No incomes have been found between the given dates.",
+        status_code=404, detail=f"No incomes have been found between the given dates.",
     )
 
 
