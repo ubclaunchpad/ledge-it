@@ -18,7 +18,7 @@ export default ({ onPress }) => {
 const styles = StyleSheet.create({
   pressable: {
     position: 'absolute',
-    top: 30,
+    top: 40,
     left: 30,
   },
 });

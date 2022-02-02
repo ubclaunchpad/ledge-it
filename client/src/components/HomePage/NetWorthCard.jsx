@@ -10,7 +10,7 @@ import { formatNumber } from '../../utils/formatters';
 // TODO: remove this once user support is added
 const NET_WORTH_ID = '61ab71e8efaeac62430a1822';
 
-const { SERVER_URL } = process.env;
+const URL = process.env.SERVER_URL;
 
 const NetWorthCard = () => {
   const [netWorth, setNetWorth] = useState(0);
@@ -20,7 +20,7 @@ const NetWorthCard = () => {
 
   const getNetWorthData = () => {
     axios
-      .get(`${SERVER_URL}/net_worth/${NET_WORTH_ID}`)
+      .get(`${URL}/net_worth/${NET_WORTH_ID}`)
       .then(({ data }) => {
         setIncome(data.all_time_income);
         setExpenses(data.all_time_expenses);

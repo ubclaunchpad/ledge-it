@@ -7,7 +7,7 @@ import BudgetDetailsTable from './BudgetDetailsTable';
 import { theme } from '../../../theme';
 import { MONTHS } from '../../utils/constants';
 
-const { SERVER_URL } = process.env;
+const URL = process.env.SERVER_URL;
 
 const BudgetDetails = ({ currentMonth, currentYear, isVisible, setVisible }) => {
   const [databaseExpense, setDatabaseExpense] = useState([]);
@@ -15,7 +15,7 @@ const BudgetDetails = ({ currentMonth, currentYear, isVisible, setVisible }) => 
   useFocusEffect(
     useCallback(() => {
       axios
-        .get(`${SERVER_URL}/expense/${currentYear}/${currentMonth}`)
+        .get(`${URL}/expense/${currentYear}/${currentMonth}`)
         .then(({ data }) => setDatabaseExpense(data))
         .catch((err) => console.log(err));
     }, [currentYear, currentMonth]),

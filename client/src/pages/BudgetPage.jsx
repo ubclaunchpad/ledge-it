@@ -4,7 +4,7 @@ import { useFocusEffect } from '@react-navigation/native';
 import BudgetTable from '../components/BudgetPage/BudgetTable';
 import BudgetDetails from '../components/BudgetPage/BudgetDetails';
 
-const { SERVER_URL } = process.env;
+const URL = process.env.SERVER_URL;
 
 const BudgetPage = () => {
   const [showDetails, setShowDetails] = useState(false);
@@ -15,7 +15,7 @@ const BudgetPage = () => {
   useFocusEffect(
     useCallback(() => {
       axios
-        .get(`${SERVER_URL}/budget/all`)
+        .get(`${URL}/budget/all`)
         .then(({ data }) => setDatabaseBudget(data))
         .catch((err) => console.log(err));
     }, []),

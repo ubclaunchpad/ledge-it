@@ -8,7 +8,7 @@ import StyledSelect from '../components/StyledSelect';
 import { formatDateBE } from '../utils/formatters';
 import { theme } from '../../theme';
 
-const { SERVER_URL } = process.env;
+const URL = process.env.SERVER_URL;
 
 const categories = [
   { label: 'Salary', value: 'Salary' },
@@ -35,7 +35,7 @@ const AddIncome = ({ setModalVisible, setIncomeModalVisible }) => {
   const submitIncome = async () => {
     axios
       .post(
-        `${SERVER_URL}/income/`,
+        `${URL}/income/`,
         JSON.stringify({
           name,
           description,

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { StyleSheet } from 'react-native';
+import { ScrollView, StatusBar, StyleSheet } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Ionicons } from '@expo/vector-icons';
@@ -14,16 +14,13 @@ import { theme } from './theme';
 import { getToken } from './src/utils/auth';
 
 const App = () => {
+  StatusBar.setBarStyle('dark-content');
   const [loggedIn, setLoggedIn] = useState(undefined);
 
   useEffect(() => {
     const checkForToken = async () => {
       const token = await getToken();
-      if (token !== null) {
-        setLoggedIn(true);
-      } else {
-        setLoggedIn(false);
-      }
+      setLoggedIn(!!token);
     };
     checkForToken();
   }, []);
@@ -35,7 +32,11 @@ const App = () => {
       </NavigationContainer>
     );
   } else if (loggedIn === false) {
-    return <AuthPage setLoggedIn={setLoggedIn} />;
+    return (
+      <ScrollView keyboardShouldPersistTaps="handled">
+        <AuthPage setLoggedIn={setLoggedIn} />
+      </ScrollView>
+    );
   } else {
     return <BlankPage />;
   }

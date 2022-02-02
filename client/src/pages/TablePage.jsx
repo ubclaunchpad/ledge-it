@@ -8,7 +8,7 @@ import DefaultActionButton from '../components/ActionButton';
 import { theme } from '../../theme';
 import { formatString } from '../utils/formatters';
 
-const { SERVER_URL } = process.env;
+const URL = process.env.SERVER_URL;
 
 const TablePage = () => {
   const [type, setType] = useState('Expenses');
@@ -21,14 +21,14 @@ const TablePage = () => {
 
   const getExpenses = () => {
     axios
-      .get(`${SERVER_URL}/expenses`)
+      .get(`${URL}/expenses`)
       .then(({ data }) => setExpenseData(data))
       .catch((err) => console.log(`${err}`));
   };
 
   const getIncomes = () => {
     axios
-      .get(`${SERVER_URL}/incomes`)
+      .get(`${URL}/incomes`)
       .then(({ data }) => setIncomeData(data))
       .catch((err) => console.log(`${err}`));
   };

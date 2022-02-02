@@ -29,8 +29,8 @@ const SignUpPage = ({ setPage, setLoggedIn }) => {
         },
       )
       .catch((err) => console.log(err));
-    const loginResponse = await login(email, secondPassword);
-    await saveToken(loginResponse.data.access_token);
+    const { data } = await login(email, secondPassword);
+    await saveToken(data.access_token, data.expiry);
     setLoggedIn(true);
   };
 
@@ -39,10 +39,10 @@ const SignUpPage = ({ setPage, setLoggedIn }) => {
       setPwdWarn("Passwords don't match");
       setTimeout(() => {
         setPwdWarn(undefined);
-      }, 3000);
+      }, 10000);
+    } else {
+      submitSignUp();
     }
-
-    submitSignUp();
   };
 
   return (
@@ -64,12 +64,14 @@ const SignUpPage = ({ setPage, setLoggedIn }) => {
           label="Create Password"
           value={firstPassword}
           onChange={setFirstPassword}
+          secureTextEntry
         />
         <StyledTextInput
           label="Confirm Password"
           value={secondPassword}
           onChange={setSecondPassword}
           errorMsg={pwdWarn}
+          secureTextEntry
         />
         <View style={styles.btnContainer}>
           <SignUpButton onPress={signUpHandler} />
@@ -85,9 +87,9 @@ const styles = StyleSheet.create({
     display: 'flex',
     alignSelf: 'center',
     width: Dimensions.get('window').width * 0.8,
-    height: Dimensions.get('window').height * 0.85,
+    height: Dimensions.get('window').height * 0.8,
     paddingHorizontal: 10,
-    paddingTop: 175,
+    paddingTop: Dimensions.get('window').height * 0.25,
     justifyContent: 'space-between',
   },
 

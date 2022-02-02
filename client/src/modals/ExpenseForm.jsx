@@ -8,7 +8,7 @@ import StyledSelect from '../components/StyledSelect';
 import { formatDateBE } from '../utils/formatters';
 import { theme } from '../../theme';
 
-const { SERVER_URL } = process.env;
+const URL = process.env.SERVER_URL;
 
 const categories = [
   { value: 'Housing', label: 'Housing' },
@@ -38,7 +38,7 @@ const AddExpense = ({ setModalVisible, setExpenseModalVisible }) => {
   const submitExpense = async () => {
     axios
       .post(
-        `${SERVER_URL}/expense/`,
+        `${URL}/expense/`,
         JSON.stringify({
           name,
           description,

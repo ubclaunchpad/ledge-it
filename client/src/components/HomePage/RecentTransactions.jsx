@@ -5,7 +5,7 @@ import { useFocusEffect } from '@react-navigation/native';
 import { theme } from '../../../theme';
 import { formatNumber } from '../../utils/formatters';
 
-const { SERVER_URL } = process.env;
+const URL = process.env.SERVER_URL;
 
 // merge two sorted arrays
 const getTransactionsToDisplay = (incomes, expenses) => {
@@ -62,14 +62,14 @@ const RecentTransactions = () => {
 
   const getExpenses = () => {
     axios
-      .get(`${SERVER_URL}/expenses`)
+      .get(`${URL}/expenses`)
       .then(({ data }) => setExpenseData(data))
       .catch((err) => console.log(`${err}`));
   };
 
   const getIncomes = () => {
     axios
-      .get(`${SERVER_URL}/incomes`)
+      .get(`${URL}/incomes`)
       .then(({ data }) => setIncomeData(data))
       .catch((err) => console.log(`${err}`));
   };

@@ -3,9 +3,7 @@ import { View, StyleSheet, Dimensions } from 'react-native';
 import StyledTextInput from '../components/StyledTextInput';
 import BackArrow from '../components/AuthPage/BackArrow';
 import LoginButton from '../components/AuthPage/LoginButton';
-import { login } from '../utils/auth';
-
-// ({ keyboardType, label, placeholder, onChange, required, noClear, ...rest }) => {
+import { login, saveToken } from '../utils/auth';
 
 const LoginPage = ({ setPage, setLoggedIn }) => {
   const [email, setEmail] = useState('');
@@ -13,8 +11,8 @@ const LoginPage = ({ setPage, setLoggedIn }) => {
 
   const submitLogin = () => {
     login(email, password)
-      .then(({ data }) => {
-        // TODO: store the key locally
+      .then(async ({ data }) => {
+        await saveToken(data.access_token, data.expires);
         setLoggedIn(true);
       })
       .catch((err) => console.log(err));
@@ -24,7 +22,7 @@ const LoginPage = ({ setPage, setLoggedIn }) => {
     <>
       <View style={styles.body}>
         <StyledTextInput label="Email" value={email} onChange={setEmail} />
-        <StyledTextInput label="Password" value={password} onChange={setPassword} />
+        <StyledTextInput label="Password" value={password} onChange={setPassword} secureTextEntry />
         <View style={styles.btnContainer}>
           <LoginButton onPress={submitLogin} />
         </View>
@@ -39,14 +37,14 @@ const styles = StyleSheet.create({
     display: 'flex',
     alignSelf: 'center',
     width: Dimensions.get('window').width * 0.8,
-    height: Dimensions.get('window').height * 0.85,
+    height: Dimensions.get('window').height * 0.7,
     paddingHorizontal: 10,
-    paddingTop: 250,
+    paddingTop: Dimensions.get('window').height * 0.3,
     justifyContent: 'space-between',
   },
 
   btnContainer: {
-    paddingTop: 80,
+    paddingTop: 50,
     display: 'flex',
     alignSelf: 'center',
   },

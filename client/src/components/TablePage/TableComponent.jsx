@@ -8,7 +8,7 @@ import { theme } from '../../../theme';
 import ItemSummary from '../../modals/ItemSummary';
 import { getDay, getMonth, getYear } from '../../utils/formatters';
 
-const { SERVER_URL } = process.env;
+const URL = process.env.SERVER_URL;
 
 const ListInputComponent = ({ item, type }) => {
   const [itemSummaryModal, setItemSummaryModal] = useState(false);
@@ -65,7 +65,7 @@ const ListInputComponent = ({ item, type }) => {
 const TableComponent = ({ title, subTitle, list, type }) => {
   const handleDelete = (id) => {
     axios
-      .delete(`${SERVER_URL}/${type === 'Expenses' ? 'expense' : 'income'}/${id}`)
+      .delete(`${URL}/${type === 'Expenses' ? 'expense' : 'income'}/${id}`)
       .then(({ data }) => console.log(data))
       .catch((err) => console.log(err));
   };

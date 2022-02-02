@@ -9,7 +9,7 @@ import AmountBox from '../components/AmountBox';
 import { theme } from '../../theme';
 import { formatDateBE, formatDateFE } from '../utils/formatters';
 
-const { SERVER_URL } = process.env;
+const URL = process.env.SERVER_URL;
 
 const ItemSummary = ({ modalVisible, setModalVisible, item, userCategories, type }) => {
   const [price, setPrice] = useState(item.price || item.amount);
@@ -24,7 +24,7 @@ const ItemSummary = ({ modalVisible, setModalVisible, item, userCategories, type
   const onUpdate = () => {
     axios
       .put(
-        `${SERVER_URL}/${type === 'Expenses' ? 'expense' : 'income'}`,
+        `${URL}/${type === 'Expenses' ? 'expense' : 'income'}`,
         JSON.stringify({
           name,
           description,
