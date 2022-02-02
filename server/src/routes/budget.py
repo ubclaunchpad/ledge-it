@@ -98,11 +98,12 @@ def update_budget_spent(month: int, year: int, change: float):
     if budget is not None:
         budget.spent += change
         budget_collection.update_one(
-            {"month": month, "year": year}, 
+            {"month": month, "year": year},
             {"$set": budget},
         )
         return budget
 
     raise HTTPException(
-        status_code=404, detail=f"Budget with month: {month} and year: {year}",
+        status_code=404,
+        detail=f"Budget with month: {month} and year: {year}",
     )

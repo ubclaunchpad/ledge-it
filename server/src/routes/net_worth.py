@@ -74,9 +74,9 @@ def update_net_worth(
                 else:
                     value_to_add = nwm.history[index]["value"] + change
                 nwm.history.insert(
-                    index + 1, 
+                    index + 1,
                     {
-                        "date": str(added_date), 
+                        "date": str(added_date),
                         "value": value_to_add,
                     },
                 )

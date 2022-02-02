@@ -214,7 +214,7 @@ def ranged_expenses(start_time: date, end_time: date):
         return [jsonable_encoder(next(expenses)) for _ in range(expenses.count())]
 
     raise HTTPException(
-        status_code=404, 
+        status_code=404,
         detail=f"No expenses have been found between the given dates.",
     )
 

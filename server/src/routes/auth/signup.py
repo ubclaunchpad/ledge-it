@@ -17,7 +17,7 @@ def create_user(user: User = Body(...)):
             content=jsonable_encoder({"error": "User already exists"}),
         )
     new_user = User(
-        email=user.email, 
+        email=user.email,
         hashed_password=pwd_context.hash(user.hashed_password),
     )
     new_user = jsonable_encoder(new_user)

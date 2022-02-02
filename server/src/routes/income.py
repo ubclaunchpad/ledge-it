@@ -166,7 +166,7 @@ def ranged_income(start_time: date, end_time: date):
         return [jsonable_encoder(next(incomes)) for _ in range(incomes.count())]
 
     raise HTTPException(
-        status_code=404, 
+        status_code=404,
         detail=f"No incomes have been found between the given dates.",
     )
 
