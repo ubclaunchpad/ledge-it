@@ -36,14 +36,20 @@ def get_incomes(current_user: User = Depends(get_current_active_user)):
     "/income/{id}", response_description="Get income by id", response_model=Income
 )
 def get_income_by_id(id, current_user: User = Depends(get_current_active_user)):
-    if (income := income_collection.find_one({"_id": id, "email": current_user["email"]})) is not None:
+    if (
+        income := income_collection.find_one(
+            {"_id": id, "email": current_user["email"]}
+        )
+    ) is not None:
         return income
 
     raise HTTPException(status_code=404, detail=f"Income with id {id} not found")
 
 
 @router.post("/income/", response_description="Add new income", response_model=Income)
-def create_income(income: AddIncome = Body(...), current_user: User = Depends(get_current_active_user)):
+def create_income(
+    income: AddIncome = Body(...), current_user: User = Depends(get_current_active_user)
+):
     if (net_worth_to_update := net_worth_collection.find_one()) is None:
         raise HTTPException(status_code=404, detail=f"Net worth not found")
 
@@ -75,7 +81,11 @@ def create_income(income: AddIncome = Body(...), current_user: User = Depends(ge
     response_description="Update income selected by id",
     response_model=Income,
 )
-def update_income(id, income: UpdateIncomeModel = Body(...), current_user: User = Depends(get_current_active_user)):
+def update_income(
+    id,
+    income: UpdateIncomeModel = Body(...),
+    current_user: User = Depends(get_current_active_user),
+):
     if (income_to_update := income_collection.find_one({"_id": id})) is None:
         raise HTTPException(status_code=404, detail=f"Expense with id {id} not found")
     if (net_worth_to_update := net_worth_collection.find_one()) is None:
@@ -95,13 +105,23 @@ def update_income(id, income: UpdateIncomeModel = Body(...), current_user: User 
     income = jsonable_encoder(income)
 
     if len(income) >= 1:
-        update_result = income_collection.update_one({"_id": id, "email": current_user["email"]}, {"$set": income})
+        update_result = income_collection.update_one(
+            {"_id": id, "email": current_user["email"]}, {"$set": income}
+        )
 
         if update_result.modified_count == 1:
-            if (updated_income := income_collection.find_one({"_id": id, "email": current_user["email"]})) is not None:
+            if (
+                updated_income := income_collection.find_one(
+                    {"_id": id, "email": current_user["email"]}
+                )
+            ) is not None:
                 return updated_income
 
-    if (existing_income := income_collection.find_one({"_id": id, "email": current_user["email"]})) is not None:
+    if (
+        existing_income := income_collection.find_one(
+            {"_id": id, "email": current_user["email"]}
+        )
+    ) is not None:
         return existing_income
 
     raise HTTPException(status_code=404, detail=f"Income with id {id} not found")
@@ -111,10 +131,16 @@ def update_income(id, income: UpdateIncomeModel = Body(...), current_user: User 
     "/income/{id}", response_description="Delete income by id", response_model=Income
 )
 def delete_income_by_id(id, current_user: User = Depends(get_current_active_user)):
-    income_to_delete: Income = income_collection.find_one({"_id": id, "email": current_user["email"]})
+    income_to_delete: Income = income_collection.find_one(
+        {"_id": id, "email": current_user["email"]}
+    )
     if income_to_delete is None:
         raise HTTPException(status_code=404, detail=f"Expense with id {id} not found")
-    if (net_worth_to_update := net_worth_collection.find_one({"email": current_user["email"]})) is None:
+    if (
+        net_worth_to_update := net_worth_collection.find_one(
+            {"email": current_user["email"]}
+        )
+    ) is None:
         raise HTTPException(status_code=404, detail=f"Net worth not found")
 
     update_net_worth(
@@ -123,7 +149,9 @@ def delete_income_by_id(id, current_user: User = Depends(get_current_active_user
         income_to_delete.date,
     )
 
-    delete_result = income_collection.delete_one({"_id": id, "email": current_user["email"]})
+    delete_result = income_collection.delete_one(
+        {"_id": id, "email": current_user["email"]}
+    )
 
     if delete_result.deleted_count == 1:
         return JSONResponse(
@@ -139,11 +167,15 @@ def delete_income_by_id(id, current_user: User = Depends(get_current_active_user
     response_description="Returns limited number of incomes sorted by date",
     response_model=List[Income],
 )
-def limited_income(limit: int = 10, offset: int = 0, current_user: User = Depends(get_current_active_user)):
+def limited_income(
+    limit: int = 10,
+    offset: int = 0,
+    current_user: User = Depends(get_current_active_user),
+):
     if (
-        all_incomes := income_collection.find({"email": current_user["email"]}, limit=limit, skip=offset).sort(
-            [("date", pymongo.DESCENDING), ("updated_at", pymongo.DESCENDING)]
-        )
+        all_incomes := income_collection.find(
+            {"email": current_user["email"]}, limit=limit, skip=offset
+        ).sort([("date", pymongo.DESCENDING), ("updated_at", pymongo.DESCENDING)])
     ).count(with_limit_and_skip=True):
         return [
             jsonable_encoder(next(all_incomes))
@@ -161,17 +193,23 @@ def limited_income(limit: int = 10, offset: int = 0, current_user: User = Depend
     response_description="Returns incomes that have a date between the start date and end date",
     response_model=List[Income],
 )
-def ranged_income(start_time: date, end_time: date, current_user: User = Depends(get_current_active_user)):
+def ranged_income(
+    start_time: date,
+    end_time: date,
+    current_user: User = Depends(get_current_active_user),
+):
     if (
         incomes := income_collection.find(
-            {"date": {"$gte": str(start_time), "$lt": str(end_time)}, "email": current_user["email"]}
+            {
+                "date": {"$gte": str(start_time), "$lt": str(end_time)},
+                "email": current_user["email"],
+            }
         ).sort([("date", pymongo.DESCENDING), ("updated_at", pymongo.DESCENDING)])
     ).count():
         return [jsonable_encoder(next(incomes)) for _ in range(incomes.count())]
 
     raise HTTPException(
-        status_code=404,
-        detail=f"No incomes have been found between the given dates.",
+        status_code=404, detail=f"No incomes have been found between the given dates.",
     )
 
 
@@ -188,7 +226,7 @@ def specified_incomes(
     income_currency: str = None,
     income_exchange_rate: float = None,
     income_category: str = None,
-    current_user: User = Depends(get_current_active_user)
+    current_user: User = Depends(get_current_active_user),
 ):
 
     specified_income = {}

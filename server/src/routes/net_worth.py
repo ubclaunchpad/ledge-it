@@ -17,7 +17,11 @@ router = APIRouter()
     response_model=NetWorth,
 )
 def get_net_worth_by_id(id, current_user: User = Depends(get_current_active_user)):
-    if (nwm := net_worth_collection.find_one({"_id": id, "email": current_user["email"]})) is not None:
+    if (
+        nwm := net_worth_collection.find_one(
+            {"_id": id, "email": current_user["email"]}
+        )
+    ) is not None:
         return nwm
     raise HTTPException(status_code=404, detail=f"NetWorth with id {id} not found")
 
@@ -27,11 +31,15 @@ def get_net_worth_by_id(id, current_user: User = Depends(get_current_active_user
     response_description="Add new Net worth model",
     response_model=NetWorth,
 )
-def create_net_worth(nwm: NetWorth = Body(...), current_user: User = Depends(get_current_active_user)):
+def create_net_worth(
+    nwm: NetWorth = Body(...), current_user: User = Depends(get_current_active_user)
+):
     nwm["email"] = current_user["email"]
     nwm = jsonable_encoder(nwm)
     new_nwm = net_worth_collection.insert_one(nwm)
-    created_nwm = net_worth_collection.find_one({"_id": new_nwm.inserted_id, "email": current_user["email"]})
+    created_nwm = net_worth_collection.find_one(
+        {"_id": new_nwm.inserted_id, "email": current_user["email"]}
+    )
     return JSONResponse(status_code=status.HTTP_201_CREATED, content=created_nwm)
 
 
@@ -41,9 +49,15 @@ def create_net_worth(nwm: NetWorth = Body(...), current_user: User = Depends(get
     response_model=NetWorth,
 )
 def update_net_worth(
-    id: str, change: float, added_date: date, is_expense: bool = False, current_user: User = Depends(get_current_active_user)
+    id: str,
+    change: float,
+    added_date: date,
+    is_expense: bool = False,
+    current_user: User = Depends(get_current_active_user),
 ):
-    nwm: NetWorth = net_worth_collection.find_one({"_id": id, "email": current_user["email"]})
+    nwm: NetWorth = net_worth_collection.find_one(
+        {"_id": id, "email": current_user["email"]}
+    )
 
     if nwm is not None:
         nwm.current += change
@@ -78,14 +92,12 @@ def update_net_worth(
                 else:
                     value_to_add = nwm.history[index]["value"] + change
                 nwm.history.insert(
-                    index + 1,
-                    {
-                        "date": str(added_date),
-                        "value": value_to_add,
-                    },
+                    index + 1, {"date": str(added_date), "value": value_to_add,},
                 )
 
-        net_worth_collection.update_one({"_id": id, "email": current_user["email"]}, {"$set": nwm})
+        net_worth_collection.update_one(
+            {"_id": id, "email": current_user["email"]}, {"$set": nwm}
+        )
         return nwm
 
     raise HTTPException(status_code=404, detail=f"Net worth not found {id} not found")
@@ -93,7 +105,9 @@ def update_net_worth(
 
 @router.delete("/net_worth/{id}", response_description="Delete a Net Worth model")
 def delete_net_worth(id: str, current_user: User = Depends(get_current_active_user)):
-    delete_result = net_worth_collection.delete_one({"_id": id, "email": current_user["email"]})
+    delete_result = net_worth_collection.delete_one(
+        {"_id": id, "email": current_user["email"]}
+    )
     if delete_result.deleted_count == 1:
         return JSONResponse(
             status_code=status.HTTP_200_OK,
