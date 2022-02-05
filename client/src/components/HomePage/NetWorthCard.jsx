@@ -1,16 +1,39 @@
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { StyleSheet, View, Text, Dimensions, TouchableOpacity } from 'react-native';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { faChevronDown, faChevronUp } from '@fortawesome/free-solid-svg-icons';
+import axios from 'axios';
+import { useFocusEffect } from '@react-navigation/native';
 import { theme } from '../../../theme';
 import { formatNumber } from '../../utils/formatters';
 
-const netWorth = 150000.1212;
-const income = 2000.5;
-const expenses = 500.5;
+// TODO: remove this once user support is added
+const NET_WORTH_ID = '61ab71e8efaeac62430a1822';
+
+const URL = process.env.SERVER_URL;
 
 const NetWorthCard = () => {
+  const [netWorth, setNetWorth] = useState(0);
+  const [income, setIncome] = useState(0);
+  const [expenses, setExpenses] = useState(0);
   const [isExpanded, setExpand] = useState(false);
+
+  const getNetWorthData = () => {
+    axios
+      .get(`${URL}/net_worth/${NET_WORTH_ID}`)
+      .then(({ data }) => {
+        setIncome(data.all_time_income);
+        setExpenses(data.all_time_expenses);
+        setNetWorth(data.current);
+      })
+      .catch((err) => console.log(err));
+  };
+
+  useFocusEffect(
+    useCallback(() => {
+      getNetWorthData();
+    }, []),
+  );
 
   return (
     <View style={styles.container}>

@@ -18,7 +18,7 @@ from .database import user_collection
 # secret_key from `openssl rand -hex 32`
 SECRET_KEY = "e58b5e9eb9ec7f63fe63ffc548a5bbace9f9fcba248ea1133dc46e4fac40c9a9"
 ALGORITHM = "HS256"
-ACCESS_TOKEN_EXPIRE_MINUTES = 30
+ACCESS_TOKEN_EXPIRE_MINUTES = 60 * 24 * 7
 
 
 class Token(BaseModel):

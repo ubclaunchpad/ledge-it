@@ -1,116 +1,98 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { SafeAreaView, ScrollView, StyleSheet } from 'react-native';
+import axios from 'axios';
+import { useFocusEffect } from '@react-navigation/native';
 import ScrollTable from '../components/TablePage/ScrollTable';
 import TablePageHeader from '../components/TablePage/TablePageHeader';
-import ActionButton from '../components/ActionButton';
-import ExpenseForm from '../modals/ExpenseForm';
+import DefaultActionButton from '../components/ActionButton';
 import { theme } from '../../theme';
+import { formatString } from '../utils/formatters';
 
-// Note: These are just sample data of expense/income from the database.
-
-const expenseDatabase = [
-  {
-    name: 'Gym',
-    price: '65.00',
-    date: '2022-10-21',
-    currency: 'CAD',
-    category: 'Category #41',
-  },
-  {
-    name: 'Gym',
-    price: '65.00',
-    date: '2021-10-21',
-    currency: 'CAD',
-    category: 'Category #41',
-  },
-  {
-    name: 'Coffee',
-    price: '4.29',
-    date: '2021-10-17',
-    currency: 'CAD',
-    category: 'Category #12',
-  },
-  {
-    name: 'Monitor',
-    price: '205.00',
-    date: '2021-09-27',
-    currency: 'CAD',
-    category: 'Category #13',
-  },
-  {
-    name: 'Mouse',
-    price: '54.99',
-    date: '2021-09-05',
-    currency: 'CAD',
-    category: 'Category #22',
-  },
-  {
-    name: 'Skateboard',
-    price: '80.99',
-    date: '2021-08-17',
-    currency: 'USD',
-    category: 'Category #25',
-  },
-];
-
-const incomeDatabase = [
-  {
-    name: 'Part Time: Piano Lessons',
-    price: '650.00',
-    date: '2021-10-21',
-    currency: 'CAD',
-    category: 'Category #1',
-  },
-  {
-    name: 'Tax Refunds',
-    price: '205.00',
-    date: '2021-09-27',
-    currency: 'CAD',
-    category: 'Category #13',
-  },
-  {
-    name: 'Part Time: CPSC 312 TA',
-    price: '1344.99',
-    date: '2021-09-05',
-    currency: 'CAD',
-    category: 'Category #1',
-  },
-  {
-    name: 'Monthly Allowance',
-    price: '80.99',
-    date: '2021-08-17',
-    currency: 'USD',
-    category: 'Category #25',
-  },
-];
+const URL = process.env.SERVER_URL;
 
 const TablePage = () => {
   const [type, setType] = useState('Expenses');
   const [categories, setCategories] = useState([]);
+  const [expenseData, setExpenseData] = useState([]);
+  const [incomeData, setIncomeData] = useState([]);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [allButton, setAllButton] = useState(true);
+  const [selectedCategories, setSelectedCategories] = useState({});
 
-  // Fetch user categories from db here
+  const getExpenses = () => {
+    axios
+      .get(`${URL}/expenses`)
+      .then(({ data }) => setExpenseData(data))
+      .catch((err) => console.log(`${err}`));
+  };
+
+  const getIncomes = () => {
+    axios
+      .get(`${URL}/incomes`)
+      .then(({ data }) => setIncomeData(data))
+      .catch((err) => console.log(`${err}`));
+  };
+
+  const filterEntries = () => {
+    if (type === 'Expenses') {
+      return expenseData.filter((entry) =>
+        formatString(entry.name).includes(formatString(searchQuery)),
+      );
+    } else if (type === 'Income') {
+      return incomeData.filter((entry) =>
+        formatString(entry.name).includes(formatString(searchQuery)),
+      );
+    }
+  };
+
+  const filterCategories = (data) => data.filter((entry) => !!selectedCategories[entry.category]);
+
+  useFocusEffect(
+    useCallback(() => {
+      getExpenses();
+      getIncomes();
+    }, []),
+  );
+
+  // TODO: Fetch user categories from db here
   useEffect(() => {
     if (type === 'Expenses') {
-      setCategories(['Food', 'Housing', 'Fun', 'Other']);
+      setCategories(['Housing', 'Food', 'Transport', 'Clothes', 'Entertainment', 'Other']);
     } else {
-      setCategories(['Main job', 'Part-time', 'Passive', 'Other']);
+      setCategories(['Salary', 'Investments', 'Business', 'Other']);
     }
   }, [type]);
+
+  useEffect(() => {
+    setAllButton(true);
+    setSelectedCategories((sl) => {
+      const copyOfSelectedLookup = sl;
+      categories.forEach((category) => {
+        copyOfSelectedLookup[category] = true;
+      });
+      return { ...copyOfSelectedLookup };
+    });
+  }, [categories]);
 
   return (
     <>
       <SafeAreaView style={styles.container}>
-        <TablePageHeader categories={categories} type={type} setType={setType} />
+        <TablePageHeader
+          categories={categories}
+          searchQuery={searchQuery}
+          setSearchQuery={setSearchQuery}
+          type={type}
+          setType={setType}
+          allButton={allButton}
+          setAllButton={setAllButton}
+          selectedCategories={selectedCategories}
+          setSelectedCategories={setSelectedCategories}
+        />
         <ScrollView style={styles.content}>
-          <ScrollTable
-            renderList={type === 'Expenses' ? expenseDatabase : incomeDatabase}
-            type={type}
-          />
+          <ScrollTable renderList={filterCategories(filterEntries())} type={type} />
         </ScrollView>
       </SafeAreaView>
-      <ActionButton>
-        <ExpenseForm />
-      </ActionButton>
+      <DefaultActionButton />
     </>
   );
 };

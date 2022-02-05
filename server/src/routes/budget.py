@@ -1,3 +1,4 @@
+import pymongo
 from fastapi import APIRouter, Body, HTTPException, status
 from fastapi.responses import JSONResponse
 from fastapi.encoders import jsonable_encoder
@@ -15,7 +16,11 @@ router = APIRouter()
     response_model=List[Budget],
 )
 def get_all_budgets():
-    if (all_budgets := budget_collection.find()).count():
+    if (
+        all_budgets := budget_collection.find().sort(
+            [("year", pymongo.DESCENDING), ("month", pymongo.DESCENDING)]
+        )
+    ).count():
         return [jsonable_encoder(next(all_budgets)) for _ in range(all_budgets.count())]
 
     raise HTTPException(status_code=404, detail=f"No budgets have been found.")
@@ -85,4 +90,20 @@ def delete_budget(month: int, year: int):
 
     raise HTTPException(
         status_code=404, detail=f"Budget with month: {month} and year: {year} not found"
+    )
+
+
+def update_budget_spent(month: int, year: int, change: float):
+    budget: Budget = budget_collection.find_one({"month": month, "year": year})
+    if budget is not None:
+        budget.spent += change
+        budget_collection.update_one(
+            {"month": month, "year": year},
+            {"$set": budget},
+        )
+        return budget
+
+    raise HTTPException(
+        status_code=404,
+        detail=f"Budget with month: {month} and year: {year}",
     )

@@ -6,6 +6,7 @@ import Modal from '../CustomModal';
 import appTheme from '../../../theme';
 
 const years = [
+  { label: '2022', value: 2022 },
   { label: '2021', value: 2021 },
   { label: '2020', value: 2020 },
   { label: '2019', value: 2019 },
@@ -42,7 +43,7 @@ const BudgetHeader = ({ year, setYear, sortFunction }) => {
               customStyles={dropDownStyles}
               label="Sort"
               onTap={() => setSortModalVisible(true)}
-              icon={sortModalVisible ? 'chevron-up' : 'chevron-down'}
+              iconName={sortModalVisible ? 'chevron-up' : 'chevron-down'}
             />
           </View>
           <Modal isModalVisible={sortModalVisible} setModalVisible={setSortModalVisible}>
@@ -133,8 +134,10 @@ const dropDownStyles = StyleSheet.create({
     borderRadius: 20,
     height: 40,
     width: 90,
+    display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
+    justifyContent: 'space-between',
   },
 
   text: {

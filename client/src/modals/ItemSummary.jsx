@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { StyleSheet, View, Text } from 'react-native';
+import axios from 'axios';
 import StyledButton from '../components/StyledButton';
 import StyledTextInput from '../components/StyledTextInput';
 import StyledSelect from '../components/StyledSelect';
@@ -7,6 +8,8 @@ import CustomModal from '../components/CustomModal';
 import AmountBox from '../components/AmountBox';
 import { theme } from '../../theme';
 import { formatDateBE, formatDateFE } from '../utils/formatters';
+
+const URL = process.env.SERVER_URL;
 
 const ItemSummary = ({ modalVisible, setModalVisible, item, userCategories, type }) => {
   const [price, setPrice] = useState(item.price || item.amount);
@@ -19,17 +22,25 @@ const ItemSummary = ({ modalVisible, setModalVisible, item, userCategories, type
   const [categoryDropdownVisible, setCategoryDropdownVisible] = useState(false);
 
   const onUpdate = () => {
-    const updateObject = {
-      item: price,
-      name,
-      description,
-      date: formatDateBE(date),
-      category,
-      sub_category: tag,
-      location,
-    };
-    console.log(updateObject);
-
+    axios
+      .put(
+        `${URL}/${type === 'Expenses' ? 'expense' : 'income'}`,
+        JSON.stringify({
+          name,
+          description,
+          date: formatDateBE(date),
+          [type === 'Expenses' ? 'price' : 'amount']: price,
+          location,
+          category,
+        }),
+        {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        },
+      )
+      .then(({ data }) => console.log(data))
+      .catch((err) => console.log(err));
     setModalVisible(false);
   };
 
@@ -52,7 +63,7 @@ const ItemSummary = ({ modalVisible, setModalVisible, item, userCategories, type
           label={type === 'Expenses' ? 'Price' : 'Amount'}
           onChange={(newVal) => setPrice(newVal)}
           keyboardType="numeric"
-          value={price}
+          value={String(price)}
           required
         />
         <StyledTextInput

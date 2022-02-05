@@ -1,26 +1,28 @@
 import React, { useState } from 'react';
 import { List } from 'react-native-paper';
-import { StyleSheet, Text, View } from 'react-native';
+import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { Swipeable } from 'react-native-gesture-handler';
+import axios from 'axios';
 import { MONTHS } from '../../utils/constants';
 import { theme } from '../../../theme';
 import ItemSummary from '../../modals/ItemSummary';
 import { getDay, getMonth, getYear } from '../../utils/formatters';
 
-const RightSwipe = () => {
-  return (
-    <View style={styles.swipeBackground}>
-      <Text style={styles.swipeText}>Delete</Text>
-    </View>
-  );
-};
+const URL = process.env.SERVER_URL;
 
 const ListInputComponent = ({ item, type }) => {
   const [itemSummaryModal, setItemSummaryModal] = useState(false);
 
   const negative = type === 'Expenses' ? '-' : '';
-  const userCategoriesExpenses = ['Food', 'Housing', 'Fun', 'Other', 'School'];
-  const userCategoriesIncomes = ['Main job', 'Part-time', 'Passive', 'Other'];
+  const userCategoriesExpenses = [
+    'Housing',
+    'Food',
+    'Transport',
+    'Clothes',
+    'Entertainment',
+    'Other',
+  ];
+  const userCategoriesIncomes = ['Salary', 'Investments', 'Business', 'Other'];
 
   return (
     <>
@@ -41,7 +43,7 @@ const ListInputComponent = ({ item, type }) => {
           <View>
             <Text />
             <Text style={styles.price}>
-              {negative}${item.price || item.amount} {item.currency}
+              {negative}${item.price || item.amount} {item.currency.toUpperCase()}
             </Text>
           </View>
         )}
@@ -61,18 +63,31 @@ const ListInputComponent = ({ item, type }) => {
 };
 
 const TableComponent = ({ title, subTitle, list, type }) => {
-  const tableItems = list.map((item, index) => (
-    <Swipeable key={index} renderRightActions={RightSwipe}>
-      <ListInputComponent item={item} type={type} />
-    </Swipeable>
-  ));
+  const handleDelete = (id) => {
+    axios
+      .delete(`${URL}/${type === 'Expenses' ? 'expense' : 'income'}/${id}`)
+      .then(({ data }) => console.log(data))
+      .catch((err) => console.log(err));
+  };
+
+  const RightSwipeComponent = (id) => {
+    return (
+      <Pressable style={styles.swipeBackground} onPress={() => handleDelete(id)}>
+        <Text style={styles.swipeText}>Delete</Text>
+      </Pressable>
+    );
+  };
 
   return (
     <List.Section style={styles.container}>
       <List.Subheader style={styles.header}>
         {MONTHS[title - 1]} {subTitle}
       </List.Subheader>
-      {tableItems}
+      {list.map((item, index) => (
+        <Swipeable key={index} renderRightActions={() => RightSwipeComponent(item._id)}>
+          <ListInputComponent item={item} type={type} />
+        </Swipeable>
+      ))}
     </List.Section>
   );
 };

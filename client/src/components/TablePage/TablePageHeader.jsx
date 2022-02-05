@@ -1,69 +1,74 @@
 import React, { useState, useEffect } from 'react';
-import { View, ScrollView, StyleSheet, Text, TouchableOpacity } from 'react-native';
+import { View, ScrollView, StyleSheet, Text, TouchableOpacity, Dimensions } from 'react-native';
 import { Searchbar, Chip } from 'react-native-paper';
 import { faChevronRight } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
+import { FontAwesome5 } from '@expo/vector-icons';
 import SortMenu from './SortMenu';
 import { theme } from '../../../theme';
 
-const TablePageHeader = ({ categories, type, setType }) => {
-  const [searchQuery, setSearchQuery] = useState('');
-  const [selectedLookup, setSelectedLookup] = useState({});
-  const [allButton, setAllButton] = useState(true);
+const TablePageHeader = ({
+  categories,
+  searchQuery,
+  setSearchQuery,
+  type,
+  setType,
+  allButton,
+  setAllButton,
+  selectedCategories,
+  setSelectedCategories,
+}) => {
+  const [searchBarVisible, setSearchBarVisible] = useState(false);
 
   const onChangeSearch = (query) => setSearchQuery(query);
   const onToggleSwitch = () => setType(type === 'Expenses' ? 'Income' : 'Expenses');
 
   useEffect(() => {
     setAllButton(true);
-    setSelectedLookup((sl) => {
+    setSelectedCategories((sl) => {
       const copyOfSelectedLookup = sl;
       categories.forEach((category) => {
         copyOfSelectedLookup[category] = true;
       });
       return { ...copyOfSelectedLookup };
     });
-  }, [categories]);
+  }, [categories, setAllButton, setSelectedCategories]);
 
   const allButtonPressLogic = () => {
     if (allButton) {
-      setSelectedLookup(() => {
+      setSelectedCategories(() => {
+        const temp = {};
         categories.forEach((category) => {
-          selectedLookup[category] = false;
+          temp[category] = false;
         });
-        return { ...selectedLookup };
+        return { ...temp };
       });
       setAllButton(false);
     } else {
-      setSelectedLookup(() => {
+      setSelectedCategories(() => {
+        const temp = {};
         categories.forEach((category) => {
-          selectedLookup[category] = true;
+          temp[category] = true;
         });
-        return { ...selectedLookup };
+        return { ...temp };
       });
       setAllButton(true);
     }
   };
 
   const categoryButtonPressLogic = (category) => {
-    setSelectedLookup((s) => {
+    setSelectedCategories((s) => {
       const copyOfS = s;
       copyOfS[category] = !copyOfS[category];
       return { ...copyOfS };
     });
-    setAllButton(categories.every((item) => selectedLookup[item]));
+    setAllButton(categories.every((item) => selectedCategories[item]));
   };
 
   const emptyIcon = () => null;
 
   return (
     <View style={styles.headerContainer}>
-      <Searchbar
-        placeholder="Search"
-        onChangeText={onChangeSearch}
-        value={searchQuery}
-        style={{ shadowOpacity: 0.1 }}
-      />
       <View style={styles.container}>
         <TouchableOpacity
           style={styles.toggleButton}
@@ -72,7 +77,23 @@ const TablePageHeader = ({ categories, type, setType }) => {
           <Text style={styles.toggleButtonText}>{type}</Text>
           <FontAwesomeIcon icon={faChevronRight} color={theme.colors.white} size={24} />
         </TouchableOpacity>
+      </View>
+      <View style={styles.container}>
         <SortMenu />
+        {searchBarVisible && (
+          <Searchbar
+            placeholder="Search"
+            onChangeText={onChangeSearch}
+            value={searchQuery}
+            style={styles.searchBar}
+          />
+        )}
+        <FontAwesome5
+          name="search"
+          size={24}
+          style={styles.searchIcon}
+          onPress={() => setSearchBarVisible(!searchBarVisible)}
+        />
       </View>
       <View>
         <ScrollView horizontal={true} style={styles.chipContainer}>
@@ -91,14 +112,14 @@ const TablePageHeader = ({ categories, type, setType }) => {
               style={[
                 styles.chip,
                 {
-                  backgroundColor: selectedLookup[category]
+                  backgroundColor: selectedCategories[category]
                     ? theme.colors.primary
                     : theme.colors.primaryLight,
                 },
               ]}
               icon={emptyIcon}
               key={category}
-              selected={selectedLookup[category]}
+              selected={selectedCategories[category]}
               onPress={() => categoryButtonPressLogic(category)}>
               <Text style={styles.text}>{category}</Text>
             </Chip>
@@ -121,7 +142,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     marginHorizontal: 5,
-    marginVertical: 10,
+    marginTop: 5,
     paddingHorizontal: 20,
     borderRadius: 25,
     shadowRadius: 5,
@@ -141,6 +162,7 @@ const styles = StyleSheet.create({
   },
   container: {
     marginTop: 10,
+    marginBottom: 15,
     flexDirection: 'row',
     justifyContent: 'center',
   },
@@ -150,11 +172,23 @@ const styles = StyleSheet.create({
   },
   chipContainer: {
     paddingTop: 5,
-    paddingBottom: 10,
+    paddingBottom: 15,
   },
   text: {
     fontWeight: 'bold',
     color: theme.colors.white,
+  },
+  searchBar: {
+    shadowOpacity: 0.1,
+    width: Dimensions.get('window').width - 150,
+    height: 38,
+    marginRight: 10,
+    borderRadius: 15,
+  },
+  searchIcon: {
+    marginRight: 20,
+    color: theme.colors.primary,
+    marginTop: 5,
   },
 });
 

@@ -16,4 +16,5 @@ web-build/
 .vscode
 
 node_modules
+venv
 Pipfile
