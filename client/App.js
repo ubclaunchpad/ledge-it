@@ -4,18 +4,17 @@ import PlaidLink from "@burstware/expo-plaid-link";
 import axios from "axios";
 
 export default function App() {
-  const [linkToken, setLinkToken] = useState("");
+  const [linkToken, setLinkToken] = useState(false);
   const [accessToken, setAccessToken] = useState(false);
   const [transactions, setTransactions] = useState(false);
 
-  const baseURL = "https://wise-dodo-75.loca.lt";
+  const baseURL = "https://lucky-stingray-21.loca.lt";
   
   useEffect(() => {
     axios
       .post(baseURL + "/api/create_link_token")
       .then((res) => {
         setLinkToken(res.data.link_token);
-        setLinkTokenReady(true);
       })
       .catch((err) => console.log(err));
   }, []);
@@ -56,14 +55,13 @@ export default function App() {
           })}
         </View>
       )}
-      {!accessToken && (
+      {linkToken && !accessToken && (
         <PlaidLink
           linkToken={linkToken}
           onEvent={(event) => console.log(event)}
           onExit={(exit) => console.log(exit)}
           onSuccess={(success) => {
             console.log(`Public Token: ${success.publicToken}`);
-            setLinkTokenReady(false);
             exchangePublicToken(success.publicToken);
           }}
         >
