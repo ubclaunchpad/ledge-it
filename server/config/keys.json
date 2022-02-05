@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "project-ledgeit",
+  "private_key_id": "2b5f752dfd457ac3066b2809153c1f8d203faa39",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQC6mJg0ABegc8HF\nEPTf4vaG6nBk0vks8IQh52f7sNRV8zUIqjlyN3zf05+bjUMikLFZAAkcsPZLGCjQ\nedjdxmVEAmNS6hbBSH/iDYaBkbfxS5S4gxScIfjPWR2YwEcnzMJ+e8tWs/zRqi4d\nDArTB5/PcphEBgTmZ+K5s5Z51kZgpb7a+M7dWYQKDBjGN4XOONtP32hCRKU8emj4\noGQRkx4NITcMczUCJEFiNpjPeNT9zUUZzSazNGY576a7FGANxX92MjLEZZsHW9c6\npi0+kPj9YpQfCOaug+zqfOsvlpHg816mRM/um2GHjFAOnD3Y8B4wgMJIpXazRQAv\nbifYiKmXAgMBAAECggEAVYPnhTVhnpxOepUp1I18tBovRlXV8n2L4Mnfwt6ogXeD\nn6P7zdeWODIRXMWhte6gCIzWoDqNtZ6t3dVpyUHKWR/LC03S/ePPD/do5Gq25TPh\nRap1QJTlJYnO4ZmFQr05iaQMbYDxZdlbZt6E+2/sErOPCuXDSyDjLH4cgVvtRw8E\nspoG/sb+fqVur6R1VijERMgaUK9I4/L5HZ6b5X5QGBXfGBiMcvJZ5illw4ZZv5KF\n3CuiJVA6niELA+7FNvD9rXT+CEz0tKqgFnvtY+be5peemhzToLRPNZS9PHolyBGQ\nh0qXDb/OhfwnYdd2ekkZV87VhuTyknIoLAO9gqRvuQKBgQD6mMMGyq5p8u9lswfQ\nYNB3lZclbur0JUIJ7f+S50dUP4ARBlA6nGdhD8O4ocZsqvU7O9LZbzHOUbRd+/gv\n0MfQj19yaT2e93lWQuX04XG2+X+D5XhFeFcbAK6f/kL1uhmlHj95paezZvkye07X\nUgWQ9GVmPu8tVsQR3O3jGHyDiwKBgQC+npA313/ERXaB9DpqDL499LLLR0E7to6/\nKcrDyFoccVAdeayZw3Zy5PjHXhmqgiV6drRDLtW35HM40QcxrmA3gr6ShfgiXo+1\nrOyEbY2PjGswU4PYy/CpofidKQeyzhodJTmowR/UOoObvRgGOS+/a9p31cQ35MCY\nbA4PJt/DpQKBgQDM4z95exd1OpIvVVxLLAzl6SGmEnT5XskKs1NlecEhCbYctUu9\nUAlaG3iLqYFBcdmFL5lp+3b+WGEfApdeCNaGF+MS+SbPpUjIlXPMbtL5pi5y2Zgn\nPIgDZOBhoZJ/tEOpc/yz6hQeI1AVzSmd9MrmRFvvZ/9H04wFitvY9DlBlwKBgQCj\naCBvjnA72+REcQ4mXTg0unEPK80zGEN0gqoMfdMpsMWiDu00f0gqJDlUB0nvTlQ8\nkEflk9+oHdHccew93aMj0xP1XZ0iMXf2oP+8YoHI/fHhYqaTEfkEIhKS/1pXILFo\nLMIp9SyI7YRm3Iocw6c37IhC1GC6HYIw5+iBeqy19QKBgAbHxrx9cdPgkDYYrY4D\nVRfVvPaOYVv7PaKpH0jC7lyUF/b7Xubafz+Kzk2tws5wkp7kTuqRHdmcRRw0NC2W\n2eeD0+dhWrLFRgeZZzzXVsNpTUmc8LZQ67b65hXXFYRH4aiNeXjtC6DS8LRmYQTt\n0JvFijLgbTqtzYZwNkvMzq+y\n-----END PRIVATE KEY-----\n",
+  "client_email": "teamlp@project-ledgeit.iam.gserviceaccount.com",
+  "client_id": "104469693241547641011",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/teamlp%40project-ledgeit.iam.gserviceaccount.com"
+}
