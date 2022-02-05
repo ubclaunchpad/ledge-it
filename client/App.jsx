@@ -2,23 +2,27 @@ import React from 'react';
 import { StyleSheet } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { Ionicons } from '@expo/vector-icons';
 import HomePage from './src/pages/HomePage';
 import TablePage from './src/pages/TablePage';
 import BudgetPage from './src/pages/BudgetPage';
 import AnalyticsPage from './src/pages/AnalyticsPage';
 import SettingsPage from './src/pages/SettingsPage';
+import NotificationPage from './src/components/SettingsPage/NotificationPage';
 import { theme } from './theme';
 
 const App = () => {
   return (
     <NavigationContainer>
       <TabNavBar />
+      <StackNavigator />
     </NavigationContainer>
   );
 };
 
 const Tab = createBottomTabNavigator();
+const Stack = createNativeStackNavigator();
 
 const TabNavBar = () => {
   return (
@@ -40,6 +44,15 @@ const TabNavBar = () => {
       <Tab.Screen name="Analytics" component={AnalyticsPage} />
       <Tab.Screen name="Settings" component={SettingsPage} />
     </Tab.Navigator>
+  );
+};
+
+const StackNavigator = () => {
+  return (
+    <Stack.Navigator initialRouteName="SettingsHome">
+      <Stack.Screen name="SettingsHome" component={SettingsPage} />
+      <Stack.Screen name="Details" component={NotificationPage} />
+    </Stack.Navigator>
   );
 };
 
