@@ -7,6 +7,7 @@ import TablePageHeader from '../components/TablePage/TablePageHeader';
 import DefaultActionButton from '../components/ActionButton';
 import { theme } from '../../theme';
 import { formatString } from '../utils/formatters';
+import { METHODS, sortTransactions } from '../utils/sorts';
 
 const url = 'https://ledge-it.herokuapp.com';
 
@@ -18,6 +19,7 @@ const TablePage = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [allButton, setAllButton] = useState(true);
   const [selectedCategories, setSelectedCategories] = useState({});
+  const [sortMethod, setSortMethod] = useState(METHODS.NEW_TO_OLD);
 
   const getExpenses = () => {
     axios
@@ -87,9 +89,13 @@ const TablePage = () => {
           setAllButton={setAllButton}
           selectedCategories={selectedCategories}
           setSelectedCategories={setSelectedCategories}
+          sortFunction={setSortMethod}
         />
         <ScrollView style={styles.content}>
-          <ScrollTable renderList={filterCategories(filterEntries())} type={type} />
+          <ScrollTable
+            renderList={sortTransactions(filterCategories(filterEntries()), sortMethod)}
+            type={type}
+          />
         </ScrollView>
       </SafeAreaView>
       <DefaultActionButton />

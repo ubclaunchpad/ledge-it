@@ -4,29 +4,10 @@ import { StyleSheet, ScrollView, SafeAreaView, Text, View, Dimensions } from 're
 import { theme } from '../../../theme';
 import BudgetTableComponent from './BudgetTableComponent';
 import BudgetHeader from './BudgetPageHeader';
+import { METHODS, sortTransactions } from '../../utils/sorts';
 
 const BudgetTable = ({ renderList, isVisible, setVisible, setMonth, year, setYear }) => {
-  const [sortMethod, setSortMethod] = useState('new->old');
-
-  const sortBudgets = () => {
-    if (sortMethod === 'old->new') {
-      return renderList.sort((a, b) => {
-        return a.year + a.month / 12 - (b.year + b.month / 12);
-      });
-    } else if (sortMethod === 'high->low') {
-      return renderList.sort((a, b) => {
-        return b.value - a.value;
-      });
-    } else if (sortMethod === 'low->high') {
-      return renderList.sort((a, b) => {
-        return a.value - b.value;
-      });
-    } else {
-      return renderList.sort((a, b) => {
-        return b.year + b.month / 12 - (a.year + a.month / 12);
-      });
-    }
-  };
+  const [sortMethod, setSortMethod] = useState(METHODS.NEW_TO_OLD);
 
   return (
     <>
@@ -50,7 +31,7 @@ const BudgetTable = ({ renderList, isVisible, setVisible, setMonth, year, setYea
       <SafeAreaView style={styles.container}>
         <ScrollView style={styles.scrollView}>
           <List.Section>
-            {sortBudgets()
+            {sortTransactions(renderList, sortMethod)
               .filter((monthBudget) => monthBudget.year === year)
               .map((budget) => (
                 <BudgetTableComponent

@@ -3,11 +3,14 @@ import { Dimensions, StyleSheet, Text, View } from 'react-native';
 import TableComponent from './TableComponent';
 import { theme } from '../../../theme';
 import { getMonth, getYear } from '../../utils/formatters';
-
 const ScrollTable = ({ type, renderList }) => {
   const [splitList, setSplitList] = useState([]);
 
+  /**
+   * Build split list, i.e., the expense data grouped by year and month.
+   */
   useEffect(() => {
+    // TODO: should we disable this behavior when sortMethod is price- (or value-) based?
     const tempList = [];
     renderList.forEach((item) => {
       const month = getMonth(item.date);

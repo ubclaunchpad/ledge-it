@@ -4,6 +4,7 @@ import StyledSelect from '../StyledSelect';
 import StyledButton from '../StyledButton';
 import Modal from '../CustomModal';
 import appTheme from '../../../theme';
+import { METHODS } from '../../utils/sorts';
 
 const years = [
   { label: '2021', value: 2021 },
@@ -14,6 +15,7 @@ const years = [
 const BudgetHeader = ({ year, setYear, sortFunction }) => {
   const [yearDropdownVisible, setYearDropdownVisible] = useState(false);
   const [sortModalVisible, setSortModalVisible] = useState(false);
+
   const sortBudgets = (sortCriteria) => {
     sortFunction(sortCriteria);
     setSortModalVisible(false);
@@ -37,6 +39,7 @@ const BudgetHeader = ({ year, setYear, sortFunction }) => {
               placeholder="2021"
             />
           </View>
+          {/* TODO: refactor to use generic SortMenu component */}
           <View>
             <StyledButton
               customStyles={dropDownStyles}
@@ -49,28 +52,28 @@ const BudgetHeader = ({ year, setYear, sortFunction }) => {
             <View>
               <StyledButton
                 onTap={() => {
-                  sortBudgets('old->new');
+                  sortBudgets(METHODS.OLD_TO_NEW);
                 }}
                 customStyles={btnCustomStyles}
                 label="Sort by date (old to new)"
               />
               <StyledButton
                 onTap={() => {
-                  sortBudgets('new->old');
+                  sortBudgets(METHODS.NEW_TO_OLD);
                 }}
                 customStyles={btnCustomStyles}
                 label="Sort by date (new to old)"
               />
               <StyledButton
                 onTap={() => {
-                  sortBudgets('high->low');
+                  sortBudgets(METHODS.HIGH_TO_LOW);
                 }}
                 customStyles={btnCustomStyles}
                 label="Sort by amount (high to low)"
               />
               <StyledButton
                 onTap={() => {
-                  sortBudgets('low->high');
+                  sortBudgets(METHODS.LOW_TO_HIGH);
                 }}
                 customStyles={btnCustomStyles}
                 label="Sort by amount (low to high)"

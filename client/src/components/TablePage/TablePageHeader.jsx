@@ -17,6 +17,7 @@ const TablePageHeader = ({
   setAllButton,
   selectedCategories,
   setSelectedCategories,
+  sortFunction,
 }) => {
   const [searchBarVisible, setSearchBarVisible] = useState(false);
 
@@ -79,7 +80,7 @@ const TablePageHeader = ({
         </TouchableOpacity>
       </View>
       <View style={styles.container}>
-        <SortMenu />
+        <SortMenu sortFunction={sortFunction} />
         {searchBarVisible && (
           <Searchbar
             placeholder="Search"
@@ -164,7 +165,7 @@ const styles = StyleSheet.create({
     marginTop: 10,
     marginBottom: 15,
     flexDirection: 'row',
-    justifyContent: 'center',
+    justifyContent: 'space-around',
   },
   chip: {
     marginHorizontal: 5,
