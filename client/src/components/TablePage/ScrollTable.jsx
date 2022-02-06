@@ -3,6 +3,7 @@ import { Dimensions, StyleSheet, Text, View } from 'react-native';
 import TableComponent from './TableComponent';
 import { theme } from '../../../theme';
 import { getMonth, getYear } from '../../utils/formatters';
+
 const ScrollTable = ({ type, renderList }) => {
   const [splitList, setSplitList] = useState([]);
 
