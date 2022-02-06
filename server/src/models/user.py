@@ -9,4 +9,5 @@ class User(MongoDBModel):
     email: str
     hashed_password: Optional[str]
     active: Optional[bool] = None
-    categories_list: List[Category] = None
+    expense_categories_list: List[Category] = None
+    income_categories_list: List[Category] = None
