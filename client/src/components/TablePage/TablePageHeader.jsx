@@ -70,7 +70,7 @@ const TablePageHeader = ({
 
   return (
     <View style={styles.headerContainer}>
-      <View style={styles.container}>
+      <View style={styles.containerHeader}>
         <TouchableOpacity
           style={styles.toggleButton}
           onPress={() => onToggleSwitch()}
@@ -161,11 +161,18 @@ const styles = StyleSheet.create({
   m10: {
     margin: 10,
   },
-  container: {
+  containerHeader: {
     marginTop: 10,
     marginBottom: 15,
     flexDirection: 'row',
-    justifyContent: 'space-around',
+    justifyContent: 'center',
+  },
+  container: {
+    marginTop: 10,
+    marginBottom: 15,
+    marginHorizontal: 10,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
   },
   chip: {
     marginHorizontal: 5,
@@ -183,7 +190,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.1,
     width: Dimensions.get('window').width - 150,
     height: 38,
-    marginRight: 10,
+    marginHorizontal: 10,
     borderRadius: 15,
   },
   searchIcon: {

@@ -13,7 +13,7 @@ const BudgetPage = () => {
   useFocusEffect(
     useCallback(() => {
       axios
-        .get('https://money-manager-dev.herokuapp.com/budget/all')
+        .get('https://ledge-it.herokuapp.com/budget/all')
         .then(({ data }) => setDatabaseBudget(data))
         .catch((err) => console.log(err));
     }, []),

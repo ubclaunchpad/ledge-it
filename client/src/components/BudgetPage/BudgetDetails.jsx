@@ -13,7 +13,7 @@ const BudgetDetails = ({ currentMonth, currentYear, isVisible, setVisible }) => 
   useFocusEffect(
     useCallback(() => {
       axios
-        .get(`https://money-manager-dev.herokuapp.com/expense/${currentYear}/${currentMonth}`)
+        .get(`https://ledge-it.herokuapp.com/expense/${currentYear}/${currentMonth}`)
         .then(({ data }) => setDatabaseExpense(data))
         .catch((err) => console.log(err));
     }, [currentYear, currentMonth]),
