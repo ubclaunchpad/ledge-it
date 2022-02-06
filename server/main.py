@@ -7,6 +7,7 @@ from src.routes import (
     signup,
     login,
     net_worth,
+    category,
 )
 
 # Note: the server runs on http://127.0.0.1:8000
@@ -20,6 +21,7 @@ app.include_router(budget.router)
 app.include_router(category_budget.router)
 app.include_router(signup.router)
 app.include_router(login.router)
+app.include_router(category.router)
 
 
 @app.get("/")

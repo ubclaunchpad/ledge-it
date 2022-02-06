@@ -21,3 +21,4 @@ net_worth_collection: Collection = db.net_worths
 income_collection: Collection = db.incomes
 budget_collection: Collection = db.budgets
 category_budget_collection: Collection = db.category_budgets
+category_collection: Collection = db.categories
