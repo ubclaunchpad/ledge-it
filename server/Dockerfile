@@ -1,15 +1,12 @@
-FROM node:alpine
+FROM python:alpine
 
 WORKDIR /opt/app
-RUN chown -R node:node /opt/app
-COPY --chown=node:node ./node/package*.json /opt/app/
+COPY . .
+WORKDIR /opt/app/python
 
-USER node
-RUN npm install
+RUN pip3 install -r requirements.txt
 
-COPY --chown=node:node ./node/index.js ./
-COPY --chown=node:node ./.env ./
-
+ENV FLASK_APP=/opt/app/python/server.py
 EXPOSE 8000
-ENTRYPOINT ["node"]
-CMD ["index.js"]
+ENTRYPOINT ["python"]
+CMD ["-m", "flask", "run", "--host=0.0.0.0", "--port=8000"]

@@ -8,33 +8,38 @@ export default function App() {
   const [accessToken, setAccessToken] = useState(false);
   const [transactions, setTransactions] = useState(false);
 
-  const baseURL = "https://lucky-stingray-21.loca.lt";
-  
+  const baseURL = "https://rude-impala-97.loca.lt";
+
   useEffect(() => {
-    axios
-      .post(baseURL + "/api/create_link_token")
-      .then((res) => {
-        setLinkToken(res.data.link_token);
-      })
-      .catch((err) => console.log(err));
+    const getLinkToken = async () => {
+      const response = await axios.post(baseURL + "/api/create_link_token");
+      setLinkToken(response.data.link_token);
+    };
+
+    getLinkToken();
   }, []);
 
   // Exchanges public token to api access token
   const exchangePublicToken = async (publicToken) => {
-    const response = await axios.post(baseURL + "/api/set_access_token", {
-      public_token: publicToken,
+    // I could not get this working with axios :(
+    const response = await fetch(baseURL + "/api/set_access_token", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8",
+      },
+      body: `public_token=${publicToken}`,
     });
-    setAccessToken(response.data.access_token);
-    console.log(accessToken);
+    const data = await response.json();
+    setAccessToken(data.access_token);
   };
 
   // Sets transactions with current access token
   const fetchTransactions = async () => {
-    const response = await axios.post(baseURL + "/api/transactions", {
-      access_token: accessToken
+    const response = await axios.get(baseURL + "/api/transactions", {
+      access_token: accessToken,
     });
     setTransactions(response.data.transactions);
-  }
+  };
 
   return (
     <>
@@ -51,7 +56,7 @@ export default function App() {
                 <Text>Name: {transaction.name}</Text>
                 <Text>Amount: ${transaction.amount.toFixed(2)}</Text>
               </View>
-            )
+            );
           })}
         </View>
       )}
@@ -82,7 +87,7 @@ const styles = StyleSheet.create({
   button: {
     height: 100,
     padding: 30,
-    marginTop: 40
+    marginTop: 40,
   },
   transactionView: {
     justifyContent: "center",
@@ -90,5 +95,5 @@ const styles = StyleSheet.create({
   },
   singleTransaction: {
     padding: 10,
-  }
+  },
 });

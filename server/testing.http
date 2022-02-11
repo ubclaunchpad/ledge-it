@@ -1,6 +1,0 @@
-POST http://localhost:8000/api/transactions
-Content-Type: application/json
-
-{
-    "access_token": "access-sandbox-a03e179b-319d-4ae4-a53a-d07503def281"
-}
