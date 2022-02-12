@@ -75,7 +75,7 @@ def add_category_budget(
     category_budget: CategoryBudget = Body(...),
     current_user: User = Depends(get_current_active_user),
 ):
-    category_budget["email"] = current_user["email"]
+    category_budget.email = current_user["email"]
     category_budget = jsonable_encoder(category_budget)
     new_category_budget = category_budget_collection.insert_one(category_budget)
     created_category_budget = category_budget_collection.find_one(
@@ -188,7 +188,7 @@ def update_category_budget_spent(
         }
     )
     if category_budget is not None:
-        category_budget.spent += change
+        category_budget["spent"] += change
         category_budget_collection.update_one(
             {
                 "month": month,
