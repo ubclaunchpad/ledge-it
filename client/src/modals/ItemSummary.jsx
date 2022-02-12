@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { StyleSheet, View, Text } from 'react-native';
-import axios from 'axios';
+import axios from '../providers/axios';
 import StyledButton from '../components/StyledButton';
 import StyledTextInput from '../components/StyledTextInput';
 import StyledSelect from '../components/StyledSelect';
@@ -8,6 +8,8 @@ import CustomModal from '../components/CustomModal';
 import AmountBox from '../components/AmountBox';
 import { theme } from '../../theme';
 import { formatDateBE, formatDateFE } from '../utils/formatters';
+
+const URL = process.env.SERVER_URL;
 
 const ItemSummary = ({ modalVisible, setModalVisible, item, userCategories, type }) => {
   const [price, setPrice] = useState(item.price || item.amount);
@@ -22,7 +24,7 @@ const ItemSummary = ({ modalVisible, setModalVisible, item, userCategories, type
   const onUpdate = () => {
     axios
       .put(
-        `https://money-manager-dev.herokuapp.com/${type === 'Expenses' ? 'expense' : 'income'}`,
+        `${URL}/${type === 'Expenses' ? 'expense' : 'income'}`,
         JSON.stringify({
           name,
           description,

@@ -2,11 +2,13 @@ import React, { useState } from 'react';
 import { List } from 'react-native-paper';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { Swipeable } from 'react-native-gesture-handler';
-import axios from 'axios';
+import axios from '../../providers/axios';
 import { MONTHS } from '../../utils/constants';
 import { theme } from '../../../theme';
 import ItemSummary from '../../modals/ItemSummary';
 import { getDay, getMonth, getYear } from '../../utils/formatters';
+
+const URL = process.env.SERVER_URL;
 
 const ListInputComponent = ({ item, type }) => {
   const [itemSummaryModal, setItemSummaryModal] = useState(false);
@@ -63,11 +65,7 @@ const ListInputComponent = ({ item, type }) => {
 const TableComponent = ({ title, subTitle, list, type }) => {
   const handleDelete = (id) => {
     axios
-      .delete(
-        `https://money-manager-dev.herokuapp.com/${
-          type === 'Expenses' ? 'expense' : 'income'
-        }/${id}`,
-      )
+      .delete(`${URL}/${type === 'Expenses' ? 'expense' : 'income'}/${id}`)
       .then(({ data }) => console.log(data))
       .catch((err) => console.log(err));
   };

@@ -1,5 +1,5 @@
-import React from 'react';
-import { StyleSheet } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { ScrollView, StatusBar, StyleSheet } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Ionicons } from '@expo/vector-icons';
@@ -8,14 +8,38 @@ import TablePage from './src/pages/TablePage';
 import BudgetPage from './src/pages/BudgetPage';
 import AnalyticsPage from './src/pages/AnalyticsPage';
 import SettingsPage from './src/pages/SettingsPage';
+import AuthPage from './src/auth/AuthPage';
+import BlankPage from './src/auth/BlankPage';
 import { theme } from './theme';
+import { getToken } from './src/utils/auth';
 
 const App = () => {
-  return (
-    <NavigationContainer>
-      <TabNavBar />
-    </NavigationContainer>
-  );
+  StatusBar.setBarStyle('dark-content');
+  const [loggedIn, setLoggedIn] = useState(undefined);
+
+  useEffect(() => {
+    const checkForToken = async () => {
+      const token = await getToken();
+      setLoggedIn(!!token);
+    };
+    checkForToken();
+  }, []);
+
+  if (loggedIn === true) {
+    return (
+      <NavigationContainer>
+        <TabNavBar />
+      </NavigationContainer>
+    );
+  } else if (loggedIn === false) {
+    return (
+      <ScrollView keyboardShouldPersistTaps="handled">
+        <AuthPage setLoggedIn={setLoggedIn} />
+      </ScrollView>
+    );
+  } else {
+    return <BlankPage />;
+  }
 };
 
 const Tab = createBottomTabNavigator();

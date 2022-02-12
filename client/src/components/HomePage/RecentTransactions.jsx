@@ -1,12 +1,11 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { StyleSheet, Text, SafeAreaView, View } from 'react-native';
-import axios from 'axios';
 import { useFocusEffect } from '@react-navigation/native';
+import axios from '../../providers/axios';
 import { theme } from '../../../theme';
 import { formatNumber } from '../../utils/formatters';
 
-// TODO: move this to a .env or config file
-const url = 'https://money-manager-dev.herokuapp.com';
+const URL = process.env.SERVER_URL;
 
 // merge two sorted arrays
 const getTransactionsToDisplay = (incomes, expenses) => {
@@ -63,14 +62,14 @@ const RecentTransactions = () => {
 
   const getExpenses = () => {
     axios
-      .get(`${url}/expenses`)
+      .get(`${URL}/expenses`)
       .then(({ data }) => setExpenseData(data))
       .catch((err) => console.log(`${err}`));
   };
 
   const getIncomes = () => {
     axios
-      .get(`${url}/incomes`)
+      .get(`${URL}/incomes`)
       .then(({ data }) => setIncomeData(data))
       .catch((err) => console.log(`${err}`));
   };

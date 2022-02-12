@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
 import { StyleSheet, View, Text } from 'react-native';
-import axios from 'axios';
+import axios from '../providers/axios';
 import AmountBox from '../components/AmountBox';
 import StyledTextInput from '../components/StyledTextInput';
 import StyledButton from '../components/StyledButton';
 import StyledSelect from '../components/StyledSelect';
 import { formatDateBE } from '../utils/formatters';
 import { theme } from '../../theme';
+
+const URL = process.env.SERVER_URL;
 
 const categories = [
   { value: 'Housing', label: 'Housing' },
@@ -36,7 +38,7 @@ const AddExpense = ({ setModalVisible, setExpenseModalVisible }) => {
   const submitExpense = async () => {
     axios
       .post(
-        'https://money-manager-dev.herokuapp.com/expense/',
+        `${URL}/expense/`,
         JSON.stringify({
           name,
           description,

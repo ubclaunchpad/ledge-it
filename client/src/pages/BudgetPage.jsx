@@ -1,8 +1,10 @@
 import React, { useState, useCallback } from 'react';
-import axios from 'axios';
 import { useFocusEffect } from '@react-navigation/native';
+import axios from '../providers/axios';
 import BudgetTable from '../components/BudgetPage/BudgetTable';
 import BudgetDetails from '../components/BudgetPage/BudgetDetails';
+
+const URL = process.env.SERVER_URL;
 
 const BudgetPage = () => {
   const [showDetails, setShowDetails] = useState(false);
@@ -13,7 +15,7 @@ const BudgetPage = () => {
   useFocusEffect(
     useCallback(() => {
       axios
-        .get('https://ledge-it.herokuapp.com/budget/all')
+        .get(`${URL}/budget/all`)
         .then(({ data }) => setDatabaseBudget(data))
         .catch((err) => console.log(err));
     }, []),

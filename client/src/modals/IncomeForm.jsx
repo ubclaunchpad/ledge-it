@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
-import axios from 'axios';
+import axios from '../providers/axios';
 import AmountBox from '../components/AmountBox';
 import StyledTextInput from '../components/StyledTextInput';
 import StyledButton from '../components/StyledButton';
 import StyledSelect from '../components/StyledSelect';
 import { formatDateBE } from '../utils/formatters';
 import { theme } from '../../theme';
+
+const URL = process.env.SERVER_URL;
 
 const categories = [
   { label: 'Salary', value: 'Salary' },
@@ -33,7 +35,7 @@ const AddIncome = ({ setModalVisible, setIncomeModalVisible }) => {
   const submitIncome = async () => {
     axios
       .post(
-        'https://money-manager-dev.herokuapp.com/income/',
+        `${URL}/income/`,
         JSON.stringify({
           name,
           description,
