@@ -1,26 +1,38 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
+import Modal from 'react-native-modal';
 import { theme } from '../../../theme';
 import StyledButton from '../StyledButton';
 
-const PrivacySetting = ({ setState }) => {
+const PrivacySetting = ({ state, setState }) => {
   return (
     <>
-      <View style={styles.container}>
-        <View style={styles.header}>
-          <StyledButton
-            customStyles={styles}
-            onTap={() => {
-              setState({ isPrivacyModalOpen: false });
-            }}
-            iconName="chevron-with-circle-left"
-            iconSize={36}
-            iconColor={theme.colors.primary}
-          />
-          <Text style={styles.titleText}>Privacy</Text>
+      <Modal
+        isVisible={state.isPrivacyModalOpen}
+        animationIn="slideInRight"
+        animationOut="slideOutRight"
+        backdropTransitionInTiming={0}
+        backdropColor={theme.colors.white}
+        backdropOpacity={1}
+        onRequestClose={() => {
+          setState({ isPrivacyModalOpen: false });
+        }}>
+        <View style={styles.container}>
+          <View style={styles.header}>
+            <StyledButton
+              customStyles={styles}
+              onTap={() => {
+                setState({ isPrivacyModalOpen: false });
+              }}
+              iconName="chevron-with-circle-left"
+              iconSize={36}
+              iconColor={theme.colors.primary}
+            />
+            <Text style={styles.titleText}>Privacy</Text>
+          </View>
+          <Text>This is privacy setting</Text>
         </View>
-        <Text>This is privacy setting</Text>
-      </View>
+      </Modal>
     </>
   );
 };

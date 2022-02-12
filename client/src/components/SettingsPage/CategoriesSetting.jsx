@@ -1,26 +1,38 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
+import Modal from 'react-native-modal';
 import { theme } from '../../../theme';
 import StyledButton from '../StyledButton';
 
-const CategoriesSetting = ({ setState }) => {
+const CategoriesSetting = ({ state, setState }) => {
   return (
     <>
-      <View style={styles.container}>
-        <View style={styles.header}>
-          <StyledButton
-            customStyles={styles}
-            onTap={() => {
-              setState({ isCategoryModalOpen: false });
-            }}
-            iconName="chevron-with-circle-left"
-            iconSize={36}
-            iconColor={theme.colors.primary}
-          />
-          <Text style={styles.titleText}>Categories</Text>
+      <Modal
+        isVisible={state.isCategoriesModalOpen}
+        animationIn="slideInRight"
+        animationOut="slideOutRight"
+        backdropTransitionInTiming={0}
+        backdropColor={theme.colors.white}
+        backdropOpacity={1}
+        onRequestClose={() => {
+          setState({ isCategoriesModalOpen: false });
+        }}>
+        <View style={styles.container}>
+          <View style={styles.header}>
+            <StyledButton
+              customStyles={styles}
+              onTap={() => {
+                setState({ isCategoryModalOpen: false });
+              }}
+              iconName="chevron-with-circle-left"
+              iconSize={36}
+              iconColor={theme.colors.primary}
+            />
+            <Text style={styles.titleText}>Categories</Text>
+          </View>
+          <Text>This is categories setting</Text>
         </View>
-        <Text>This is categories setting</Text>
-      </View>
+      </Modal>
     </>
   );
 };

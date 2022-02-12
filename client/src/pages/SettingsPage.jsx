@@ -17,20 +17,7 @@ const settingOptions = (state, setState) => {
       name: 'Notification',
       activateBy: <FontAwesome name="chevron-right" size={24} color={theme.colors.primary} />,
       activate: () => setState({ isNotificationModalOpen: true }),
-      overlayContent: (
-        <Modal
-          isVisible={state.isNotificationModalOpen}
-          animationIn="slideInRight"
-          animationOut="slideOutRight"
-          backdropTransitionInTiming={0}
-          backdropColor={theme.colors.white}
-          backdropOpacity={1}
-          onRequestClose={() => {
-            setState({ isNotificationModalOpen: false });
-          }}>
-          <NotificationSetting setState={setState} />
-        </Modal>
-      ),
+      overlayContent: <NotificationSetting state={state} setState={setState} />,
     },
     {
       name: 'Currency',
@@ -41,77 +28,25 @@ const settingOptions = (state, setState) => {
       name: 'Categories',
       activateBy: <FontAwesome name="chevron-right" size={24} color={theme.colors.primary} />,
       activate: () => setState({ isCategoriesModalOpen: true }),
-      overlayContent: (
-        <Modal
-          isVisible={state.isCategoriesModalOpen}
-          animationIn="slideInRight"
-          animationOut="slideOutRight"
-          backdropTransitionInTiming={0}
-          backdropColor={theme.colors.white}
-          backdropOpacity={1}
-          onRequestClose={() => {
-            setState({ isCategoriesModalOpen: false });
-          }}>
-          <CategoriesSetting setState={setState} />
-        </Modal>
-      ),
+      overlayContent: <CategoriesSetting state={state} setState={setState} />,
     },
     {
       name: 'Themes',
       activateBy: <FontAwesome name="chevron-right" size={24} color={theme.colors.primary} />,
       activate: () => setState({ isThemesModalOpen: true }),
-      overlayContent: (
-        <Modal
-          isVisible={state.isThemesModalOpen}
-          animationIn="slideInRight"
-          animationOut="slideOutRight"
-          backdropTransitionInTiming={0}
-          backdropColor={theme.colors.white}
-          backdropOpacity={1}
-          onRequestClose={() => {
-            setState({ isThemesModalOpen: false });
-          }}>
-          <ThemesSetting setState={setState} />
-        </Modal>
-      ),
+      overlayContent: <ThemesSetting state={state} setState={setState} />,
     },
     {
       name: 'Privacy & Security',
       activateBy: <FontAwesome name="chevron-right" size={24} color={theme.colors.primary} />,
       activate: () => setState({ isPrivacyModalOpen: true }),
-      overlayContent: (
-        <Modal
-          isVisible={state.isPrivacyModalOpen}
-          animationIn="slideInRight"
-          animationOut="slideOutRight"
-          backdropTransitionInTiming={0}
-          backdropColor={theme.colors.white}
-          backdropOpacity={1}
-          onRequestClose={() => {
-            setState({ isPrivacyModalOpen: false });
-          }}>
-          <PrivacySetting setState={setState} />
-        </Modal>
-      ),
+      overlayContent: <PrivacySetting state={state} setState={setState} />,
     },
     {
       name: 'Help',
       activateBy: <FontAwesome name="chevron-right" size={24} color={theme.colors.primary} />,
       activate: () => setState({ isHelpModalOpen: true }),
-      overlayContent: (
-        <Modal
-          isVisible={state.isHelpModalOpen}
-          animationIn="slideInRight"
-          animationOut="slideOutRight"
-          backdropTransitionInTiming={0}
-          backdropColor={theme.colors.white}
-          backdropOpacity={1}
-          onRequestClose={() => {
-            setState({ isHelpModalOpen: false });
-          }}>
-          <HelpPage setState={setState} />
-        </Modal>
-      ),
+      overlayContent: <HelpPage state={state} setState={setState} />,
     },
     {
       name: 'Sign Out',
