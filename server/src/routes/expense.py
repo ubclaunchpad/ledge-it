@@ -80,14 +80,14 @@ def create_expense(
     expense: AddExpense = Body(...),
     current_user: User = Depends(get_current_active_user),
 ):
-    if (net_worth_to_update := net_worth_collection.find_one()) is None:
+    if (net_worth_to_update := net_worth_collection.find_one({"email": current_user["email"]})) is None:
         raise HTTPException(status_code=404, detail=f"Net worth not found")
     update_net_worth(
-        net_worth_to_update["_id"], -abs(expense.price), expense.date, is_expense=True
+        net_worth_to_update["_id"], -abs(expense.price), expense.date, True, current_user
     )
-    update_budget_spent(expense.date.month, expense.date.year, expense.price)
+    update_budget_spent(expense.date.month, expense.date.year, expense.price, current_user)
     update_category_budget_spent(
-        expense.date.month, expense.date.year, expense.category, expense.price
+        expense.date.month, expense.date.year, expense.category, expense.price, current_user
     )
 
     if expense.currency.lower() == "cad":
@@ -108,7 +108,8 @@ def create_expense(
 
     insert_expense = jsonable_encoder(insert_expense)
     new_expense = expense_collection.insert_one(insert_expense)
-    return JSONResponse(status_code=status.HTTP_201_CREATED, content=new_expense)
+    created_expense = expense_collection.find_one({"_id": new_expense.inserted_id})
+    return JSONResponse(status_code=status.HTTP_201_CREATED, content=created_expense)
 
 
 @router.put(
@@ -121,16 +122,16 @@ def update_expense(
 ):
     if (expense_to_update := expense_collection.find_one({"_id": id})) is None:
         raise HTTPException(status_code=404, detail=f"Expense with id {id} not found")
-    if (net_worth_to_update := net_worth_collection.find_one()) is None:
+    if (net_worth_to_update := net_worth_collection.find_one({"email": current_user["email"]})) is None:
         raise HTTPException(status_code=404, detail=f"Net worth not found")
 
     price_change = expense_to_update["price"] - expense.price
     update_net_worth(
-        net_worth_to_update["_id"], price_change, expense.date, is_expense=True
+        net_worth_to_update["_id"], price_change, expense.date, True, current_user
     )
-    update_budget_spent(expense.date.month, expense.date.year, -price_change)
+    update_budget_spent(expense.date.month, expense.date.year, -price_change, current_user)
     update_category_budget_spent(
-        expense.date.month, expense.date.year, expense.category, -price_change
+        expense.date.month, expense.date.year, expense.category, -price_change, current_user
     )
 
     if expense.currency is not None:
@@ -173,25 +174,28 @@ def delete_expense(id, current_user: User = Depends(get_current_active_user)):
     )
     if expense_to_delete is None:
         raise HTTPException(status_code=404, detail=f"Expense with id {id} not found")
-    if (net_worth_to_update := net_worth_collection.find_one()) is None:
+    if (net_worth_to_update := net_worth_collection.find_one({"email": current_user["email"]})) is None:
         raise HTTPException(status_code=404, detail=f"Net worth not found")
 
     update_net_worth(
         net_worth_to_update["_id"],
-        expense_to_delete.price,
-        expense_to_delete.date,
-        is_expense=True,
+        expense_to_delete["price"],
+        expense_to_delete["date"],
+        True,
+        current_user
     )
     update_budget_spent(
-        expense_to_delete.date.month,
-        expense_to_delete.date.year,
-        -expense_to_delete.price,
+        date.fromisoformat(expense_to_delete["date"]).month,
+        date.fromisoformat(expense_to_delete["date"]).year,
+        -expense_to_delete["price"],
+        current_user
     )
     update_category_budget_spent(
-        expense_to_delete.date.month,
-        expense_to_delete.date.year,
-        expense_to_delete.category,
-        -expense_to_delete.price,
+        date.fromisoformat(expense_to_delete["date"]).month,
+        date.fromisoformat(expense_to_delete["date"]).year,
+        expense_to_delete["category"],
+        -expense_to_delete["price"],
+        current_user
     )
 
     delete_result = expense_collection.delete_one(
