@@ -13,13 +13,16 @@ router = APIRouter()
     "/expense_categories",
     response_description="Get user's expense categories",
 )
-async def get_current_user_expense_categories(current_user: User = Depends(get_current_active_user)):
+async def get_current_user_expense_categories(
+    current_user: User = Depends(get_current_active_user),
+):
     current_user_expense_categories = current_user.expense_categories_list
     if current_user_expense_categories is not None:
         return current_user_expense_categories
     raise HTTPException(
         status_code=404, detail=f"Categories for current user not found"
     )
+
 
 # async def get_current_user_expense_categories():
 #     data = {
@@ -72,7 +75,7 @@ async def get_current_user_expense_categories(current_user: User = Depends(get_c
     response_description="Delete expense category",
 )
 async def delete_expense_categories_by_id(user_id: str, category_id: str):
-    
+
     current_user: User = Depends(get_current_active_user)
     if current_user is None:
         raise HTTPException(status_code=404, detail=f"User not found")
@@ -82,11 +85,13 @@ async def delete_expense_categories_by_id(user_id: str, category_id: str):
             {"_id": user_id},
             {"$pull": {"current_user.expense_categories_list": {"_id": category_id}}},
         )
-        return current_user_expense_categories
+        # return current_user_expense_categories
+        return get_current_user_expense_categories()  # TODO: Test this
     else:
         raise HTTPException(
             status_code=404, detail=f"Categories for current user not found"
         )
+
 
 # @router.delete(
 #     "/delete_expense_categories/{id}",
@@ -159,21 +164,23 @@ async def get_current_user_income_categories(
             status_code=404, detail=f"Categories for current user not found"
         )
 
+
 @router.delete(
     "/delete_income_categories/{id}",
     response_description="Delete income category",
 )
-async def delete_expense_categories_by_id(user_id: str, category_id: str):
+async def delete_income_categories_by_id(user_id: str, category_id: str):
     current_user: User = Depends(get_current_active_user)
     if current_user is None:
         raise HTTPException(status_code=404, detail=f"User not found")
-    current_user_expense_categories = current_user.expense_categories_list
-    if current_user_expense_categories is not None:
+    current_user_income_categories = current_user.income_categories_list
+    if current_user_income_categories is not None:
         user_collection.update_one(
             {"_id": user_id},
-            {"$pull": {"current_user.expense_categories_list": {"_id": category_id}}},
+            {"$pull": {"current_user.income_categories_list": {"_id": category_id}}},
         )
-        return current_user_expense_categories
+        # return current_user_expense_categories
+        return get_current_user_income_categories()  # TODO: Test this
     else:
         raise HTTPException(
             status_code=404, detail=f"Categories for current user not found"
