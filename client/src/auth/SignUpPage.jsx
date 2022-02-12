@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
 import { View, StyleSheet, Dimensions } from 'react-native';
-import axios from 'axios';
+import axios from '../providers/axios';
 import StyledTextInput from '../components/StyledTextInput';
 import BackArrow from '../components/AuthPage/BackArrow';
 import SignUpButton from '../components/AuthPage/SignUpButton';
 import { login, saveToken } from '../utils/auth';
+
+const URL = process.env.SERVER_URL;
 
 const SignUpPage = ({ setPage, setLoggedIn }) => {
   const [firstName, setFirstName] = useState('');
@@ -16,7 +18,7 @@ const SignUpPage = ({ setPage, setLoggedIn }) => {
   const submitSignUp = async () => {
     await axios
       .post(
-        'https://ledge-it.herokuapp.com/signup/',
+        `${URL}/signup/`,
         JSON.stringify({
           email,
           hashed_password: secondPassword,

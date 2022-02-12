@@ -25,6 +25,7 @@ def get_net_worth_by_id(id):
     response_model=NetWorth,
 )
 def create_net_worth(nwm: NetWorth = Body(...)):
+    # TODO: add check to make sure the user doesn't already have a net worth model
     nwm = jsonable_encoder(nwm)
     new_nwm = net_worth_collection.insert_one(nwm)
     created_nwm = net_worth_collection.find_one({"_id": new_nwm.inserted_id})

@@ -56,6 +56,21 @@ def get__category_budget(month: int, year: int, category: str):
     response_model=CategoryBudget,
 )
 def add_category_budget(category_budget: CategoryBudget = Body(...)):
+    if (
+        category_budget_collection.find_one(
+            {
+                "month": category_budget.month,
+                "year": category_budget.year,
+                "category": category_budget.category,
+            }
+        )
+        is not None
+    ):
+        raise HTTPException(
+            status_code=404,
+            detail=f"{category_budget.category} budget with month: {category_budget.month} and year: {category_budget.year} already exists",
+        )
+
     category_budget = jsonable_encoder(category_budget)
     new_category_budget = category_budget_collection.insert_one(category_budget)
     created_category_budget = category_budget_collection.find_one(

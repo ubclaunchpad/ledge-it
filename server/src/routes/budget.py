@@ -44,6 +44,15 @@ def get_budget(month: int, year: int):
 
 @router.post("/budget/", response_description="Add new budget", response_model=Budget)
 def add_budget(budget: Budget = Body(...)):
+    if (
+        budget_collection.find_one({"month": budget.month, "year": budget.year})
+        is not None
+    ):
+        raise HTTPException(
+            status_code=404,
+            detail=f"Budget with month: {budget.month} and year: {budget.year} already exists",
+        )
+
     budget = jsonable_encoder(budget)
     new_budget = budget_collection.insert_one(budget)
     created_budget = budget_collection.find_one({"_id": new_budget.inserted_id})

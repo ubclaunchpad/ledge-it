@@ -2,7 +2,7 @@ import React, { useCallback, useState } from 'react';
 import { Text, View, Pressable, StyleSheet, SafeAreaView } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useFocusEffect } from '@react-navigation/native';
-import axios from 'axios';
+import axios from '../../providers/axios';
 import BudgetDetailsTable from './BudgetDetailsTable';
 import { theme } from '../../../theme';
 import { MONTHS } from '../../utils/constants';
