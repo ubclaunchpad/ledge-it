@@ -50,10 +50,10 @@ def get_income_by_id(id, current_user: User = Depends(get_current_active_user)):
 def create_income(
     income: AddIncome = Body(...), current_user: User = Depends(get_current_active_user)
 ):
-    if (net_worth_to_update := net_worth_collection.find_one()) is None:
+    if (net_worth_to_update := net_worth_collection.find_one({"email": current_user["email"]})) is None:
         raise HTTPException(status_code=404, detail=f"Net worth not found")
 
-    update_net_worth(net_worth_to_update["_id"], abs(income.amount), income.date)
+    update_net_worth(net_worth_to_update["_id"], abs(income.amount), income.date, False, current_user)
 
     if income.currency.lower() == "cad":
         income.exchange_rate = 1
@@ -73,7 +73,8 @@ def create_income(
 
     insert_income = jsonable_encoder(insert_income)
     new_income = income_collection.insert_one(insert_income)
-    return JSONResponse(status_code=status.HTTP_201_CREATED, content=new_income)
+    created_expense = income_collection.find_one({"_id": new_income.inserted_id})
+    return JSONResponse(status_code=status.HTTP_201_CREATED, content=created_expense)
 
 
 @router.put(
@@ -87,12 +88,12 @@ def update_income(
     current_user: User = Depends(get_current_active_user),
 ):
     if (income_to_update := income_collection.find_one({"_id": id})) is None:
-        raise HTTPException(status_code=404, detail=f"Expense with id {id} not found")
-    if (net_worth_to_update := net_worth_collection.find_one()) is None:
+        raise HTTPException(status_code=404, detail=f"Income with id {id} not found")
+    if (net_worth_to_update := net_worth_collection.find_one({"email": current_user["email"]})) is None:
         raise HTTPException(status_code=404, detail=f"Net worth not found")
 
     amount_change = income.amount - income_to_update["amount"]
-    update_net_worth(net_worth_to_update["_id"], amount_change, income.date)
+    update_net_worth(net_worth_to_update["_id"], amount_change, income.date, False, current_user)
 
     if income.currency is not None:
         if income.currency.lower() == "cad":
@@ -145,8 +146,10 @@ def delete_income_by_id(id, current_user: User = Depends(get_current_active_user
 
     update_net_worth(
         net_worth_to_update["_id"],
-        -abs(income_to_delete.amount),
-        income_to_delete.date,
+        -abs(income_to_delete["amount"]),
+        income_to_delete["date"],
+        False,
+        current_user
     )
 
     delete_result = income_collection.delete_one(
