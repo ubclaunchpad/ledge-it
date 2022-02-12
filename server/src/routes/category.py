@@ -70,6 +70,27 @@ async def get_current_user_expense_categories(
 #         )
 
 
+@router.put(
+    "/update_expense_category/{id}",
+    response_description="Update user's expense categories list by user id",
+)
+def add_expense_category(
+    user_id: str,
+    new_category: str,
+    category_color: str,
+    updated_user: UpdateUserModel = Body(...),
+):
+    current_user: User = Depends(get_current_active_user)
+    if current_user is None:
+        raise HTTPException(status_code=404, detail=f"User not found")
+    new_category_dict = {"name": new_category, "color": category_color}
+    new_category = Category(**new_category_dict)
+    user_collection.update_one(
+        {"_id": user_id},
+        {"$push": {"expense_categories_list": new_category}},
+    )
+
+
 @router.delete(
     "/delete_expense_categories/{id}",
     response_description="Delete expense category",
@@ -83,7 +104,7 @@ async def delete_expense_categories_by_id(user_id: str, category_id: str):
     if current_user_expense_categories is not None:
         user_collection.update_one(
             {"_id": user_id},
-            {"$pull": {"current_user.expense_categories_list": {"_id": category_id}}},
+            {"$pull": {"expense_categories_list": {"_id": category_id}}},
         )
         # return current_user_expense_categories
         return get_current_user_expense_categories()  # TODO: Test this
@@ -177,7 +198,7 @@ async def delete_income_categories_by_id(user_id: str, category_id: str):
     if current_user_income_categories is not None:
         user_collection.update_one(
             {"_id": user_id},
-            {"$pull": {"current_user.income_categories_list": {"_id": category_id}}},
+            {"$pull": {"income_categories_list": {"_id": category_id}}},
         )
         # return current_user_expense_categories
         return get_current_user_income_categories()  # TODO: Test this
@@ -185,3 +206,24 @@ async def delete_income_categories_by_id(user_id: str, category_id: str):
         raise HTTPException(
             status_code=404, detail=f"Categories for current user not found"
         )
+
+
+@router.put(
+    "/update_income_category/{id}",
+    response_description="Update user's income categories list by user id",
+)
+def add_income_category(
+    user_id: str,
+    new_category: str,
+    category_color: str,
+    updated_user: UpdateUserModel = Body(...),
+):
+    current_user: User = Depends(get_current_active_user)
+    if current_user is None:
+        raise HTTPException(status_code=404, detail=f"User not found")
+    new_category_dict = {"name": new_category, "color": category_color}
+    new_category = Category(**new_category_dict)
+    user_collection.update_one(
+        {"_id": user_id},
+        {"$push": {"income_categories_list": new_category}},
+    )
