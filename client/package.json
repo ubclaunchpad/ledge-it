@@ -6,8 +6,8 @@
     "ios": "expo start --ios",
     "web": "expo start --web",
     "eject": "expo eject",
-    "lint": "eslint --ext .jsx --ext .js .",
-    "lint:fix": "prettier --write . && eslint --ext .jsx --ext .js . --fix"
+    "lint": "eslint --ext .jsx,.js .",
+    "lint:fix": "prettier --write . && eslint --ext .jsx,.js . --fix"
   },
   "dependencies": {
     "@expo/vector-icons": "^12.0.5",
