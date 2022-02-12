@@ -22,6 +22,7 @@ class PyObjectId(ObjectId):
 
 class MongoDBModel(BaseModel):
     id: PyObjectId = Field(default_factory=PyObjectId, alias="_id")
+    email: str
     created_at: Optional[datetime] = datetime.now()
     updated_at: Optional[datetime] = datetime.now()
 
