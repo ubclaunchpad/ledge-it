@@ -76,15 +76,15 @@ def add_category_budget(
     current_user: User = Depends(get_current_active_user),
 ):
     if (
-            category_budget_collection.find_one(
-                {
-                    "month": category_budget.month,
-                    "year": category_budget.year,
-                    "category": category_budget.category,
-                    "email": current_user["email"],
-                }
-            )
-            is not None
+        category_budget_collection.find_one(
+            {
+                "month": category_budget.month,
+                "year": category_budget.year,
+                "category": category_budget.category,
+                "email": current_user["email"],
+            }
+        )
+        is not None
     ):
         raise HTTPException(
             status_code=404,

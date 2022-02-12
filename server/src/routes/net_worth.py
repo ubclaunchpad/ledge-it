@@ -34,7 +34,11 @@ def get_net_worth_by_id(id, current_user: User = Depends(get_current_active_user
 def create_net_worth(
     nwm: NetWorth = Body(...), current_user: User = Depends(get_current_active_user)
 ):
-    # TODO: add check to make sure the user doesn't already have a net worth model
+    if net_worth_collection.find_one({"email": current_user["email"]}) is not None:
+        raise HTTPException(
+            status_code=404,
+            detail=f"Net worth for user: {current_user.email} already exists",
+        )
     nwm.email = current_user["email"]
     nwm = jsonable_encoder(nwm)
     new_nwm = net_worth_collection.insert_one(nwm)
