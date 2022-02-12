@@ -1,8 +1,8 @@
 import React, { useState, useCallback } from 'react';
-import axios from 'axios';
 import { StyleSheet, Text, SafeAreaView, View, Dimensions } from 'react-native';
 import { VictoryPie, VictoryLabel } from 'victory-native';
 import { useFocusEffect } from '@react-navigation/native';
+import axios from '../../providers/axios';
 import { MONTHS } from '../../utils/constants';
 import { theme } from '../../../theme';
 import { formatNumber } from '../../utils/formatters';

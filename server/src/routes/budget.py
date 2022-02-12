@@ -52,6 +52,14 @@ def get_budget(
 def add_budget(
     budget: Budget = Body(...), current_user: User = Depends(get_current_active_user)
 ):
+    if (
+            budget_collection.find_one({"month": budget.month, "year": budget.year, "email": current_user["email"]})
+            is not None
+    ):
+        raise HTTPException(
+            status_code=404,
+            detail=f"Budget with month: {budget.month} and year: {budget.year} already exists",
+        )
     budget.email = current_user["email"]
     budget = jsonable_encoder(budget)
     new_budget = budget_collection.insert_one(budget)

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { StyleSheet, View, Text } from 'react-native';
-import axios from 'axios';
+import axios from '../providers/axios';
 import StyledButton from '../components/StyledButton';
 import StyledTextInput from '../components/StyledTextInput';
 import StyledSelect from '../components/StyledSelect';
