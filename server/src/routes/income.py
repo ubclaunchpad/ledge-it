@@ -50,10 +50,16 @@ def get_income_by_id(id, current_user: User = Depends(get_current_active_user)):
 def create_income(
     income: AddIncome = Body(...), current_user: User = Depends(get_current_active_user)
 ):
-    if (net_worth_to_update := net_worth_collection.find_one({"email": current_user["email"]})) is None:
+    if (
+        net_worth_to_update := net_worth_collection.find_one(
+            {"email": current_user["email"]}
+        )
+    ) is None:
         raise HTTPException(status_code=404, detail=f"Net worth not found")
 
-    update_net_worth(net_worth_to_update["_id"], abs(income.amount), income.date, False, current_user)
+    update_net_worth(
+        net_worth_to_update["_id"], abs(income.amount), income.date, False, current_user
+    )
 
     if income.currency.lower() == "cad":
         income.exchange_rate = 1
@@ -89,11 +95,17 @@ def update_income(
 ):
     if (income_to_update := income_collection.find_one({"_id": id})) is None:
         raise HTTPException(status_code=404, detail=f"Income with id {id} not found")
-    if (net_worth_to_update := net_worth_collection.find_one({"email": current_user["email"]})) is None:
+    if (
+        net_worth_to_update := net_worth_collection.find_one(
+            {"email": current_user["email"]}
+        )
+    ) is None:
         raise HTTPException(status_code=404, detail=f"Net worth not found")
 
     amount_change = income.amount - income_to_update["amount"]
-    update_net_worth(net_worth_to_update["_id"], amount_change, income.date, False, current_user)
+    update_net_worth(
+        net_worth_to_update["_id"], amount_change, income.date, False, current_user
+    )
 
     if income.currency is not None:
         if income.currency.lower() == "cad":
@@ -149,7 +161,7 @@ def delete_income_by_id(id, current_user: User = Depends(get_current_active_user
         -abs(income_to_delete["amount"]),
         income_to_delete["date"],
         False,
-        current_user
+        current_user,
     )
 
     delete_result = income_collection.delete_one(
@@ -212,7 +224,8 @@ def ranged_income(
         return [jsonable_encoder(next(incomes)) for _ in range(incomes.count())]
 
     raise HTTPException(
-        status_code=404, detail=f"No incomes have been found between the given dates.",
+        status_code=404,
+        detail=f"No incomes have been found between the given dates.",
     )
 
 

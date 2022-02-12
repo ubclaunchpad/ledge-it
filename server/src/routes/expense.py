@@ -80,14 +80,28 @@ def create_expense(
     expense: AddExpense = Body(...),
     current_user: User = Depends(get_current_active_user),
 ):
-    if (net_worth_to_update := net_worth_collection.find_one({"email": current_user["email"]})) is None:
+    if (
+        net_worth_to_update := net_worth_collection.find_one(
+            {"email": current_user["email"]}
+        )
+    ) is None:
         raise HTTPException(status_code=404, detail=f"Net worth not found")
     update_net_worth(
-        net_worth_to_update["_id"], -abs(expense.price), expense.date, True, current_user
+        net_worth_to_update["_id"],
+        -abs(expense.price),
+        expense.date,
+        True,
+        current_user,
     )
-    update_budget_spent(expense.date.month, expense.date.year, expense.price, current_user)
+    update_budget_spent(
+        expense.date.month, expense.date.year, expense.price, current_user
+    )
     update_category_budget_spent(
-        expense.date.month, expense.date.year, expense.category, expense.price, current_user
+        expense.date.month,
+        expense.date.year,
+        expense.category,
+        expense.price,
+        current_user,
     )
 
     if expense.currency.lower() == "cad":
@@ -122,16 +136,26 @@ def update_expense(
 ):
     if (expense_to_update := expense_collection.find_one({"_id": id})) is None:
         raise HTTPException(status_code=404, detail=f"Expense with id {id} not found")
-    if (net_worth_to_update := net_worth_collection.find_one({"email": current_user["email"]})) is None:
+    if (
+        net_worth_to_update := net_worth_collection.find_one(
+            {"email": current_user["email"]}
+        )
+    ) is None:
         raise HTTPException(status_code=404, detail=f"Net worth not found")
 
     price_change = expense_to_update["price"] - expense.price
     update_net_worth(
         net_worth_to_update["_id"], price_change, expense.date, True, current_user
     )
-    update_budget_spent(expense.date.month, expense.date.year, -price_change, current_user)
+    update_budget_spent(
+        expense.date.month, expense.date.year, -price_change, current_user
+    )
     update_category_budget_spent(
-        expense.date.month, expense.date.year, expense.category, -price_change, current_user
+        expense.date.month,
+        expense.date.year,
+        expense.category,
+        -price_change,
+        current_user,
     )
 
     if expense.currency is not None:
@@ -174,7 +198,11 @@ def delete_expense(id, current_user: User = Depends(get_current_active_user)):
     )
     if expense_to_delete is None:
         raise HTTPException(status_code=404, detail=f"Expense with id {id} not found")
-    if (net_worth_to_update := net_worth_collection.find_one({"email": current_user["email"]})) is None:
+    if (
+        net_worth_to_update := net_worth_collection.find_one(
+            {"email": current_user["email"]}
+        )
+    ) is None:
         raise HTTPException(status_code=404, detail=f"Net worth not found")
 
     update_net_worth(
@@ -182,20 +210,20 @@ def delete_expense(id, current_user: User = Depends(get_current_active_user)):
         expense_to_delete["price"],
         expense_to_delete["date"],
         True,
-        current_user
+        current_user,
     )
     update_budget_spent(
         date.fromisoformat(expense_to_delete["date"]).month,
         date.fromisoformat(expense_to_delete["date"]).year,
         -expense_to_delete["price"],
-        current_user
+        current_user,
     )
     update_category_budget_spent(
         date.fromisoformat(expense_to_delete["date"]).month,
         date.fromisoformat(expense_to_delete["date"]).year,
         expense_to_delete["category"],
         -expense_to_delete["price"],
-        current_user
+        current_user,
     )
 
     delete_result = expense_collection.delete_one(
@@ -258,7 +286,8 @@ def ranged_expenses(
         return [jsonable_encoder(next(expenses)) for _ in range(expenses.count())]
 
     raise HTTPException(
-        status_code=404, detail=f"No expenses have been found between the given dates.",
+        status_code=404,
+        detail=f"No expenses have been found between the given dates.",
     )
 
 

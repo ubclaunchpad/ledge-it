@@ -67,7 +67,7 @@ def update_budget(
     current_user: User = Depends(get_current_active_user),
 ):
     budget = {k: v for k, v in budget.dict().items() if v is not None}
-    budget['email'] = current_user["email"]
+    budget["email"] = current_user["email"]
     budget = jsonable_encoder(budget)
 
     if len(budget) >= 1:
@@ -133,5 +133,6 @@ def update_budget_spent(
         return budget
 
     raise HTTPException(
-        status_code=404, detail=f"Budget with month: {month} and year: {year}",
+        status_code=404,
+        detail=f"Budget with month: {month} and year: {year}",
     )
