@@ -52,7 +52,7 @@ def get_budget(
 def add_budget(
     budget: Budget = Body(...), current_user: User = Depends(get_current_active_user)
 ):
-    budget["email"] = current_user["email"]
+    budget.email = current_user["email"]
     budget = jsonable_encoder(budget)
     new_budget = budget_collection.insert_one(budget)
     created_budget = budget_collection.find_one({"_id": new_budget.inserted_id})
@@ -67,7 +67,7 @@ def update_budget(
     current_user: User = Depends(get_current_active_user),
 ):
     budget = {k: v for k, v in budget.dict().items() if v is not None}
-    budget["email"] = current_user["email"]
+    budget['email'] = current_user["email"]
     budget = jsonable_encoder(budget)
 
     if len(budget) >= 1:
@@ -125,7 +125,7 @@ def update_budget_spent(
         {"month": month, "year": year, "email": current_user["email"]}
     )
     if budget is not None:
-        budget.spent += change
+        budget["spent"] += change
         budget_collection.update_one(
             {"month": month, "year": year, "email": current_user["email"]},
             {"$set": budget},
