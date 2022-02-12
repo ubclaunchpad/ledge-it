@@ -2,14 +2,12 @@ import React, { useEffect, useState } from 'react';
 import { ScrollView, StatusBar, StyleSheet } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { createStackNavigator } from '@react-navigation/stack';
 import { Ionicons } from '@expo/vector-icons';
 import HomePage from './src/pages/HomePage';
 import TablePage from './src/pages/TablePage';
 import BudgetPage from './src/pages/BudgetPage';
 import AnalyticsPage from './src/pages/AnalyticsPage';
 import SettingsPage from './src/pages/SettingsPage';
-import NotificationPage from './src/components/SettingsPage/NotificationPage';
 import AuthPage from './src/auth/AuthPage';
 import BlankPage from './src/auth/BlankPage';
 import { theme } from './theme';
@@ -27,11 +25,11 @@ const App = () => {
     checkForToken();
   }, []);
 
-  if (loggedIn === true) {
+  if (true) {
+    // loggedIn === true
     return (
       <NavigationContainer>
         <TabNavBar />
-        <StackNavigator />
       </NavigationContainer>
     );
   } else if (loggedIn === false) {
@@ -46,7 +44,6 @@ const App = () => {
 };
 
 const Tab = createBottomTabNavigator();
-const Stack = createStackNavigator();
 
 const TabNavBar = () => {
   return (
@@ -68,15 +65,6 @@ const TabNavBar = () => {
       <Tab.Screen name="Analytics" component={AnalyticsPage} />
       <Tab.Screen name="Settings" component={SettingsPage} />
     </Tab.Navigator>
-  );
-};
-
-const StackNavigator = () => {
-  return (
-    <Stack.Navigator initialRouteName="SettingsHome">
-      <Stack.Screen name="SettingsHome" component={SettingsPage} />
-      <Stack.Screen name="Details" component={NotificationPage} />
-    </Stack.Navigator>
   );
 };
 
