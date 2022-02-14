@@ -52,6 +52,8 @@ async def delete_expense_categories_by_id(
     category_name: str,
     current_user: User = Depends(get_current_active_user),
 ):
+    if category_name == "Other":
+        return
     current_user_expense_categories = current_user["expense_categories_list"]
     if current_user_expense_categories is not None:
         user_collection.update_one(
@@ -110,6 +112,8 @@ async def delete_income_categories_by_id(
     category_name: str,
     current_user: User = Depends(get_current_active_user),
 ):
+    if category_name == "Other":
+        return
     current_user_expense_categories = current_user["income_categories_list"]
     if current_user_expense_categories is not None:
         user_collection.update_one(
