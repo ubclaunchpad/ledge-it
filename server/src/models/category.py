@@ -1,6 +1,6 @@
-from .mongo_db_model import MongoDBModel
+from .mongo_db_model import BaseMongoDBModel
 
 
-class Category(MongoDBModel):
+class Category(BaseMongoDBModel):
     name: str
     color: str

@@ -2,14 +2,25 @@ from .mongo_db_model import MongoDBModel
 from .category import Category
 from typing import Optional, List
 
-# TODO: add more default categories
-other_category_dict = {"name": "Other", "color": "grey"}
-other_category = Category(**other_category_dict)
+default_expense_categories = [
+    Category(**{"name": "Housing", "color": "blue"}),
+    Category(**{"name": "Transportation", "color": "orange"}),
+    Category(**{"name": "Food", "color": "green"}),
+    Category(**{"name": "Entertainment", "color": "red"}),
+    Category(**{"name": "Other", "color": "grey"}),
+]
+default_income_categories = [
+    Category(**{"name": "Exployment", "color": "blue"}),
+    Category(**{"name": "Business", "color": "orange"}),
+    Category(**{"name": "Investment", "color": "green"}),
+    Category(**{"name": "Scholarships", "color": "red"}),
+    Category(**{"name": "Other", "color": "grey"}),
+]
 
 
 class User(MongoDBModel):
     email: str
     hashed_password: Optional[str]
     active: Optional[bool] = None
-    expense_categories_list: List[Category] = [other_category]
-    income_categories_list: List[Category] = [other_category]
+    expense_categories_list: List[Category] = default_expense_categories
+    income_categories_list: List[Category] = default_income_categories
