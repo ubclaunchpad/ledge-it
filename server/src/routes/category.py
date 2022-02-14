@@ -43,7 +43,9 @@ def add_expense_category(
             {"email": current_user["email"]},
             {"$push": {"expense_categories_list": new_category}},
         )
-        return JSONResponse(status_code=status.HTTP_200_OK, content="Category successfully added.")
+        return JSONResponse(
+            status_code=status.HTTP_200_OK, content="Category successfully added."
+        )
     else:
         raise HTTPException(status_code=400, detail=f"Category already exists.")
 
@@ -68,7 +70,6 @@ async def delete_expense_categories_by_id(
         raise HTTPException(status_code=404, detail=f"No categories found.")
 
 
-
 @router.get(
     "/income_categories",
     response_description="Get user's income categories",
@@ -81,7 +82,6 @@ async def get_current_user_income_categories(
         return current_user_income_categories
     else:
         raise HTTPException(status_code=404, detail=f"No categories found.")
-
 
 
 @router.put(
@@ -105,7 +105,9 @@ def add_income_category(
             {"email": current_user["email"]},
             {"$push": {"income_categories_list": new_category}},
         )
-        return JSONResponse(status_code=status.HTTP_200_OK, content="Category successfully added.")
+        return JSONResponse(
+            status_code=status.HTTP_200_OK, content="Category successfully added."
+        )
     else:
         raise HTTPException(status_code=400, detail=f"Category already exists.")
 
