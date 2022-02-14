@@ -1,12 +1,8 @@
-import json
-from fastapi import APIRouter, HTTPException, Depends, Body
+from fastapi import APIRouter, HTTPException, Depends
 from fastapi.encoders import jsonable_encoder
-from ..models import User, UpdateUserModel, Category
-from typing import List
-from ..middleware import get_current_active_user, get_current_user, pwd_context
+from ..models import User, Category
+from ..middleware import get_current_active_user
 from ..database import user_collection
-
-# from ..database import category_collection
 
 router = APIRouter()
 
@@ -27,43 +23,40 @@ async def get_current_user_expense_categories(
 
 
 @router.put(
-    "/update_expense_category/",
+    "/expense_categories",
     response_description="Update user's expense categories list by user id",
 )
 def add_expense_category(
-    user_id: str,
-    new_category: str,
+    category_name: str,
     category_color: str,
-    # updated_user: UpdateUserModel = Body(...),
+    current_user: User = Depends(get_current_active_user),
 ):
-    current_user: User = Depends(get_current_active_user)
-    if current_user is None:
-        raise HTTPException(status_code=404, detail=f"User not found")
-    new_category_dict = {"name": new_category, "color": category_color}
+    new_category_dict = {"name": category_name, "color": category_color}
     new_category = Category(**new_category_dict)
     new_category = jsonable_encoder(new_category)
-    user_collection.update_one(
-        {"_id": user_id},
-        {"$push": {"expense_categories_list": new_category}},
-    )
+    if not any(
+        category_name == c["name"] for c in current_user["expense_categories_list"]
+    ):
+        user_collection.update_one(
+            {"email": current_user["email"]},
+            {"$push": {"expense_categories_list": new_category}},
+        )
+    return
 
 
 @router.delete(
-    "/delete_expense_categories",
+    "/expense_categories",
     response_description="Delete expense category",
 )
 async def delete_expense_categories_by_id(
-    user_id: str,
-    category_id: str,
+    category_name: str,
     current_user: User = Depends(get_current_active_user),
 ):
-    if current_user is None:
-        raise HTTPException(status_code=404, detail=f"User not found")
-    current_user_expense_categories = current_user.expense_categories_list
+    current_user_expense_categories = current_user["expense_categories_list"]
     if current_user_expense_categories is not None:
         user_collection.update_one(
-            {"_id": user_id},
-            {"$pull": {"expense_categories_list": {"_id": category_id}}},
+            {"email": current_user["email"]},
+            {"$pull": {"expense_categories_list": {"name": category_name}}},
         )
     else:
         raise HTTPException(
@@ -78,8 +71,6 @@ async def delete_expense_categories_by_id(
 async def get_current_user_income_categories(
     current_user: User = Depends(get_current_active_user),
 ):
-    if current_user is None:
-        raise HTTPException(status_code=404, detail=f"User not found")
     current_user_income_categories = current_user["income_categories_list"]
     if current_user_income_categories is not None:
         return current_user_income_categories
@@ -89,46 +80,43 @@ async def get_current_user_income_categories(
         )
 
 
+@router.put(
+    "/income_categories",
+    response_description="Update user's income categories list by user id",
+)
+def add_income_category(
+    category_name: str,
+    category_color: str,
+    current_user: User = Depends(get_current_active_user),
+):
+    new_category_dict = {"name": category_name, "color": category_color}
+    new_category = Category(**new_category_dict)
+    new_category = jsonable_encoder(new_category)
+    if not any(
+        category_name == c["name"] for c in current_user["income_categories_list"]
+    ):
+        user_collection.update_one(
+            {"email": current_user["email"]},
+            {"$push": {"income_categories_list": new_category}},
+        )
+    return
+
+
 @router.delete(
-    "/delete_income_categories",
+    "/income_categories",
     response_description="Delete income category",
 )
 async def delete_income_categories_by_id(
-    user_id: str,
-    category_id: str,
+    category_name: str,
     current_user: User = Depends(get_current_active_user),
 ):
-    if current_user is None:
-        raise HTTPException(status_code=404, detail=f"User not found")
     current_user_expense_categories = current_user["income_categories_list"]
     if current_user_expense_categories is not None:
         user_collection.update_one(
-            {"_id": user_id},
-            {"$pull": {"income_categories_list": {"_id": category_id}}},
+            {"email": current_user["email"]},
+            {"$pull": {"income_categories_list": {"name": category_name}}},
         )
     else:
         raise HTTPException(
             status_code=404, detail=f"Categories for current user not found"
         )
-
-
-@router.put(
-    "/update_income_category/",
-    response_description="Update user's income categories list by user id",
-)
-def add_income_category(
-    user_id: str,
-    new_category: str,
-    category_color: str,
-    # updated_user: UpdateUserModel = Body(...),
-):
-    current_user: User = Depends(get_current_active_user)
-    if current_user is None:
-        raise HTTPException(status_code=404, detail=f"User not found")
-    new_category_dict = {"name": new_category, "color": category_color}
-    new_category = Category(**new_category_dict)
-    new_category = jsonable_encoder(new_category)
-    user_collection.update_one(
-        {"_id": user_id},
-        {"$push": {"income_categories_list": new_category}},
-    )
