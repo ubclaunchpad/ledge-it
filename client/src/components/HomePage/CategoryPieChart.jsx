@@ -189,6 +189,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: 4,
     left: 10,
+    width: 200,
   },
   pbarTextBudget: {
     fontSize: 18,
