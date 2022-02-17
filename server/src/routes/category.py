@@ -66,6 +66,9 @@ async def delete_expense_categories_by_id(
             {"email": current_user["email"]},
             {"$pull": {"expense_categories_list": {"name": category_name}}},
         )
+        return JSONResponse(
+            status_code=status.HTTP_200_OK, content="Category successfully deleted."
+        )
     else:
         raise HTTPException(status_code=404, detail=f"No categories found.")
 
@@ -127,6 +130,9 @@ async def delete_income_categories_by_id(
         user_collection.update_one(
             {"email": current_user["email"]},
             {"$pull": {"income_categories_list": {"name": category_name}}},
+        )
+        return JSONResponse(
+            status_code=status.HTTP_200_OK, content="Category successfully deleted."
         )
     else:
         raise HTTPException(status_code=404, detail=f"No categories found.")

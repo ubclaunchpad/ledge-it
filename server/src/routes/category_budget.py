@@ -3,7 +3,6 @@ from fastapi import APIRouter, Body, HTTPException, status, Depends
 from fastapi.responses import JSONResponse
 from fastapi.encoders import jsonable_encoder
 
-
 from ..middleware import get_current_active_user
 from ..models.user import User
 from ..models import CategoryBudget, UpdateCategoryBudgetModel
@@ -38,11 +37,11 @@ def get_all_category_budget(
 
 
 @router.get(
-    "/budget/{category}/",
+    "/budget/{category}",
     response_description="Get category budget by category, month and year",
     response_model=CategoryBudget,
 )
-def get__category_budget(
+def get_category_budget(
     month: int,
     year: int,
     category: str,
@@ -67,7 +66,7 @@ def get__category_budget(
 
 
 @router.post(
-    "/budget/{category}/",
+    "/budget/category",
     response_description="Add new category budget",
     response_model=CategoryBudget,
 )
@@ -75,6 +74,13 @@ def add_category_budget(
     category_budget: CategoryBudget = Body(...),
     current_user: User = Depends(get_current_active_user),
 ):
+    if category_budget.category not in [
+        category["name"] for category in current_user["expense_categories_list"]
+    ]:
+        raise HTTPException(
+            status_code=404,
+            detail=f"The category: {category_budget.category} does not exist.",
+        )
     if (
         category_budget_collection.find_one(
             {
@@ -178,12 +184,32 @@ def delete_category_budget(
     if delete_result.deleted_count == 1:
         return JSONResponse(
             status_code=status.HTTP_200_OK,
-            content=f"Category budget with month: {month} and year: {year} and category: {category} was successfully deleted",
+            content=f"Category budget with month: {month}, year: {year}, and category: {category} was successfully deleted.",
         )
 
     raise HTTPException(
         status_code=404,
         detail=f"Category budget with month: {month} and year: {year} and category: {category} not found",
+    )
+
+
+@router.post(
+    "/budget/categories",
+    response_description="Add new category budgets",
+)
+def add_category_budgets(
+    category_budgets: List[CategoryBudget] = Body(...),
+    current_user: User = Depends(get_current_active_user),
+):
+    for category_budget in category_budgets:
+        try:
+            add_category_budget(category_budget, current_user)
+        except:
+            continue
+
+    return JSONResponse(
+        status_code=status.HTTP_201_CREATED,
+        content="Category budgets successfully added.",
     )
 
 
