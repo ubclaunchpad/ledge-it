@@ -1,6 +1,6 @@
 import React, { useState, useCallback } from 'react';
-import axios from 'axios';
 import { useFocusEffect } from '@react-navigation/native';
+import axios from '../providers/axios';
 import BudgetTable from '../components/BudgetPage/BudgetTable';
 import BudgetDetails from '../components/BudgetPage/BudgetDetails';
 

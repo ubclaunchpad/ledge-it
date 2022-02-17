@@ -1,5 +1,5 @@
 import pymongo
-from fastapi import APIRouter, Body, HTTPException, status
+from fastapi import APIRouter, Body, HTTPException, status, Depends
 from fastapi.responses import JSONResponse
 from fastapi.encoders import jsonable_encoder
 from pydantic.error_wrappers import ValidationError
@@ -7,6 +7,8 @@ from typing import List, Optional
 from re import compile
 from datetime import date
 
+from ..middleware import get_current_active_user
+from ..models.user import User
 from .net_worth import update_net_worth
 from .category_budget import update_category_budget_spent
 from .budget import update_budget_spent
@@ -19,11 +21,11 @@ router = APIRouter()
 
 
 @router.get(
-    "/expenses/", response_description="Get all expenses", response_model=List[Expense]
+    "/expenses", response_description="Get all expenses", response_model=List[Expense]
 )
-def get_expenses():
+def get_expenses(current_user: User = Depends(get_current_active_user)):
     if (
-        all_expenses := expense_collection.find().sort(
+        all_expenses := expense_collection.find({"email": current_user["email"]}).sort(
             [("date", pymongo.DESCENDING), ("updated_at", pymongo.DESCENDING)]
         )
     ).count():
@@ -39,13 +41,15 @@ def get_expenses():
     response_description="Get all expenses from the given month and year",
     response_model=List[Expense],
 )
-def get_expenses_by_month(year: int, month: int):
+def get_expenses_by_month(
+    year: int, month: int, current_user: User = Depends(get_current_active_user)
+):
     regex = compile(f"{year}-{f'0{month}' if month < 10 else month}-" + r"\d{2}")
 
     if (
-        expenses := expense_collection.find({"date": {"$regex": regex}}).sort(
-            [("date", pymongo.DESCENDING), ("updated_at", pymongo.DESCENDING)]
-        )
+        expenses := expense_collection.find(
+            {"date": {"$regex": regex}, "email": current_user["email"]}
+        ).sort([("date", pymongo.DESCENDING), ("updated_at", pymongo.DESCENDING)])
     ).count():
         return [jsonable_encoder(next(expenses)) for _ in range(expenses.count())]
 
@@ -58,25 +62,44 @@ def get_expenses_by_month(year: int, month: int):
 @router.get(
     "/expense/{id}", response_description="Get expense by id", response_model=Expense
 )
-def get_expense_by_id(id):
-    if (expense := expense_collection.find_one({"_id": id})) is not None:
+def get_expense_by_id(id, current_user: User = Depends(get_current_active_user)):
+    if (
+        expense := expense_collection.find_one(
+            {"_id": id, "email": current_user["email"]}
+        )
+    ) is not None:
         return expense
 
     raise HTTPException(status_code=404, detail=f"Expense with id {id} not found")
 
 
-@router.post(
-    "/expense/", response_description="Add new expense", response_model=Expense
-)
-def create_expense(expense: AddExpense = Body(...)):
-    if (net_worth_to_update := net_worth_collection.find_one()) is None:
+@router.post("/expense", response_description="Add new expense", response_model=Expense)
+def create_expense(
+    expense: AddExpense = Body(...),
+    current_user: User = Depends(get_current_active_user),
+):
+    if (
+        net_worth_to_update := net_worth_collection.find_one(
+            {"email": current_user["email"]}
+        )
+    ) is None:
         raise HTTPException(status_code=404, detail=f"Net worth not found")
     update_net_worth(
-        net_worth_to_update["_id"], -abs(expense.price), expense.date, is_expense=True
+        net_worth_to_update["_id"],
+        -abs(expense.price),
+        expense.date,
+        True,
+        current_user,
     )
-    update_budget_spent(expense.date.month, expense.date.year, expense.price)
+    update_budget_spent(
+        expense.date.month, expense.date.year, expense.price, current_user
+    )
     update_category_budget_spent(
-        expense.date.month, expense.date.year, expense.category, expense.price
+        expense.date.month,
+        expense.date.year,
+        expense.category,
+        expense.price,
+        current_user,
     )
 
     if expense.currency.lower() == "cad":
@@ -85,6 +108,7 @@ def create_expense(expense: AddExpense = Body(...)):
         expense.exchange_rate = get_exchange_rate_to_cad(expense.currency)
 
     expense_dict = {k: v for k, v in expense.dict().items()}
+    expense_dict["email"] = current_user["email"]
 
     try:
         insert_expense = Expense(**expense_dict)
@@ -96,25 +120,42 @@ def create_expense(expense: AddExpense = Body(...)):
 
     insert_expense = jsonable_encoder(insert_expense)
     new_expense = expense_collection.insert_one(insert_expense)
-    return JSONResponse(status_code=status.HTTP_201_CREATED, content=new_expense)
+    created_expense = expense_collection.find_one({"_id": new_expense.inserted_id})
+    return JSONResponse(status_code=status.HTTP_201_CREATED, content=created_expense)
 
 
 @router.put(
     "/expense/{id}", response_description="Update an expense", response_model=Expense
 )
-def update_expense(id, expense: UpdateExpenseModel = Body(...)):
+def update_expense(
+    id,
+    expense: UpdateExpenseModel = Body(...),
+    current_user: User = Depends(get_current_active_user),
+):
     if (expense_to_update := expense_collection.find_one({"_id": id})) is None:
         raise HTTPException(status_code=404, detail=f"Expense with id {id} not found")
-    if (net_worth_to_update := net_worth_collection.find_one()) is None:
+    if (
+        net_worth_to_update := net_worth_collection.find_one(
+            {"email": current_user["email"]}
+        )
+    ) is None:
         raise HTTPException(status_code=404, detail=f"Net worth not found")
 
+    # TODO: handle logic for when the month, year, or category of the expense changes
+    #  and how the budget and category budgets should change
     price_change = expense_to_update["price"] - expense.price
     update_net_worth(
-        net_worth_to_update["_id"], price_change, expense.date, is_expense=True
+        net_worth_to_update["_id"], price_change, expense.date, True, current_user
     )
-    update_budget_spent(expense.date.month, expense.date.year, -price_change)
+    update_budget_spent(
+        expense.date.month, expense.date.year, -price_change, current_user
+    )
     update_category_budget_spent(
-        expense.date.month, expense.date.year, expense.category, -price_change
+        expense.date.month,
+        expense.date.year,
+        expense.category,
+        -price_change,
+        current_user,
     )
 
     if expense.currency is not None:
@@ -124,50 +165,70 @@ def update_expense(id, expense: UpdateExpenseModel = Body(...)):
             expense.exchange_rate = get_exchange_rate_to_cad(expense.currency)
 
     expense = {k: v for k, v in expense.dict().items() if v is not None}
+    expense["email"] = current_user["email"]
     expense = jsonable_encoder(expense)
 
     if len(expense) >= 1:
-        update_result = expense_collection.update_one({"_id": id}, {"$set": expense})
+        update_result = expense_collection.update_one(
+            {"_id": id, "email": current_user["email"]}, {"$set": expense}
+        )
 
         if update_result.modified_count == 1:
             if (
-                updated_expense := expense_collection.find_one({"_id": id})
+                updated_expense := expense_collection.find_one(
+                    {"_id": id, "email": current_user["email"]}
+                )
             ) is not None:
                 return updated_expense
 
-    if (existing_expense := expense_collection.find_one({"_id": id})) is not None:
+    if (
+        existing_expense := expense_collection.find_one(
+            {"_id": id, "email": current_user["email"]}
+        )
+    ) is not None:
         return existing_expense
 
     raise HTTPException(status_code=404, detail=f"Expense with id {id} not found")
 
 
 @router.delete("/expense/{id}", response_description="Delete an expense")
-def delete_expense(id):
-    expense_to_delete: Expense = expense_collection.find_one({"_id": id})
+def delete_expense(id, current_user: User = Depends(get_current_active_user)):
+    expense_to_delete: Expense = expense_collection.find_one(
+        {"_id": id, "email": current_user["email"]}
+    )
     if expense_to_delete is None:
         raise HTTPException(status_code=404, detail=f"Expense with id {id} not found")
-    if (net_worth_to_update := net_worth_collection.find_one()) is None:
+    if (
+        net_worth_to_update := net_worth_collection.find_one(
+            {"email": current_user["email"]}
+        )
+    ) is None:
         raise HTTPException(status_code=404, detail=f"Net worth not found")
 
     update_net_worth(
         net_worth_to_update["_id"],
-        expense_to_delete.price,
-        expense_to_delete.date,
-        is_expense=True,
+        expense_to_delete["price"],
+        expense_to_delete["date"],
+        True,
+        current_user,
     )
     update_budget_spent(
-        expense_to_delete.date.month,
-        expense_to_delete.date.year,
-        -expense_to_delete.price,
+        date.fromisoformat(expense_to_delete["date"]).month,
+        date.fromisoformat(expense_to_delete["date"]).year,
+        -expense_to_delete["price"],
+        current_user,
     )
     update_category_budget_spent(
-        expense_to_delete.date.month,
-        expense_to_delete.date.year,
-        expense_to_delete.category,
-        -expense_to_delete.price,
+        date.fromisoformat(expense_to_delete["date"]).month,
+        date.fromisoformat(expense_to_delete["date"]).year,
+        expense_to_delete["category"],
+        -expense_to_delete["price"],
+        current_user,
     )
 
-    delete_result = expense_collection.delete_one({"_id": expense_to_delete["_id"]})
+    delete_result = expense_collection.delete_one(
+        {"_id": expense_to_delete["_id"], "email": current_user["email"]}
+    )
 
     if delete_result.deleted_count == 1:
         return JSONResponse(
@@ -179,15 +240,19 @@ def delete_expense(id):
 
 
 @router.get(
-    "/expense/limited/",
+    "/expense/limited",
     response_description="Returns limited number of expenses sorted by date",
     response_model=List[Expense],
 )
-def limited_expenses(limit: int = 10, offset: int = 0):
+def limited_expenses(
+    limit: int = 10,
+    offset: int = 0,
+    current_user: User = Depends(get_current_active_user),
+):
     if (
-        all_expenses := expense_collection.find(limit=limit, skip=offset).sort(
-            [("date", pymongo.DESCENDING), ("updated_at", pymongo.DESCENDING)]
-        )
+        all_expenses := expense_collection.find(
+            {"email": current_user["email"]}, limit=limit, skip=offset
+        ).sort([("date", pymongo.DESCENDING), ("updated_at", pymongo.DESCENDING)])
     ).count(with_limit_and_skip=True):
         return [
             jsonable_encoder(next(all_expenses))
@@ -205,10 +270,17 @@ def limited_expenses(limit: int = 10, offset: int = 0):
     response_description="Returns expenses that have a date between the start date and end date",
     response_model=List[Expense],
 )
-def ranged_expenses(start_time: date, end_time: date):
+def ranged_expenses(
+    start_time: date,
+    end_time: date,
+    current_user: User = Depends(get_current_active_user),
+):
     if (
         expenses := expense_collection.find(
-            {"date": {"$gte": str(start_time), "$lt": str(end_time)}}
+            {
+                "date": {"$gte": str(start_time), "$lt": str(end_time)},
+                "email": current_user["email"],
+            }
         ).sort([("date", pymongo.DESCENDING), ("updated_at", pymongo.DESCENDING)])
     ).count():
         return [jsonable_encoder(next(expenses)) for _ in range(expenses.count())]
@@ -220,7 +292,7 @@ def ranged_expenses(start_time: date, end_time: date):
 
 
 @router.get(
-    "/expense/specify/",
+    "/expense/specify",
     response_description="Returns expenses that have the specified value in the specified field name",
     response_model=List[Expense],
 )
@@ -232,6 +304,7 @@ def specified_expenses(
     expense_currency: str = None,
     expense_exchange_rate: float = None,
     expense_category: str = None,
+    current_user: User = Depends(get_current_active_user),
 ):
     specified_expense = {}
     if expense_name:
@@ -248,6 +321,7 @@ def specified_expenses(
         specified_expense["exchange_rate"] = expense_exchange_rate
     if expense_category:
         specified_expense["currency"] = expense_category
+    specified_expense["email"] = current_user["email"]
 
     if (
         expenses := expense_collection.find(specified_expense).sort(

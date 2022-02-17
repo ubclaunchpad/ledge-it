@@ -2,8 +2,8 @@ import React, { useCallback, useState } from 'react';
 import { StyleSheet, View, Text, Dimensions, TouchableOpacity } from 'react-native';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { faChevronDown, faChevronUp } from '@fortawesome/free-solid-svg-icons';
-import axios from 'axios';
 import { useFocusEffect } from '@react-navigation/native';
+import axios from '../../providers/axios';
 import { theme } from '../../../theme';
 import { formatNumber } from '../../utils/formatters';
 

@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { SafeAreaView, ScrollView, StyleSheet } from 'react-native';
-import axios from 'axios';
 import { useFocusEffect } from '@react-navigation/native';
+import axios from '../providers/axios';
 import ScrollTable from '../components/TablePage/ScrollTable';
 import TablePageHeader from '../components/TablePage/TablePageHeader';
 import DefaultActionButton from '../components/ActionButton';

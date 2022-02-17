@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { List } from 'react-native-paper';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { Swipeable } from 'react-native-gesture-handler';
-import axios from 'axios';
+import axios from '../../providers/axios';
 import { MONTHS } from '../../utils/constants';
 import { theme } from '../../../theme';
 import ItemSummary from '../../modals/ItemSummary';

@@ -1,11 +1,14 @@
 import pymongo
-from fastapi import APIRouter, Body, HTTPException, status
+from fastapi import APIRouter, Body, HTTPException, status, Depends
 from fastapi.responses import JSONResponse
 from fastapi.encoders import jsonable_encoder
 from typing import List
 
-from ..models import Budget, UpdateBudgetModel
-from ..database import budget_collection
+from .category_budget import add_category_budgets
+from ..middleware import get_current_active_user
+from ..models.user import User
+from ..models import Budget, UpdateBudgetModel, CategoryBudget
+from ..database import budget_collection, category_budget_collection
 
 router = APIRouter()
 
@@ -15,9 +18,9 @@ router = APIRouter()
     response_description="Get all stored budgets",
     response_model=List[Budget],
 )
-def get_all_budgets():
+def get_all_budgets(current_user: User = Depends(get_current_active_user)):
     if (
-        all_budgets := budget_collection.find().sort(
+        all_budgets := budget_collection.find({"email": current_user["email"]}).sort(
             [("year", pymongo.DESCENDING), ("month", pymongo.DESCENDING)]
         )
     ).count():
@@ -27,13 +30,17 @@ def get_all_budgets():
 
 
 @router.get(
-    "/budget/",
+    "/budget",
     response_description="Get budget by month and year",
     response_model=Budget,
 )
-def get_budget(month: int, year: int):
+def get_budget(
+    month: int, year: int, current_user: User = Depends(get_current_active_user)
+):
     if (
-        budget := budget_collection.find_one({"month": month, "year": year})
+        budget := budget_collection.find_one(
+            {"month": month, "year": year, "email": current_user["email"]}
+        )
     ) is not None:
         return budget
 
@@ -42,34 +49,56 @@ def get_budget(month: int, year: int):
     )
 
 
-@router.post("/budget/", response_description="Add new budget", response_model=Budget)
-def add_budget(budget: Budget = Body(...)):
+@router.post("/budget", response_description="Add new budget", response_model=Budget)
+def add_budget(
+    budget: Budget = Body(...), current_user: User = Depends(get_current_active_user)
+):
+    if (
+        budget_collection.find_one(
+            {"month": budget.month, "year": budget.year, "email": current_user["email"]}
+        )
+        is not None
+    ):
+        raise HTTPException(
+            status_code=404,
+            detail=f"Budget with month: {budget.month} and year: {budget.year} already exists",
+        )
+    budget.email = current_user["email"]
     budget = jsonable_encoder(budget)
     new_budget = budget_collection.insert_one(budget)
     created_budget = budget_collection.find_one({"_id": new_budget.inserted_id})
     return JSONResponse(status_code=status.HTTP_201_CREATED, content=created_budget)
 
 
-@router.put("/budget/", response_description="Update a budget", response_model=Budget)
-def update_budget(month: int, year: int, budget: UpdateBudgetModel = Body(...)):
+@router.put("/budget", response_description="Update a budget", response_model=Budget)
+def update_budget(
+    month: int,
+    year: int,
+    budget: UpdateBudgetModel = Body(...),
+    current_user: User = Depends(get_current_active_user),
+):
     budget = {k: v for k, v in budget.dict().items() if v is not None}
+    budget["email"] = current_user["email"]
     budget = jsonable_encoder(budget)
 
     if len(budget) >= 1:
         update_result = budget_collection.update_one(
-            {"month": month, "year": year}, {"$set": budget}
+            {"month": month, "year": year, "email": current_user["email"]},
+            {"$set": budget},
         )
 
         if update_result.modified_count == 1:
             if (
                 updated_budget := budget_collection.find_one(
-                    {"month": month, "year": year}
+                    {"month": month, "year": year, "email": current_user["email"]}
                 )
             ) is not None:
                 return updated_budget
 
     if (
-        existing_budget := budget_collection.find_one({"month": month, "year": year})
+        existing_budget := budget_collection.find_one(
+            {"month": month, "year": year, "email": current_user["email"]}
+        )
     ) is not None:
         return existing_budget
 
@@ -78,9 +107,16 @@ def update_budget(month: int, year: int, budget: UpdateBudgetModel = Body(...)):
     )
 
 
-@router.delete("/budget/", response_description="Delete a budget")
-def delete_budget(month: int, year: int):
-    delete_result = budget_collection.delete_one({"month": month, "year": year})
+@router.delete("/budget", response_description="Delete a budget")
+def delete_budget(
+    month: int, year: int, current_user: User = Depends(get_current_active_user)
+):
+    delete_result = budget_collection.delete_one(
+        {"month": month, "year": year, "email": current_user["email"]}
+    )
+    category_budget_collection.delete_many(
+        {"month": month, "year": year, "email": current_user["email"]}
+    )
 
     if delete_result.deleted_count == 1:
         return JSONResponse(
@@ -93,12 +129,48 @@ def delete_budget(month: int, year: int):
     )
 
 
-def update_budget_spent(month: int, year: int, change: float):
-    budget: Budget = budget_collection.find_one({"month": month, "year": year})
+def add_new_budget_helper(
+    month: int,
+    year: int,
+    value: float,
+    current_user: User = Depends(get_current_active_user),
+):
+    budget = {
+        "value": value,
+        "spent": 0,
+        "month": month,
+        "year": year,
+    }
+    add_budget(Budget(**budget), current_user)
+
+    category_budgets: List[CategoryBudget] = []
+    budget_value = value / len(current_user["expense_categories_list"])
+    for category in current_user["expense_categories_list"]:
+        category_budget = {
+            "value": budget_value,
+            "spent": 0,
+            "month": month,
+            "year": year,
+            "category": category["name"],
+        }
+        category_budgets.append(CategoryBudget(**category_budget))
+
+    return add_category_budgets(category_budgets, current_user)
+
+
+def update_budget_spent(
+    month: int,
+    year: int,
+    change: float,
+    current_user: User = Depends(get_current_active_user),
+):
+    budget: Budget = budget_collection.find_one(
+        {"month": month, "year": year, "email": current_user["email"]}
+    )
     if budget is not None:
-        budget.spent += change
+        budget["spent"] += change
         budget_collection.update_one(
-            {"month": month, "year": year},
+            {"month": month, "year": year, "email": current_user["email"]},
             {"$set": budget},
         )
         return budget

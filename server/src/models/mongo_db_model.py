@@ -20,7 +20,7 @@ class PyObjectId(ObjectId):
         field_schema.update(type="string")
 
 
-class MongoDBModel(BaseModel):
+class BaseMongoDBModel(BaseModel):
     id: PyObjectId = Field(default_factory=PyObjectId, alias="_id")
     created_at: Optional[datetime] = datetime.now()
     updated_at: Optional[datetime] = datetime.now()
@@ -29,3 +29,7 @@ class MongoDBModel(BaseModel):
         allow_population_by_field_name = True
         arbitrary_types_allowed = True
         json_encoders = {ObjectId: str}
+
+
+class MongoDBModel(BaseMongoDBModel):
+    email: Optional[str]
