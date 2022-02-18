@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
-import { StyleSheet, SafeAreaView, Text, View, TouchableOpacity } from 'react-native';
+import { StyleSheet, SafeAreaView, Text, View, Pressable } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import { FontAwesome } from '@expo/vector-icons';
-import Modal from 'react-native-modal';
 import { theme } from '../../theme';
 import DefaultActionButton from '../components/ActionButton';
 import NotificationSetting from '../components/SettingsPage/NotificationSetting';
@@ -10,8 +9,9 @@ import CategoriesSetting from '../components/SettingsPage/CategoriesSetting';
 import ThemesSetting from '../components/SettingsPage/ThemesSetting';
 import PrivacySetting from '../components/SettingsPage/PrivacySetting';
 import HelpPage from '../components/SettingsPage/HelpPage';
+import CurrencyPicker from '../components/SettingsPage/CurrencyPicker';
 
-const settingOptions = (state, setState) => {
+const settingOptions = (state, setState, selectedCurrency, setSelectedCurrency) => {
   return [
     {
       name: 'Notification',
@@ -21,8 +21,20 @@ const settingOptions = (state, setState) => {
     },
     {
       name: 'Currency',
-      activateBy: null,
-      activate: null,
+      activateBy: (
+        <View style={styles.selectedCurrency}>
+          <Text style={styles.optionText}>{selectedCurrency}</Text>
+        </View>
+      ),
+      activate: () => setState({ isCurrencyPickerOpen: true }),
+      overlayContent: (
+        <CurrencyPicker
+          state={state}
+          setState={setState}
+          selectedCurrency={selectedCurrency}
+          setSelectedCurrency={setSelectedCurrency}
+        />
+      ),
     },
     {
       name: 'Categories',
@@ -61,10 +73,12 @@ const SettingsPage = () => {
   const [state, setState] = useState({
     isModalOpen: false,
     isCategoriesModalOpen: false,
+    isCurrencyPickerOpen: false,
     isThemesModalOpen: false,
     isPrivacyModalOpen: false,
     isHelpModalOpen: false,
   });
+  const [selectedCurrency, setSelectedCurrency] = useState('CAD');
 
   return (
     <>
@@ -73,16 +87,18 @@ const SettingsPage = () => {
           <View>
             <Text style={styles.titleText}>Settings</Text>
           </View>
-          {settingOptions(state, setState).map((item) => {
+          {settingOptions(state, setState, selectedCurrency, setSelectedCurrency).map((item) => {
             return (
               <>
-                <TouchableOpacity onPress={item.activate} key={item.name}>
-                  <View style={styles.settingOptions}>
-                    <Text style={styles.optionText}>{item.name}</Text>
-                    {item.activateBy}
-                  </View>
-                </TouchableOpacity>
-                <View key={item.overlayContent}>{item.overlayContent}</View>
+                <View key={item.index}>
+                  <Pressable onPress={item.activate}>
+                    <View style={styles.settingOptions}>
+                      <Text style={styles.optionText}>{item.name}</Text>
+                      {item.activateBy}
+                    </View>
+                  </Pressable>
+                </View>
+                {item.overlayContent}
               </>
             );
           })}
@@ -118,7 +134,6 @@ const styles = StyleSheet.create({
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'space-between',
-    fontSize: 20,
     paddingVertical: 24,
     paddingHorizontal: 15,
     borderTopWidth: 1,
@@ -128,6 +143,14 @@ const styles = StyleSheet.create({
     fontSize: 20,
     color: theme.colors.primary,
     fontWeight: '600',
+  },
+  selectedCurrency: {
+    borderWidth: 3,
+    borderColor: theme.colors.primary,
+    paddingVertical: 5,
+    paddingHorizontal: 17,
+    borderRadius: 20,
+    marginVertical: -8,
   },
 });
 

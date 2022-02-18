@@ -8,6 +8,7 @@ import StyledButton from '../StyledButton';
 const NotificationSetting = ({ state, setState }) => {
   const [isPushSwitchOn, setIsPushSwitchOn] = useState(false);
   const [isEmailSwitchOn, setIsEmailSwitchOn] = useState(false);
+  const [isCalendarSwitchOn, setIsCalendarSwitchOn] = useState(false);
 
   return (
     <>
@@ -70,8 +71,8 @@ const NotificationSetting = ({ state, setState }) => {
             </View>
             <Switch
               style={{ flex: 2 }}
-              value={isEmailSwitchOn}
-              onValueChange={() => setIsEmailSwitchOn(!isEmailSwitchOn)}
+              value={isCalendarSwitchOn}
+              onValueChange={() => setIsCalendarSwitchOn(!isCalendarSwitchOn)}
             />
           </View>
         </View>
