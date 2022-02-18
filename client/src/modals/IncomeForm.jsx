@@ -35,7 +35,7 @@ const AddIncome = ({ setModalVisible, setIncomeModalVisible }) => {
   const submitIncome = async () => {
     axios
       .post(
-        `${URL}/income/`,
+        `${URL}/income`,
         JSON.stringify({
           name,
           description,

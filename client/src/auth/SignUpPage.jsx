@@ -18,7 +18,7 @@ const SignUpPage = ({ setPage, setLoggedIn }) => {
   const submitSignUp = async () => {
     await axios
       .post(
-        `${URL}/signup/`,
+        `${URL}/signup`,
         JSON.stringify({
           email,
           hashed_password: secondPassword,

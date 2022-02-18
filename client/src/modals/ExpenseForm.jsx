@@ -38,7 +38,7 @@ const AddExpense = ({ setModalVisible, setExpenseModalVisible }) => {
   const submitExpense = async () => {
     axios
       .post(
-        `${URL}/expense/`,
+        `${URL}/expense`,
         JSON.stringify({
           name,
           description,

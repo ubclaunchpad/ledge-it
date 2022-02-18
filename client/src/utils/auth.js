@@ -5,7 +5,7 @@ import { setAxiosHeaders } from '../providers/axios';
 const URL = process.env.SERVER_URL;
 
 export const login = async (email, password) => {
-  return axios.post(`${URL}/login/`, `username=${email}&password=${password}`, {
+  return axios.post(`${URL}/login`, `username=${email}&password=${password}`, {
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded',
     },
