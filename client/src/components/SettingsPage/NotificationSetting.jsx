@@ -1,16 +1,21 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import Modal from 'react-native-modal';
+import { Switch } from 'react-native-paper';
 import { theme } from '../../../theme';
 import StyledButton from '../StyledButton';
 
 const NotificationSetting = ({ state, setState }) => {
+  const [isPushSwitchOn, setIsPushSwitchOn] = useState(false);
+  const [isEmailSwitchOn, setIsEmailSwitchOn] = useState(false);
+
   return (
     <>
       <Modal
         isVisible={state.isNotificationModalOpen}
         animationIn="slideInRight"
         animationOut="slideOutRight"
+        presentationStyle="overFullScreen"
         backdropTransitionInTiming={0}
         backdropColor={theme.colors.white}
         backdropOpacity={1}
@@ -30,7 +35,45 @@ const NotificationSetting = ({ state, setState }) => {
             />
             <Text style={styles.titleText}>Notifications</Text>
           </View>
-          <Text>This is notification setting</Text>
+          <View style={styles.settingOptions}>
+            <View style={styles.settingDetail}>
+              <Text style={styles.optionTitleText}>Push Notification</Text>
+              <Text style={styles.optionDescriptionText}>
+                You want to receive budget reminders when you&apos;re close to your budget cap
+              </Text>
+            </View>
+            <Switch
+              style={{ flex: 1 }}
+              value={isPushSwitchOn}
+              onValueChange={() => setIsPushSwitchOn(!isPushSwitchOn)}
+            />
+          </View>
+          <View style={styles.settingOptions}>
+            <View style={styles.settingDetail}>
+              <Text style={styles.optionTitleText}>Emails</Text>
+              <Text style={styles.optionDescriptionText}>
+                You want to receive budget reminder emails when you&apos;re close to your budget cap
+              </Text>
+            </View>
+            <Switch
+              style={{ flex: 1 }}
+              value={isEmailSwitchOn}
+              onValueChange={() => setIsEmailSwitchOn(!isEmailSwitchOn)}
+            />
+          </View>
+          <View style={styles.settingOptions}>
+            <View style={styles.settingDetail}>
+              <Text style={styles.optionTitleText}>Calendar</Text>
+              <Text style={styles.optionDescriptionText}>
+                You want to sync your transactions to your device calendar
+              </Text>
+            </View>
+            <Switch
+              style={{ flex: 2 }}
+              value={isEmailSwitchOn}
+              onValueChange={() => setIsEmailSwitchOn(!isEmailSwitchOn)}
+            />
+          </View>
         </View>
       </Modal>
     </>
@@ -58,8 +101,32 @@ const styles = StyleSheet.create({
   titleText: {
     fontSize: 36,
     textAlign: 'center',
-    marginVertical: 4,
+    marginTop: 4,
+    marginBottom: 24,
     color: theme.colors.primary,
+  },
+  settingOptions: {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingHorizontal: 15,
+    paddingVertical: 10,
+    borderTopWidth: 1,
+    borderColor: theme.colors.primary,
+  },
+  settingDetail: {
+    display: 'flex',
+    flexDirection: 'column',
+    flex: 2,
+  },
+  optionTitleText: {
+    fontSize: 20,
+    color: theme.colors.primary,
+    fontWeight: '600',
+  },
+  optionDescriptionText: {
+    fontSize: 10,
+    color: theme.colors.grey,
   },
 });
 
