@@ -97,7 +97,6 @@ const SettingsPage = ({ setLoggedIn }) => {
           <Pressable
             onPress={() => {
               logout().catch((err) => console.log(err));
-              alert("Successfully logged out");
               setLoggedIn(false);
             }}>
             <Text style={styles.optionText}>Sign Out</Text>
