@@ -4,7 +4,7 @@
 python -m venv venv
 source venv/bin/activate
 pip install -r requirements.txt || pip3 install -r requirements.txt
-python server.py || python3 server.py
+uvicorn main:app --reload
 ```
 
 ## Start client

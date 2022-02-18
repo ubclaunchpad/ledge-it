@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { StyleSheet, Text, View, Button } from "react-native";
-import PlaidLink from "@burstware/expo-plaid-link";
+import TheLink from "./TheLink.js";
 import axios from "axios";
 
 export default function App() {
@@ -8,7 +8,7 @@ export default function App() {
   const [accessToken, setAccessToken] = useState(false);
   const [transactions, setTransactions] = useState(false);
 
-  const baseURL = "https://rude-impala-97.loca.lt";
+  const baseURL = "https://lazy-turtle-65.loca.lt";
 
   useEffect(() => {
     const getLinkToken = async () => {
@@ -18,20 +18,6 @@ export default function App() {
 
     getLinkToken();
   }, []);
-
-  // Exchanges public token to api access token
-  const exchangePublicToken = async (publicToken) => {
-    // I could not get this working with axios :(
-    const response = await fetch(baseURL + "/api/set_access_token", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8",
-      },
-      body: `public_token=${publicToken}`,
-    });
-    const data = await response.json();
-    setAccessToken(data.access_token);
-  };
 
   // Sets transactions with current access token
   const fetchTransactions = async () => {
@@ -61,17 +47,11 @@ export default function App() {
         </View>
       )}
       {linkToken && !accessToken && (
-        <PlaidLink
+        <TheLink
           linkToken={linkToken}
-          onEvent={(event) => console.log(event)}
-          onExit={(exit) => console.log(exit)}
-          onSuccess={(success) => {
-            console.log(`Public Token: ${success.publicToken}`);
-            exchangePublicToken(success.publicToken);
-          }}
-        >
-          <Text>Open up App.js to start working on your app!</Text>
-        </PlaidLink>
+          setAccessToken={setAccessToken}
+          baseURL={baseURL}
+        />
       )}
     </>
   );
