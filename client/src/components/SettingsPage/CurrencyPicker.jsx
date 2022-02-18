@@ -4,7 +4,7 @@ import ScrollPicker from 'react-native-wheel-scrollview-picker';
 import CustomModal from '../CustomModal';
 import { theme } from '../../../theme';
 
-const CurrencyPicker = ({ state, setState, selectedCurrency, setSelectedCurrency }) => {
+const CurrencyPicker = ({ state, setState, setSelectedCurrency }) => {
   const [currentCurrency, setCurrentCurrency] = useState('CAD');
 
   return (
@@ -14,7 +14,7 @@ const CurrencyPicker = ({ state, setState, selectedCurrency, setSelectedCurrency
           <View style={styles.picker}>
             <ScrollPicker
               dataSource={['CAD', 'USD', 'EUR', 'AUD', 'GDP']}
-              selectedIndex={1}
+              selectedIndex={0}
               renderItem={(data, index) => {
                 return (
                   <View>

@@ -25,11 +25,10 @@ const App = () => {
     checkForToken();
   }, []);
 
-  if (true) {
-    // loggedIn === true
+  if (loggedIn === true) {
     return (
       <NavigationContainer>
-        <TabNavBar />
+        <TabNavBar setLoggedIn={setLoggedIn} />
       </NavigationContainer>
     );
   } else if (loggedIn === false) {
@@ -45,7 +44,7 @@ const App = () => {
 
 const Tab = createBottomTabNavigator();
 
-const TabNavBar = () => {
+const TabNavBar = ({ setLoggedIn }) => {
   return (
     <Tab.Navigator
       screenOptions={({ route }) => ({
@@ -63,7 +62,7 @@ const TabNavBar = () => {
       <Tab.Screen name="Table" component={TablePage} />
       <Tab.Screen name="Budget" component={BudgetPage} />
       <Tab.Screen name="Analytics" component={AnalyticsPage} />
-      <Tab.Screen name="Settings" component={SettingsPage} />
+      <Tab.Screen name="Settings">{() => <SettingsPage setLoggedIn={setLoggedIn} />}</Tab.Screen>
     </Tab.Navigator>
   );
 };

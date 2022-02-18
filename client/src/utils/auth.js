@@ -11,6 +11,10 @@ export const login = async (email, password) => {
   });
 };
 
+export const logout = async () => {
+  return axios.post(`${URL}/logout/`);
+};
+
 export const saveToken = async (token, expiry) => {
   try {
     await AsyncStorage.setItem('expiry', expiry);

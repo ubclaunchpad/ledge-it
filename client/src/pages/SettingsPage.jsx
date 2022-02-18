@@ -10,8 +10,9 @@ import ThemesSetting from '../components/SettingsPage/ThemesSetting';
 import PrivacySetting from '../components/SettingsPage/PrivacySetting';
 import HelpPage from '../components/SettingsPage/HelpPage';
 import CurrencyPicker from '../components/SettingsPage/CurrencyPicker';
+import { logout } from '../utils/auth';
 
-const settingOptions = (state, setState, selectedCurrency, setSelectedCurrency) => {
+const setSettingOptions = (state, setState, selectedCurrency, setSelectedCurrency) => {
   return [
     {
       name: 'Notification',
@@ -31,7 +32,6 @@ const settingOptions = (state, setState, selectedCurrency, setSelectedCurrency) 
         <CurrencyPicker
           state={state}
           setState={setState}
-          selectedCurrency={selectedCurrency}
           setSelectedCurrency={setSelectedCurrency}
         />
       ),
@@ -60,16 +60,10 @@ const settingOptions = (state, setState, selectedCurrency, setSelectedCurrency) 
       activate: () => setState({ isHelpModalOpen: true }),
       overlayContent: <HelpPage state={state} setState={setState} />,
     },
-    {
-      name: 'Sign Out',
-      activateBy: null,
-      activate: null,
-      overlayContent: null,
-    },
   ];
 };
 
-const SettingsPage = () => {
+const SettingsPage = ({ setLoggedIn }) => {
   const [state, setState] = useState({
     isModalOpen: false,
     isCategoriesModalOpen: false,
@@ -81,34 +75,38 @@ const SettingsPage = () => {
   const [selectedCurrency, setSelectedCurrency] = useState('CAD');
 
   return (
-    <>
-      <SafeAreaView style={styles.container}>
-        <ScrollView style={styles.content}>
-          <View>
-            <Text style={styles.titleText}>Settings</Text>
-          </View>
-          {settingOptions(state, setState, selectedCurrency, setSelectedCurrency).map((item) => {
-            return (
-              <>
-                <View key={item.index}>
-                  <Pressable onPress={item.activate}>
-                    <View style={styles.settingOptions}>
-                      <Text style={styles.optionText}>{item.name}</Text>
-                      {item.activateBy}
-                    </View>
-                  </Pressable>
+    <SafeAreaView style={styles.container}>
+      <ScrollView style={styles.content}>
+        <View>
+          <Text style={styles.titleText}>Settings</Text>
+        </View>
+        {setSettingOptions(state, setState, selectedCurrency, setSelectedCurrency).map((item) => {
+          return (
+            <>
+              <View key={item.index}>
+                <View style={styles.setSettingOptions}>
+                  <Text style={styles.optionText}>{item.name}</Text>
+                  <Pressable onPress={item.activate}>{item.activateBy}</Pressable>
                 </View>
-                {item.overlayContent}
-              </>
-            );
-          })}
-          <Text style={{ textAlign: 'center', color: theme.colors.primary }}>
-            Frugal Version 1.0
-          </Text>
-        </ScrollView>
-      </SafeAreaView>
+              </View>
+              {item.overlayContent}
+            </>
+          );
+        })}
+        <View style={styles.setSettingOptions}>
+          <Pressable
+            onPress={() => {
+              logout().catch((err) => console.log(err));
+              alert("Successfully logged out");
+              setLoggedIn(false);
+            }}>
+            <Text style={styles.optionText}>Sign Out</Text>
+          </Pressable>
+        </View>
+        <Text style={{ textAlign: 'center', color: theme.colors.primary }}>Frugal Version 1.0</Text>
+      </ScrollView>
       <DefaultActionButton />
-    </>
+    </SafeAreaView>
   );
 };
 
@@ -130,7 +128,7 @@ const styles = StyleSheet.create({
     marginVertical: 20,
     color: theme.colors.primary,
   },
-  settingOptions: {
+  setSettingOptions: {
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'space-between',
