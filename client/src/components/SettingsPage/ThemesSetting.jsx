@@ -1,10 +1,13 @@
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { Dimensions, Pressable, StyleSheet, Text, View } from 'react-native';
 import Modal from 'react-native-modal';
+import { LinearGradient } from 'expo-linear-gradient';
 import { theme } from '../../../theme';
 import StyledButton from '../StyledButton';
 
 const ThemesSetting = ({ state, setState }) => {
+  const colorData = ['#24838F', '#996A25', '#17C308', '#0032E5', '#BF0000', '#742599'];
+
   return (
     <>
       <Modal
@@ -30,7 +33,21 @@ const ThemesSetting = ({ state, setState }) => {
             />
             <Text style={styles.titleText}>Themes</Text>
           </View>
-          <Text>This is themes setting</Text>
+          <View style={styles.themesSelections}>
+            {colorData.map((item) => {
+              return (
+                <>
+                  <Pressable>
+                    <LinearGradient
+                      colors={[item, '#F3F3F3']}
+                      style={[styles.circle, { borderColor: item }]}
+                      key={item}
+                    />
+                  </Pressable>
+                </>
+              );
+            })}
+          </View>
         </View>
       </Modal>
     </>
@@ -60,6 +77,21 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginVertical: 4,
     color: theme.colors.primary,
+  },
+  themesSelections: {
+    flex: 1,
+    flexWrap: 'wrap',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: 20,
+  },
+  circle: {
+    width: Dimensions.get('screen').width / 4,
+    height: Dimensions.get('screen').width / 4,
+    borderRadius: Dimensions.get('screen').width / 8,
+    borderWidth: 3,
+    margin: 10,
   },
 });
 
