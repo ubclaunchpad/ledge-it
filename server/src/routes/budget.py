@@ -8,8 +8,8 @@ from .category_budget import add_category_budgets
 from ..middleware import get_current_active_user
 from ..models.user import User
 from ..models import Budget, UpdateBudgetModel, CategoryBudget
-from ..database import budget_collection, category_budget_collection
-
+from ..database import budget_collection, user_collection, category_budget_collection
+from datetime import datetime
 router = APIRouter()
 
 
@@ -179,3 +179,57 @@ def update_budget_spent(
         status_code=404,
         detail=f"Budget with month: {month} and year: {year}",
     )
+
+@router.post("/generateBudget/", response_description="Generates new budget for next month.", response_model=str)
+def generate_budget(
+    keyword: str = Body(...)
+):
+    if (keyword != "verySecurePassword"):
+        raise HTTPException(
+        status_code=404,
+        detail=f"Incorrect keyword!",
+        )
+    if (all_users := user_collection.find()).count():
+        for user in all_users:
+            currentTime = datetime.now()
+            nextMonth = currentTime.month + 1
+            nextYear = currentTime.year
+            if currentTime.month == 13:
+                nextMonth = 1
+                nextYear = nextYear + 1
+
+            # Create a new budget for next month, if not there
+            if (budget_collection.find_one(
+            {"month": nextMonth, "year": nextYear, "email": user["email"]})) is None:
+                nextBudget = Budget(
+                    email = user["email"], 
+                    month = nextMonth, 
+                    year = nextYear, 
+                    value = 1000, 
+                    spent = 0
+                )
+                if (
+                budget := budget_collection.find_one(
+                    {"month": currentTime.month, "year": currentTime.year, "email": user["email"]})
+                ) is not None:
+                    nextBudget.value = budget["value"]
+
+                nextBudget = jsonable_encoder(nextBudget)
+                new_budget = budget_collection.insert_one(nextBudget)
+
+            # Create a category budget for next month, if not there
+            all_categories = category_budget_collection.find({"month": currentTime.month, "year": currentTime.year, "email": user["email"]})
+            for category in all_categories:
+                if (catBudget := category_budget_collection.find_one({"month": nextMonth, "year": nextYear, "email": user["email"], "category": category["category"]})) is None:
+                    nextCatBudget = CategoryBudget(
+                            email = user["email"], 
+                            month = nextMonth, 
+                            year = nextYear, 
+                            value = category["value"], 
+                            spent = 0,
+                            category = category["category"]
+                        )
+                    nextCatBudget = jsonable_encoder(nextCatBudget)
+                    new_cat_budget = category_budget_collection.insert_one(nextCatBudget)
+
+    return "Budgets successfully generated!"
