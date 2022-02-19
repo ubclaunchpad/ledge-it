@@ -1,13 +1,8 @@
 import React from 'react';
-import { Text, View } from 'react-native';
+import Plaid from '../plaid/Plaid';
 
 const SettingsPage = () => {
-  return (
-    <View>
-      <Text>Settings Page</Text>
-      <Text>This is the settings page</Text>
-    </View>
-  );
+  return <Plaid />;
 };
 
 export default SettingsPage;
