@@ -10,6 +10,7 @@ from ..models.user import User
 from ..models import Budget, UpdateBudgetModel, CategoryBudget
 from ..database import budget_collection, user_collection, category_budget_collection
 from datetime import datetime
+
 router = APIRouter()
 
 
@@ -180,14 +181,17 @@ def update_budget_spent(
         detail=f"Budget with month: {month} and year: {year}",
     )
 
-@router.post("/generateBudget/", response_description="Generates new budget for next month.", response_model=str)
-def generate_budget(
-    keyword: str = Body(...)
-):
-    if (keyword != "verySecurePassword"):
+
+@router.post(
+    "/generateBudget/",
+    response_description="Generates new budget for next month.",
+    response_model=str,
+)
+def generate_budget(keyword: str = Body(...)):
+    if keyword != "verySecurePassword":
         raise HTTPException(
-        status_code=404,
-        detail=f"Incorrect keyword!",
+            status_code=404,
+            detail=f"Incorrect keyword!",
         )
     if (all_users := user_collection.find()).count():
         for user in all_users:
@@ -199,18 +203,26 @@ def generate_budget(
                 nextYear = nextYear + 1
 
             # Create a new budget for next month, if not there
-            if (budget_collection.find_one(
-            {"month": nextMonth, "year": nextYear, "email": user["email"]})) is None:
+            if (
+                budget_collection.find_one(
+                    {"month": nextMonth, "year": nextYear, "email": user["email"]}
+                )
+            ) is None:
                 nextBudget = Budget(
-                    email = user["email"], 
-                    month = nextMonth, 
-                    year = nextYear, 
-                    value = 1000, 
-                    spent = 0
+                    email=user["email"],
+                    month=nextMonth,
+                    year=nextYear,
+                    value=1000,
+                    spent=0,
                 )
                 if (
-                budget := budget_collection.find_one(
-                    {"month": currentTime.month, "year": currentTime.year, "email": user["email"]})
+                    budget := budget_collection.find_one(
+                        {
+                            "month": currentTime.month,
+                            "year": currentTime.year,
+                            "email": user["email"],
+                        }
+                    )
                 ) is not None:
                     nextBudget.value = budget["value"]
 
@@ -218,18 +230,35 @@ def generate_budget(
                 new_budget = budget_collection.insert_one(nextBudget)
 
             # Create a category budget for next month, if not there
-            all_categories = category_budget_collection.find({"month": currentTime.month, "year": currentTime.year, "email": user["email"]})
+            all_categories = category_budget_collection.find(
+                {
+                    "month": currentTime.month,
+                    "year": currentTime.year,
+                    "email": user["email"],
+                }
+            )
             for category in all_categories:
-                if (catBudget := category_budget_collection.find_one({"month": nextMonth, "year": nextYear, "email": user["email"], "category": category["category"]})) is None:
+                if (
+                    catBudget := category_budget_collection.find_one(
+                        {
+                            "month": nextMonth,
+                            "year": nextYear,
+                            "email": user["email"],
+                            "category": category["category"],
+                        }
+                    )
+                ) is None:
                     nextCatBudget = CategoryBudget(
-                            email = user["email"], 
-                            month = nextMonth, 
-                            year = nextYear, 
-                            value = category["value"], 
-                            spent = 0,
-                            category = category["category"]
-                        )
+                        email=user["email"],
+                        month=nextMonth,
+                        year=nextYear,
+                        value=category["value"],
+                        spent=0,
+                        category=category["category"],
+                    )
                     nextCatBudget = jsonable_encoder(nextCatBudget)
-                    new_cat_budget = category_budget_collection.insert_one(nextCatBudget)
+                    new_cat_budget = category_budget_collection.insert_one(
+                        nextCatBudget
+                    )
 
     return "Budgets successfully generated!"
