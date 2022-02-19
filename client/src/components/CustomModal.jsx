@@ -7,6 +7,7 @@ import { theme } from '../../theme';
 const CustomModal = ({ isModalVisible, setModalVisible, children, ...rest }) => {
   return (
     <Modal
+      avoidKeyboard
       animationIn="slideInUp"
       animationOut="slideOutDown"
       backdropTransitionOutTiming={0}
