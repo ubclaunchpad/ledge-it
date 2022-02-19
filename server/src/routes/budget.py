@@ -183,7 +183,7 @@ def update_budget_spent(
 
 
 @router.post(
-    "/generateBudget/",
+    "/generateBudget",
     response_description="Generates new budget for next month.",
     response_model=str,
 )
@@ -230,6 +230,8 @@ def generate_budget(keyword: str = Body(...)):
                 new_budget = budget_collection.insert_one(nextBudget)
 
             # Create a category budget for next month, if not there
+            # TODO: this should add budgets for all the categories in the user's expense categories list
+            #  this is because the list of categories might have changed since the last month
             all_categories = category_budget_collection.find(
                 {
                     "month": currentTime.month,
