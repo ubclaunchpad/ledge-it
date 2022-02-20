@@ -8,7 +8,7 @@ from src.routes import (
     login,
     net_worth,
     category,
-    image_to_s3
+    image_to_s3,
 )
 
 # Note: the server runs on http://127.0.0.1:8000
