@@ -15,3 +15,5 @@ bcrypt==3.2.0
 python-jose==3.3.0
 
 requests==2.26.0
+
+google-cloud-storage == 2.1.0
