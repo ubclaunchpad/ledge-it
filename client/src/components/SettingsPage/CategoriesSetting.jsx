@@ -1,39 +1,47 @@
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { Dimensions, StyleSheet, Text, View } from 'react-native';
 import Modal from 'react-native-modal';
 import { theme } from '../../../theme';
 import StyledButton from '../StyledButton';
 
 const CategoriesSetting = ({ state, setState }) => {
   return (
-    <>
-      <Modal
-        isVisible={state.isCategoriesModalOpen}
-        animationIn="slideInRight"
-        animationOut="slideOutRight"
-        backdropTransitionInTiming={0}
-        backdropColor={theme.colors.white}
-        backdropOpacity={1}
-        onRequestClose={() => {
-          setState({ isCategoriesModalOpen: false });
-        }}>
-        <View style={styles.container}>
-          <View style={styles.header}>
-            <StyledButton
-              customStyles={styles}
-              onTap={() => {
-                setState({ isCategoryModalOpen: false });
-              }}
-              iconName="chevron-with-circle-left"
-              iconSize={36}
-              iconColor={theme.colors.primary}
-            />
-            <Text style={styles.titleText}>Categories</Text>
-          </View>
-          <Text>This is categories setting</Text>
+    <Modal
+      style={{ width: Dimensions.get('window').width, marginLeft: 0 }}
+      isVisible={state.isCategoriesModalOpen}
+      animationIn="slideInRight"
+      animationOut="slideOutRight"
+      backdropTransitionInTiming={0}
+      backdropColor={theme.colors.white}
+      backdropOpacity={1}
+      onRequestClose={() => {
+        setState({ isCategoriesModalOpen: false });
+      }}>
+      <View style={styles.container}>
+        <View style={styles.header}>
+          <StyledButton
+            customStyles={{
+              pressable: {
+                position: 'absolute',
+                left: -5,
+                top: -25,
+              },
+              background: {
+                padding: 20,
+              },
+            }}
+            onTap={() => {
+              setState({ isCategoryModalOpen: false });
+            }}
+            iconName="chevron-with-circle-left"
+            iconSize={36}
+            iconColor={theme.colors.primary}
+          />
+          <Text style={styles.titleText}>Categories</Text>
         </View>
-      </Modal>
-    </>
+        <Text>This is categories setting</Text>
+      </View>
+    </Modal>
   );
 };
 
@@ -50,12 +58,8 @@ const styles = StyleSheet.create({
     position: 'relative',
     justifyContent: 'center',
   },
-  pressable: {
-    position: 'absolute',
-    left: 0,
-    top: -10,
-  },
   titleText: {
+    fontWeight: 'bold',
     fontSize: 36,
     textAlign: 'center',
     marginVertical: 4,

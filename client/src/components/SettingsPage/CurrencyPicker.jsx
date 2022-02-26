@@ -15,17 +15,15 @@ const CurrencyPicker = ({ state, setState, setSelectedCurrency }) => {
             <ScrollPicker
               dataSource={['CAD', 'USD', 'EUR', 'AUD', 'GDP']}
               selectedIndex={0}
-              renderItem={(data, index) => {
+              renderItem={(data) => {
                 return (
                   <View>
                     <Text>{data}</Text>
                   </View>
                 );
               }}
-              onValueChange={(data, selectedIndex) => {
-                setCurrentCurrency(data);
-              }}
-              wrapperHeight={180}
+              onValueChange={(data) => setCurrentCurrency(data)}
+              wrapperHeight={200}
               wrapperWidth={300}
               wrapperColor="#FFFFFF"
               itemHeight={40}
@@ -56,6 +54,7 @@ const styles = StyleSheet.create({
   },
   picker: {
     marginTop: -20,
+    width: '100%',
   },
   selectButton: {
     width: '110%',

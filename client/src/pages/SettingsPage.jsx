@@ -3,7 +3,6 @@ import { StyleSheet, SafeAreaView, Text, View, Pressable } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import { FontAwesome } from '@expo/vector-icons';
 import { theme } from '../../theme';
-import DefaultActionButton from '../components/ActionButton';
 import NotificationSetting from '../components/SettingsPage/NotificationSetting';
 import CategoriesSetting from '../components/SettingsPage/CategoriesSetting';
 import ThemesSetting from '../components/SettingsPage/ThemesSetting';
@@ -76,19 +75,19 @@ const SettingsPage = ({ setLoggedIn }) => {
 
   return (
     <SafeAreaView style={styles.container}>
+      <View>
+        <Text style={styles.titleText}>Settings</Text>
+      </View>
       <ScrollView style={styles.content}>
-        <View>
-          <Text style={styles.titleText}>Settings</Text>
-        </View>
         {setSettingOptions(state, setState, selectedCurrency, setSelectedCurrency).map((item) => {
           return (
             <>
-              <View key={item.index}>
+              <Pressable key={item.index} onPress={item.activate}>
                 <View style={styles.setSettingOptions}>
                   <Text style={styles.optionText}>{item.name}</Text>
-                  <Pressable onPress={item.activate}>{item.activateBy}</Pressable>
+                  <Text>{item.activateBy}</Text>
                 </View>
-              </View>
+              </Pressable>
               {item.overlayContent}
             </>
           );
@@ -102,9 +101,10 @@ const SettingsPage = ({ setLoggedIn }) => {
             <Text style={styles.optionText}>Sign Out</Text>
           </Pressable>
         </View>
-        <Text style={{ textAlign: 'center', color: theme.colors.primary }}>Frugal Version 1.0</Text>
+        <Text style={{ textAlign: 'center', color: theme.colors.primary, marginTop: 20 }}>
+          Frugal Version 1.0
+        </Text>
       </ScrollView>
-      <DefaultActionButton />
     </SafeAreaView>
   );
 };
@@ -120,9 +120,11 @@ const styles = StyleSheet.create({
   },
   content: {
     display: 'flex',
+    marginTop: 10,
   },
   titleText: {
     fontSize: 36,
+    fontWeight: 'bold',
     textAlign: 'center',
     marginVertical: 20,
     color: theme.colors.primary,
