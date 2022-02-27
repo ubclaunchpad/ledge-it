@@ -1,7 +1,7 @@
 import React, { useState, useRef } from 'react';
 import { StyleSheet, View, Text, FlatList, Dimensions, Animated } from 'react-native';
 import Paginator from './Paginator';
-import { theme } from '../../../theme';
+import theme from '../../../theme';
 
 const data = [
   {

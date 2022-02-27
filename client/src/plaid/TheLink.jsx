@@ -1,5 +1,5 @@
 import React from "react";
-import PlaidLinkWebview from "./PlaidLinkWebview.js";
+import PlaidLinkWebview from "./PlaidLinkWebview.jsx";
 import axios from "axios";
 import { Text } from "react-native";
 

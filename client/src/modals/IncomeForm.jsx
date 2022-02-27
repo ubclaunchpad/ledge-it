@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import axios from '../providers/axios';
-import AmountBox from '../components/AmountBox';
 import StyledTextInput from '../components/StyledTextInput';
 import StyledButton from '../components/StyledButton';
 import StyledSelect from '../components/StyledSelect';
 import { formatDateBE } from '../utils/formatters';
-import { theme } from '../../theme';
+import AmountBox from '../components/AmountBox';
+import ToggleButtons from '../components/ToggleButtons';
 
 const URL = process.env.SERVER_URL;
 
@@ -22,7 +22,7 @@ const getCurrentDate = () => {
   return `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`;
 };
 
-const AddIncome = ({ setModalVisible, setIncomeModalVisible }) => {
+const AddIncome = ({ setModalVisible, setIncomeModalVisible, type, setType }) => {
   const currency = 'CAD';
   const [amount, setAmount] = useState(undefined);
   const [name, setName] = useState(undefined);
@@ -35,7 +35,7 @@ const AddIncome = ({ setModalVisible, setIncomeModalVisible }) => {
   const submitIncome = async () => {
     axios
       .post(
-        `${URL}/income/`,
+        `${URL}/income`,
         JSON.stringify({
           name,
           description,
@@ -59,9 +59,9 @@ const AddIncome = ({ setModalVisible, setIncomeModalVisible }) => {
   };
 
   return (
-    <View style={styles.content}>
-      <Text style={styles.title}>Add Income</Text>
-      <AmountBox fields={[amount || 0.0, date, category || '', description, location]} />
+    <>
+      <AmountBox date={date} name={name} category={category} amount={amount} />
+      <ToggleButtons type={type} setType={setType} />
       <StyledTextInput
         onChange={setAmount}
         keyboardType="numeric"
@@ -120,23 +120,11 @@ const AddIncome = ({ setModalVisible, setIncomeModalVisible }) => {
           <StyledButton label="Add" onTap={submitIncome} />
         </View>
       </View>
-    </View>
+    </>
   );
 };
 
 const styles = StyleSheet.create({
-  content: {
-    flexDirection: 'column',
-    justifyContent: 'flex-start',
-    marginHorizontal: 20,
-  },
-  title: {
-    textAlign: 'center',
-    fontSize: 24,
-    marginBottom: 20,
-    fontWeight: 'bold',
-    color: theme.colors.primary,
-  },
   button: {
     marginHorizontal: 20,
   },

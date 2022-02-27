@@ -1,18 +1,44 @@
 import React from 'react';
 import { View, Text, StyleSheet, Dimensions } from 'react-native';
-import { theme } from '../../theme';
-import LoginButton from '../components/AuthPage/LoginButton';
-import SignUpButton from '../components/AuthPage/SignUpButton';
+import { SvgXml } from 'react-native-svg';
+import theme from '../../theme';
+import Logo from '../../assets/logo';
+import Graph from '../../assets/graph';
+import FilledButton from '../components/AuthPage/FilledButton';
+import OutlinedButton from '../components/AuthPage/OutlinedButton';
 
 const StartingPage = ({ setPage }) => {
   return (
     <>
-      <View style={styles.header}>
-        <Text style={styles.headerText}>Welcome to Ledge-It</Text>
-      </View>
-      <View style={styles.body}>
-        <LoginButton onPress={() => setPage('loginPage')} />
-        <SignUpButton onPress={() => setPage('signUpPage')} />
+      <View
+        style={{
+          backgroundColor: theme.colors.primary,
+          minHeight: Dimensions.get('window').height,
+        }}>
+        <View style={{ backgroundColor: theme.colors.white }}>
+          <View style={styles.header}>
+            <SvgXml xml={Logo} alt="logo" transform={[{ scaleX: 0.625 }]} />
+            <Text style={styles.headerText}>Welcome</Text>
+          </View>
+          <View style={styles.body}>
+            <View style={styles.description}>
+              <Text style={styles.descriptionText}>
+                Let’s begin saving by keeping track of your spending and income, and create budgets
+                you can stick to!
+              </Text>
+            </View>
+            <SvgXml
+              xml={Graph}
+              alt="graph"
+              width={Dimensions.get('window').width + 20}
+              style={{ marginLeft: -20 }}
+            />
+          </View>
+        </View>
+        <View style={styles.buttons}>
+          <FilledButton label="Login" onPress={() => setPage('loginPage')} />
+          <OutlinedButton label="Create an account" onPress={() => setPage('signUpPage')} />
+        </View>
       </View>
     </>
   );
@@ -20,25 +46,50 @@ const StartingPage = ({ setPage }) => {
 
 const styles = StyleSheet.create({
   header: {
-    height: Dimensions.get('window').height * 0.35,
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
     width: Dimensions.get('window').width,
-    paddingTop: Dimensions.get('window').height * 0.15,
-    paddingLeft: Dimensions.get('window').width * 0.05,
+    paddingVertical: 75,
+    borderBottomLeftRadius: Dimensions.get('window').width,
+    borderBottomRightRadius: Dimensions.get('window').width,
+    backgroundColor: theme.colors.greyBackground,
+    transform: [{ scaleX: 1.6 }],
   },
 
   headerText: {
-    color: theme.colors.primary,
+    marginTop: 30,
+    color: theme.colors.textDark,
     fontSize: 50,
-    fontWeight: '500',
+    transform: [{ scaleX: 0.625 }],
+  },
+
+  description: {
+    width: Dimensions.get('window').width * 0.8,
+  },
+
+  descriptionText: {
+    fontSize: 18,
+    fontWeight: '300',
+    textAlign: 'center',
+    lineHeight: 24,
   },
 
   body: {
     display: 'flex',
-    alignSelf: 'center',
-    paddingTop: Dimensions.get('window').height * 0.15,
+    alignItems: 'center',
+    width: Dimensions.get('window').width,
+    marginTop: 50,
     flexDirection: 'column',
-    justifyContent: 'space-between',
-    height: Dimensions.get('window').height * 0.3,
+    justifyContent: 'center',
+  },
+
+  buttons: {
+    marginTop: 20,
+    width: Dimensions.get('window').width,
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
 

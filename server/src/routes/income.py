@@ -19,7 +19,7 @@ router = APIRouter()
 
 
 @router.get(
-    "/incomes/", response_description="Get all expenses", response_model=List[Income]
+    "/incomes", response_description="Get all expenses", response_model=List[Income]
 )
 def get_incomes(current_user: User = Depends(get_current_active_user)):
     if (
@@ -46,7 +46,7 @@ def get_income_by_id(id, current_user: User = Depends(get_current_active_user)):
     raise HTTPException(status_code=404, detail=f"Income with id {id} not found")
 
 
-@router.post("/income/", response_description="Add new income", response_model=Income)
+@router.post("/income", response_description="Add new income", response_model=Income)
 def create_income(
     income: AddIncome = Body(...), current_user: User = Depends(get_current_active_user)
 ):
@@ -178,7 +178,7 @@ def delete_income_by_id(id, current_user: User = Depends(get_current_active_user
 
 
 @router.get(
-    "/income/limited/",
+    "/income/limited",
     response_description="Returns limited number of incomes sorted by date",
     response_model=List[Income],
 )
@@ -230,7 +230,7 @@ def ranged_income(
 
 
 @router.get(
-    "/income/specify/",
+    "/income/specify",
     response_description="Returns incomes that have the specified value in the specified field name",
     response_model=List[Income],
 )

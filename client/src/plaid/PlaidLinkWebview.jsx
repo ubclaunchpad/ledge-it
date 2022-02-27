@@ -1,9 +1,9 @@
 import React, { useRef } from "react";
 import { WebView } from "react-native-webview";
 import queryString from "query-string";
-import { LinkErrorCode, LinkErrorType, LinkExitMetadataStatus } from "./const";
+import { LinkErrorCode, LinkErrorType, LinkExitMetadataStatus } from "./plaidWebviewConfig";
 
-export default function PlaidLink({ linkToken, onEvent, onExit, onSuccess }) {
+export default function PlaidLinkWebview({ linkToken, onEvent, onExit, onSuccess }) {
   let webviewRef = useRef();
 
   const handleNavigationStateChange = (event) => {

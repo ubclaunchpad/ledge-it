@@ -18,3 +18,4 @@ requests==2.26.0
 
 plaid_python==8.8.0
 python-dotenv==0.15.0
+google-cloud-storage == 2.1.0

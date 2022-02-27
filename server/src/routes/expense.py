@@ -21,7 +21,7 @@ router = APIRouter()
 
 
 @router.get(
-    "/expenses/", response_description="Get all expenses", response_model=List[Expense]
+    "/expenses", response_description="Get all expenses", response_model=List[Expense]
 )
 def get_expenses(current_user: User = Depends(get_current_active_user)):
     if (
@@ -73,9 +73,7 @@ def get_expense_by_id(id, current_user: User = Depends(get_current_active_user))
     raise HTTPException(status_code=404, detail=f"Expense with id {id} not found")
 
 
-@router.post(
-    "/expense/", response_description="Add new expense", response_model=Expense
-)
+@router.post("/expense", response_description="Add new expense", response_model=Expense)
 def create_expense(
     expense: AddExpense = Body(...),
     current_user: User = Depends(get_current_active_user),
@@ -143,6 +141,8 @@ def update_expense(
     ) is None:
         raise HTTPException(status_code=404, detail=f"Net worth not found")
 
+    # TODO: handle logic for when the month, year, or category of the expense changes
+    #  and how the budget and category budgets should change
     price_change = expense_to_update["price"] - expense.price
     update_net_worth(
         net_worth_to_update["_id"], price_change, expense.date, True, current_user
@@ -240,7 +240,7 @@ def delete_expense(id, current_user: User = Depends(get_current_active_user)):
 
 
 @router.get(
-    "/expense/limited/",
+    "/expense/limited",
     response_description="Returns limited number of expenses sorted by date",
     response_model=List[Expense],
 )
@@ -292,7 +292,7 @@ def ranged_expenses(
 
 
 @router.get(
-    "/expense/specify/",
+    "/expense/specify",
     response_description="Returns expenses that have the specified value in the specified field name",
     response_model=List[Expense],
 )

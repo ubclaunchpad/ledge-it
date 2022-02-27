@@ -10,7 +10,7 @@ import AnalyticsPage from './src/pages/AnalyticsPage';
 import SettingsPage from './src/pages/SettingsPage';
 import AuthPage from './src/auth/AuthPage';
 import BlankPage from './src/auth/BlankPage';
-import { theme } from './theme';
+import theme from './theme';
 import { getToken } from './src/utils/auth';
 
 const App = () => {
@@ -28,7 +28,7 @@ const App = () => {
   if (loggedIn === true) {
     return (
       <NavigationContainer>
-        <TabNavBar />
+        <TabNavBar setLoggedIn={setLoggedIn} />
       </NavigationContainer>
     );
   } else if (loggedIn === false) {
@@ -44,7 +44,7 @@ const App = () => {
 
 const Tab = createBottomTabNavigator();
 
-const TabNavBar = () => {
+const TabNavBar = ({ setLoggedIn }) => {
   return (
     <Tab.Navigator
       screenOptions={({ route }) => ({
@@ -62,7 +62,7 @@ const TabNavBar = () => {
       <Tab.Screen name="Table" component={TablePage} />
       <Tab.Screen name="Budget" component={BudgetPage} />
       <Tab.Screen name="Analytics" component={AnalyticsPage} />
-      <Tab.Screen name="Settings" component={SettingsPage} />
+      <Tab.Screen name="Settings">{() => <SettingsPage setLoggedIn={setLoggedIn} />}</Tab.Screen>
     </Tab.Navigator>
   );
 };

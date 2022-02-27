@@ -6,7 +6,7 @@ import StyledTextInput from '../components/StyledTextInput';
 import StyledSelect from '../components/StyledSelect';
 import CustomModal from '../components/CustomModal';
 import AmountBox from '../components/AmountBox';
-import { theme } from '../../theme';
+import theme from '../../theme';
 import { formatDateBE, formatDateFE } from '../utils/formatters';
 
 const URL = process.env.SERVER_URL;

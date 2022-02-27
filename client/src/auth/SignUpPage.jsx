@@ -1,24 +1,32 @@
 import React, { useState } from 'react';
-import { View, StyleSheet, Dimensions } from 'react-native';
+import { View, StyleSheet, Dimensions, Text, Platform, KeyboardAvoidingView } from 'react-native';
+import { SvgXml } from 'react-native-svg';
 import axios from '../providers/axios';
 import StyledTextInput from '../components/StyledTextInput';
 import BackArrow from '../components/AuthPage/BackArrow';
-import SignUpButton from '../components/AuthPage/SignUpButton';
 import { login, saveToken } from '../utils/auth';
+import theme from '../../theme';
+import Logo from '../../assets/logo';
+import Gradient from '../../assets/loginPageGradient';
+import FilledButton from '../components/AuthPage/FilledButton';
+import OutlinedButton from '../components/AuthPage/OutlinedButton';
 
 const URL = process.env.SERVER_URL;
 
 const SignUpPage = ({ setPage, setLoggedIn }) => {
-  const [firstName, setFirstName] = useState('');
+  const [form, setForm] = useState(0);
+  const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [firstPassword, setFirstPassword] = useState('');
   const [secondPassword, setSecondPassword] = useState('');
   const [pwdWarn, setPwdWarn] = useState(undefined);
 
+  const isFormOneFilled = () => !!name && !!email;
+
   const submitSignUp = async () => {
     await axios
       .post(
-        `${URL}/signup/`,
+        `${URL}/signup`,
         JSON.stringify({
           email,
           hashed_password: secondPassword,
@@ -49,54 +57,104 @@ const SignUpPage = ({ setPage, setLoggedIn }) => {
 
   return (
     <>
-      <View style={styles.body}>
-        <StyledTextInput
-          label="First Name"
-          value={firstName}
-          placeholder="ex. Gregor"
-          onChange={setFirstName}
-        />
-        <StyledTextInput
-          label="Email"
-          value={email}
-          placeholder="ex. gregork@ubc.ca"
-          onChange={setEmail}
-        />
-        <StyledTextInput
-          label="Create Password"
-          value={firstPassword}
-          onChange={setFirstPassword}
-          secureTextEntry
-        />
-        <StyledTextInput
-          label="Confirm Password"
-          value={secondPassword}
-          onChange={setSecondPassword}
-          errorMsg={pwdWarn}
-          secureTextEntry
-        />
-        <View style={styles.btnContainer}>
-          <SignUpButton onPress={signUpHandler} />
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        style={{
+          backgroundColor: theme.colors.primary,
+          minHeight: Dimensions.get('window').height,
+        }}>
+        <View style={styles.header}>
+          <SvgXml xml={Logo} alt="logo" transform={[{ scaleX: 0.625 }]} />
+          <Text style={styles.headerText}>Welcome</Text>
         </View>
-      </View>
+        <SvgXml
+          xml={Gradient}
+          alt="gradient"
+          width={Dimensions.get('window').width}
+          transform={[{ scaleX: 1.2 }]}
+          style={{
+            marginTop: -50,
+            alignSelf: 'center',
+          }}
+        />
+        <View style={styles.body}>
+          {form === 0 ? (
+            <>
+              <StyledTextInput label="Name" value={name} onChange={setName} isLight />
+              <StyledTextInput label="Email" value={email} onChange={setEmail} isLight />
+            </>
+          ) : (
+            <>
+              <StyledTextInput
+                label="Create Password"
+                value={firstPassword}
+                onChange={setFirstPassword}
+                secureTextEntry
+                isLight
+              />
+              <StyledTextInput
+                label="Confirm Password"
+                value={secondPassword}
+                onChange={setSecondPassword}
+                errorMsg={pwdWarn}
+                secureTextEntry
+                isLight
+              />
+            </>
+          )}
+          <View style={styles.btnContainer}>
+            {form === 0 ? (
+              <>
+                <OutlinedButton
+                  label="Next"
+                  onPress={() => setForm(1)}
+                  disabled={!isFormOneFilled()}
+                />
+              </>
+            ) : (
+              <>
+                <OutlinedButton label="Back" onPress={() => setForm(0)} />
+                <FilledButton label="Create an account" onPress={signUpHandler} />
+              </>
+            )}
+          </View>
+        </View>
+      </KeyboardAvoidingView>
       <BackArrow onPress={() => setPage('startingPage')} />
     </>
   );
 };
 
 const styles = StyleSheet.create({
+  header: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: Dimensions.get('window').width,
+    paddingVertical: 75,
+    borderBottomLeftRadius: Dimensions.get('window').width,
+    borderBottomRightRadius: Dimensions.get('window').width,
+    backgroundColor: theme.colors.greyBackground,
+    transform: [{ scaleX: 1.6 }],
+    zIndex: 20,
+  },
+  headerText: {
+    marginTop: 30,
+    color: theme.colors.textDark,
+    fontSize: 50,
+    transform: [{ scaleX: 0.625 }],
+  },
+
   body: {
     display: 'flex',
     alignSelf: 'center',
     width: Dimensions.get('window').width * 0.8,
-    height: Dimensions.get('window').height * 0.8,
     paddingHorizontal: 10,
-    paddingTop: Dimensions.get('window').height * 0.25,
     justifyContent: 'space-between',
   },
 
   btnContainer: {
-    paddingTop: 40,
+    paddingTop: 50,
     display: 'flex',
     alignSelf: 'center',
   },

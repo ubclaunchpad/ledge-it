@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { StyleSheet, Text, View, Button } from "react-native";
-import TheLink from "./TheLink.js";
+import TheLink from "./TheLink";
 import axios from "axios";
 
 export default function Plaid() {
@@ -9,7 +9,7 @@ export default function Plaid() {
   const [transactions, setTransactions] = useState(false);
   const [linkToggle, setLinkToggle] = useState(false);
 
-  const baseURL = "https://proud-dragonfly-67.loca.lt";
+  const baseURL = process.env.SERVER_URL;
 
   useEffect(() => {
     const getLinkToken = async () => {

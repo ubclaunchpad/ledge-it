@@ -32,4 +32,4 @@ class BaseMongoDBModel(BaseModel):
 
 
 class MongoDBModel(BaseMongoDBModel):
-    email: str
+    email: Optional[str]
