@@ -11,6 +11,7 @@ export default ({ onPress }) => {
       iconSize={50}
       customStyles={styles}
       onTap={onPress}
+      underlayColor={theme.colors.greyBackground}
     />
   );
 };

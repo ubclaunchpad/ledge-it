@@ -10,6 +10,7 @@ export default ({
   required,
   noClear,
   errorMsg,
+  isLight,
   ...rest
 }) => {
   const [value, setValue] = useState(null);
@@ -21,12 +22,22 @@ export default ({
   return (
     <View style={styles.container}>
       <>
-        <Text style={styles.label}>
+        <Text
+          style={[
+            styles.label,
+            { color: isLight ? theme.colors.textLight : theme.colors.primary },
+          ]}>
           {label}
           {required && '*'}
         </Text>
         <TextInput
-          style={styles.text}
+          style={[
+            styles.text,
+            {
+              borderColor: isLight ? theme.colors.greyBackground : theme.colors.primaryDark,
+              color: isLight ? theme.colors.textLight : theme.colors.textDark,
+            },
+          ]}
           onChangeText={updateValue}
           value={value}
           keyboardType={keyboardType}
@@ -51,7 +62,6 @@ const styles = StyleSheet.create({
     display: 'flex',
   },
   label: {
-    color: theme.colors.primary,
     fontSize: 14,
     marginBottom: -15,
     zIndex: 10,
@@ -60,9 +70,7 @@ const styles = StyleSheet.create({
     borderWidth: 0,
     shadowRadius: 0,
     borderBottomWidth: 1,
-    borderColor: theme.colors.primaryDark,
     paddingBottom: 5,
-    color: theme.colors.textDark,
     paddingTop: 20,
   },
   errorText: {
