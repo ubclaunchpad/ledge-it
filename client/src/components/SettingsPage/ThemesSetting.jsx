@@ -2,7 +2,7 @@ import React from 'react';
 import { Dimensions, Pressable, SafeAreaView, StyleSheet, Text, View } from 'react-native';
 import Modal from 'react-native-modal';
 import { LinearGradient } from 'expo-linear-gradient';
-import { theme } from '../../../theme';
+import theme from '../../../theme';
 import StyledButton from '../StyledButton';
 
 const ThemesSetting = ({ state, setState }) => {

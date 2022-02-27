@@ -2,7 +2,7 @@ import React from 'react';
 import { StyleSheet, Pressable, View, Dimensions, ScrollView } from 'react-native';
 import Modal from 'react-native-modal';
 import { Ionicons } from '@expo/vector-icons';
-import { theme } from '../../theme';
+import theme from '../../theme';
 
 const CustomModal = ({ isModalVisible, setModalVisible, children, ...rest }) => {
   return (

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, StyleSheet } from 'react-native';
-import { theme } from '../../theme';
+import theme from '../../theme';
 
 export default ({
   keyboardType,

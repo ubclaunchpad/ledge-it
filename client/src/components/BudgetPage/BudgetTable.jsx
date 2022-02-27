@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { List } from 'react-native-paper';
 import { StyleSheet, ScrollView, SafeAreaView, Text, View, Dimensions } from 'react-native';
-import { theme } from '../../../theme';
+import theme from '../../../theme';
 import BudgetTableComponent from './BudgetTableComponent';
 import BudgetHeader from './BudgetPageHeader';
 

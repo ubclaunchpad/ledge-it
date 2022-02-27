@@ -1,7 +1,7 @@
 import React from 'react';
 import { StyleSheet } from 'react-native';
 import StyledButton from '../StyledButton';
-import { theme } from '../../../theme';
+import theme from '../../../theme';
 
 export default ({ onPress }) => {
   return (

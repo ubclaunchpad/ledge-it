@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { StyleSheet, SafeAreaView, Text, View, Pressable } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import { FontAwesome } from '@expo/vector-icons';
-import { theme } from '../../theme';
+import theme from '../../theme';
 import NotificationSetting from '../components/SettingsPage/NotificationSetting';
 import CategoriesSetting from '../components/SettingsPage/CategoriesSetting';
 import ThemesSetting from '../components/SettingsPage/ThemesSetting';

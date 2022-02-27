@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text, StyleSheet, TouchableHighlight } from 'react-native';
 import { Entypo } from '@expo/vector-icons';
-import { theme } from '../../theme';
+import theme from '../../theme';
 
 export default ({
   label,
@@ -12,6 +12,8 @@ export default ({
   iconColor,
   activeOpacity,
   underlayColor,
+  backgroundStyle,
+  textStyle,
   ...rest
 }) => {
   const styles = customStyles || defaultStyles;
@@ -22,9 +24,10 @@ export default ({
         T
         underlayColor={underlayColor || theme.colors.white}
         onPress={onTap}
+        style={styles.highlightStyle}
         {...rest}>
-        <View style={styles.background}>
-          <Text style={styles.text}>{label}</Text>
+        <View style={backgroundStyle || styles.background}>
+          <Text style={textStyle || styles.text}>{label}</Text>
           {iconName && (
             <Entypo name={iconName} size={iconSize || 20} color={iconColor || theme.colors.white} />
           )}
@@ -50,4 +53,5 @@ const defaultStyles = StyleSheet.create({
     color: theme.colors.textLight,
     fontWeight: 'bold',
   },
+  highlightStyle: {},
 });

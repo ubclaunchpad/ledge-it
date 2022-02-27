@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { StyleSheet, View, Text, Pressable } from 'react-native';
 import ScrollPicker from 'react-native-wheel-scrollview-picker';
 import CustomModal from '../CustomModal';
-import { theme } from '../../../theme';
+import theme from '../../../theme';
 
 const CurrencyPicker = ({ state, setState, setSelectedCurrency }) => {
   const [currentCurrency, setCurrentCurrency] = useState('CAD');

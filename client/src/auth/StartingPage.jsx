@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text, StyleSheet, Dimensions } from 'react-native';
 import { SvgXml } from 'react-native-svg';
-import { theme } from '../../theme';
+import theme from '../../theme';
 import Logo from '../../assets/logo';
 import Graph from '../../assets/graph';
 import FilledButton from '../components/AuthPage/FilledButton';
