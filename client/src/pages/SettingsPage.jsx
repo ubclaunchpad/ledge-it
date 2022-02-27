@@ -81,7 +81,7 @@ const SettingsPage = ({ setLoggedIn }) => {
       <ScrollView style={styles.content}>
         {setSettingOptions(state, setState, selectedCurrency, setSelectedCurrency).map((item) => {
           return (
-            <>
+            <View key={item.name}>
               <Pressable key={item.index} onPress={item.activate}>
                 <View style={styles.setSettingOptions}>
                   <Text style={styles.optionText}>{item.name}</Text>
@@ -89,7 +89,7 @@ const SettingsPage = ({ setLoggedIn }) => {
                 </View>
               </Pressable>
               {item.overlayContent}
-            </>
+            </View>
           );
         })}
         <View style={styles.setSettingOptions}>

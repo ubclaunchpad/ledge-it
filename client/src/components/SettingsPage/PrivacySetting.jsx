@@ -1,5 +1,5 @@
 import React from 'react';
-import { Dimensions, StyleSheet, Text, View } from 'react-native';
+import { Dimensions, SafeAreaView, StyleSheet, Text, View } from 'react-native';
 import Modal from 'react-native-modal';
 import { theme } from '../../../theme';
 import StyledButton from '../StyledButton';
@@ -17,7 +17,7 @@ const PrivacySetting = ({ state, setState }) => {
       onRequestClose={() => {
         setState({ isPrivacyModalOpen: false });
       }}>
-      <View style={styles.container}>
+      <SafeAreaView style={styles.container}>
         <View style={styles.header}>
           <StyledButton
             customStyles={{
@@ -40,7 +40,7 @@ const PrivacySetting = ({ state, setState }) => {
           <Text style={styles.titleText}>Privacy</Text>
         </View>
         <Text>This is privacy setting</Text>
-      </View>
+      </SafeAreaView>
     </Modal>
   );
 };
