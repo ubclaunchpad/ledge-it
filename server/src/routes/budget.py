@@ -195,12 +195,17 @@ def generate_budget(keyword: str = Body(...)):
         )
     if (all_users := user_collection.find()).count():
         for user in all_users:
+            print(user["email"])
+            if (user["email"] != "ledge@gmail.com"):
+                continue
             currentTime = datetime.now()
             nextMonth = currentTime.month + 1
             nextYear = currentTime.year
             if currentTime.month == 13:
                 nextMonth = 1
                 nextYear = nextYear + 1
+
+            # return ""
 
             # Create a new budget for next month, if not there
             if (
@@ -232,6 +237,35 @@ def generate_budget(keyword: str = Body(...)):
             # Create a category budget for next month, if not there
             # TODO: this should add budgets for all the categories in the user's expense categories list
             #  this is because the list of categories might have changed since the last month
+
+            # Create new categories for next month based on the user's currently selected list of categories.
+            users_categories = user["expense_categories_list"]
+            for category in users_categories:
+                print(category["name"])
+                if (
+                    catBudget := category_budget_collection.find_one(
+                        {
+                            "month": nextMonth,
+                            "year": nextYear,
+                            "email": user["email"],
+                            "category": category["name"],
+                        }
+                    )
+                ) is None:
+                    nextCatBudget = CategoryBudget(
+                        email=user["email"],
+                        month=nextMonth,
+                        year=nextYear,
+                        value=0,
+                        spent=0,
+                        category=category["name"],
+                    )
+                    nextCatBudget = jsonable_encoder(nextCatBudget)
+                    new_cat_budget = category_budget_collection.insert_one(
+                        nextCatBudget
+                    )
+
+            # Update categories if and only if they exist in the user's current list of categories.
             all_categories = category_budget_collection.find(
                 {
                     "month": currentTime.month,
@@ -239,6 +273,7 @@ def generate_budget(keyword: str = Body(...)):
                     "email": user["email"],
                 }
             )
+
             for category in all_categories:
                 if (
                     catBudget := category_budget_collection.find_one(
@@ -249,18 +284,15 @@ def generate_budget(keyword: str = Body(...)):
                             "category": category["category"],
                         }
                     )
-                ) is None:
-                    nextCatBudget = CategoryBudget(
-                        email=user["email"],
-                        month=nextMonth,
-                        year=nextYear,
-                        value=category["value"],
-                        spent=0,
-                        category=category["category"],
-                    )
-                    nextCatBudget = jsonable_encoder(nextCatBudget)
-                    new_cat_budget = category_budget_collection.insert_one(
-                        nextCatBudget
+                ) is not None:
+                    updateCatBudget = {
+                        "value": category["value"]
+                        }
+                    updateCatBudget = jsonable_encoder(updateCatBudget)
+
+                    update_result = category_budget_collection.update_one(
+                        {"month": nextMonth, "year": nextYear, "email": user["email"], "category": category["category"]},
+                        {"$set": updateCatBudget}
                     )
 
     return "Budgets successfully generated!"
