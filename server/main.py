@@ -9,7 +9,7 @@ from src.routes import (
     net_worth,
     category,
     plaid,
-    image_to_s3,
+    # image_to_s3,
 )
 
 # Note: the server runs on http://127.0.0.1:8000
@@ -25,7 +25,7 @@ app.include_router(signup.router)
 app.include_router(login.router)
 app.include_router(category.router)
 app.include_router(plaid.router)
-app.include_router(image_to_s3.router)
+# app.include_router(image_to_s3.router)
 
 
 @app.get("/")

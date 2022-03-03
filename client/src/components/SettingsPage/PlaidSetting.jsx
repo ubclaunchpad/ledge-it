@@ -3,7 +3,7 @@ import { Dimensions, SafeAreaView, StyleSheet, Text, View } from 'react-native';
 import Modal from 'react-native-modal';
 import theme from '../../../theme';
 import StyledButton from '../StyledButton';
-import Plaid from "../../plaid/Plaid";
+import Plaid from '../../plaid/Plaid';
 
 export default function PlaidSetting({ state, setState }) {
   return (

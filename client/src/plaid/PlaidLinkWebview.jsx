@@ -1,14 +1,14 @@
-import React, { useRef } from "react";
-import { WebView } from "react-native-webview";
-import queryString from "query-string";
-import { LinkErrorCode, LinkErrorType, LinkExitMetadataStatus } from "./plaidWebviewConfig";
+import React, { useRef } from 'react';
+import { WebView } from 'react-native-webview';
+import queryString from 'query-string';
+import { LinkErrorCode, LinkErrorType, LinkExitMetadataStatus } from './plaidWebviewConfig';
 
 export default function PlaidLinkWebview({ linkToken, onEvent, onExit, onSuccess }) {
   let webviewRef = useRef();
 
   const handleNavigationStateChange = (event) => {
-    if (event.url.startsWith("plaidlink://")) {
-      const eventParams = queryString.parse(event.url.replace(/.*\?/, ""));
+    if (event.url.startsWith('plaidlink://')) {
+      const eventParams = queryString.parse(event.url.replace(/.*\?/, ''));
 
       const linkSessionId = eventParams.link_session_id;
       const mfaType = eventParams.mfa_type;
@@ -21,9 +21,9 @@ export default function PlaidLinkWebview({ linkToken, onEvent, onExit, onSuccess
       const institutionId = eventParams.institution_id;
       const institutionName = eventParams.institution_name;
       const institutionSearchQuery = eventParams.institution_search_query;
-      const timestamp = eventParams.timestamp;
+      const { timestamp } = eventParams;
 
-      if (event.url.startsWith("plaidlink://event") && onEvent) {
+      if (event.url.startsWith('plaidlink://event') && onEvent) {
         onEvent({
           eventName: eventParams.event_name,
           metadata: {
@@ -41,7 +41,7 @@ export default function PlaidLinkWebview({ linkToken, onEvent, onExit, onSuccess
             timestamp,
           },
         });
-      } else if (event.url.startsWith("plaidlink://exit") && onExit) {
+      } else if (event.url.startsWith('plaidlink://exit') && onExit) {
         onExit({
           error: {
             errorCode: LinkErrorCode[errorCode],
@@ -58,7 +58,7 @@ export default function PlaidLinkWebview({ linkToken, onEvent, onExit, onSuccess
             requestId,
           },
         });
-      } else if (event.url.startsWith("plaidlink://connected") && onSuccess) {
+      } else if (event.url.startsWith('plaidlink://connected') && onSuccess) {
         const publicToken = eventParams.public_token;
         const accounts = JSON.parse(eventParams.accounts);
         onSuccess({
@@ -85,7 +85,7 @@ export default function PlaidLinkWebview({ linkToken, onEvent, onExit, onSuccess
       }}
       ref={(ref) => (webviewRef = ref)}
       onError={() => webviewRef.reload()}
-      originWhitelist={["https://*", "plaidlink://*"]}
+      originWhitelist={['https://*', 'plaidlink://*']}
       onShouldStartLoadWithRequest={handleNavigationStateChange}
     />
   );

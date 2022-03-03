@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from "react";
-import { StyleSheet, Text, View, Button } from "react-native";
-import TheLink from "./TheLink";
-import axios from "axios";
+import React, { useState, useEffect } from 'react';
+import { StyleSheet, Text, View, Button } from 'react-native';
+import axios from 'axios';
+import TheLink from './TheLink';
 
 export default function Plaid() {
   const [linkToken, setLinkToken] = useState(false);
@@ -13,16 +13,16 @@ export default function Plaid() {
 
   useEffect(() => {
     const getLinkToken = async () => {
-      const response = await axios.post(baseURL + "/api/create_link_token");
+      const response = await axios.post(`${baseURL}/api/create_link_token`);
       setLinkToken(response.data.link_token);
     };
 
     getLinkToken();
-  }, []);
+  }, [baseURL]);
 
   // Sets transactions with current access token
   const fetchTransactions = async () => {
-    const response = await axios.get(baseURL + "/api/transactions", {
+    const response = await axios.get(`${baseURL}/api/transactions`, {
       access_token: accessToken,
     });
     setTransactions(response.data.transactions);
@@ -53,11 +53,7 @@ export default function Plaid() {
         </View>
       )}
       {linkToken && !accessToken && linkToggle && (
-        <TheLink
-          linkToken={linkToken}
-          setAccessToken={setAccessToken}
-          baseURL={baseURL}
-        />
+        <TheLink linkToken={linkToken} setAccessToken={setAccessToken} baseURL={baseURL} />
       )}
     </>
   );
@@ -66,9 +62,9 @@ export default function Plaid() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
-    alignItems: "center",
-    justifyContent: "center",
+    backgroundColor: '#fff',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   button: {
     height: 100,
@@ -76,7 +72,7 @@ const styles = StyleSheet.create({
     marginTop: 40,
   },
   transactionView: {
-    justifyContent: "center",
+    justifyContent: 'center',
     marginHorizontal: 20,
   },
   singleTransaction: {

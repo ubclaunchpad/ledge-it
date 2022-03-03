@@ -1,12 +1,12 @@
-import React from "react";
-import PlaidLinkWebview from "./PlaidLinkWebview.jsx";
-import axios from "axios";
-import { Text } from "react-native";
+import React from 'react';
+import axios from 'axios';
+import { Text } from 'react-native';
+import PlaidLinkWebview from './PlaidLinkWebview';
 
 export default function TheLink({ linkToken, setAccessToken, baseURL }) {
   // Exchanges public token to api access token
   const exchangePublicToken = async (publicToken) => {
-    const response = await axios.post(baseURL + "/api/set_access_token", {
+    const response = await axios.post(`${baseURL}/api/set_access_token`, {
       public_token: publicToken,
     });
     setAccessToken(response.data.access_token);
@@ -20,8 +20,7 @@ export default function TheLink({ linkToken, setAccessToken, baseURL }) {
       onSuccess={(success) => {
         console.log(`Public Token: ${success.publicToken}`);
         exchangePublicToken(success.publicToken);
-      }}
-    >
+      }}>
       <Text>Open up App.js to start working on your app!</Text>
     </PlaidLinkWebview>
   );
