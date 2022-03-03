@@ -196,7 +196,7 @@ def generate_budget(keyword: str = Body(...)):
     if (all_users := user_collection.find()).count():
         for user in all_users:
             print(user["email"])
-            if (user["email"] != "ledge@gmail.com"):
+            if user["email"] != "ledge@gmail.com":
                 continue
             currentTime = datetime.now()
             nextMonth = currentTime.month + 1
@@ -285,14 +285,17 @@ def generate_budget(keyword: str = Body(...)):
                         }
                     )
                 ) is not None:
-                    updateCatBudget = {
-                        "value": category["value"]
-                        }
+                    updateCatBudget = {"value": category["value"]}
                     updateCatBudget = jsonable_encoder(updateCatBudget)
 
                     update_result = category_budget_collection.update_one(
-                        {"month": nextMonth, "year": nextYear, "email": user["email"], "category": category["category"]},
-                        {"$set": updateCatBudget}
+                        {
+                            "month": nextMonth,
+                            "year": nextYear,
+                            "email": user["email"],
+                            "category": category["category"],
+                        },
+                        {"$set": updateCatBudget},
                     )
 
     return "Budgets successfully generated!"
