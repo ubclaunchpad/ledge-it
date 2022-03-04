@@ -19,7 +19,7 @@ router = APIRouter()
 
 
 @router.get(
-    "/incomes", response_description="Get all expenses", response_model=List[Income]
+    "/incomes", response_description="Get all incomes", response_model=List[Income]
 )
 def get_incomes(current_user: User = Depends(get_current_active_user)):
     if (

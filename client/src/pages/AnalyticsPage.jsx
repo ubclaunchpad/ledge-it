@@ -8,9 +8,7 @@ const AnalyticsPage = () => {
 
   return (
     <View>
-      <CalenderPageHeader month={month} year={year} setMonth={setMonth} />
-      <Text>Analytics Page</Text>
-      <Text>This is the data visualization page</Text>
+      <CalenderPageHeader month={month} setMonth={setMonth} year={year} />
     </View>
   );
 };

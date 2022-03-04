@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import { Text, View, StyleSheet, Pressable } from 'react-native';
 import DropDownPicker from 'react-native-dropdown-picker';
-import StyledButton from '../../StyledButton';
+import axios from 'axios';
 import { theme } from '../../../../theme';
+
+const URL = process.env.SERVER_URL;
 
 const months = [
   { label: 'January', value: 1 },
@@ -19,10 +21,36 @@ const months = [
   { label: 'December', value: 12 },
 ];
 
-const CalenderPageHeader = ({ month, setMonth }) => {
+const CalenderPageHeader = ({ month, setMonth, year }) => {
+  // const [monthOverviewData, setMonthOverviewData] = useState([]);
   const [monthDropdownVisible, setMonthDropdownVisible] = useState(false);
   const [expenseScreenVisible, setExpenseScreenVisible] = useState(true); // use this to show correct calendar
   const dropdownTextStyle = monthDropdownVisible ? styles.placeholder : styles.text;
+
+  const getMonthOverview = () => {
+    const d = new Date();
+    const start_time = new Date(d.getFullYear(), d.getMonth(), 1);
+    const end_time = new Date(d.getFullYear(), d.getMonth() + 1, 0);
+    let income, expense;
+    axios
+      .get(`${URL}/income/ranged/${start_time}/${end_time}`, {})
+      .then((res) => {
+        income = res.reduce((acc, item) => {
+          return acc + item.amount;
+        }, 0);
+      })
+      .catch((e) => console.log(e));
+    axios
+      .get(`${URL}/expense/ranged/${start_time}/${end_time}`, {})
+      .then((res) => {
+        expense = res.reduce((acc, item) => {
+          return acc + item.amount;
+        }, 0);
+      })
+      .catch((e) => console.log(e));
+
+    return income + expense;
+  };
 
   return (
     <View style={styles.headerBackground}>
@@ -50,11 +78,7 @@ const CalenderPageHeader = ({ month, setMonth }) => {
             { backgroundColor: expenseScreenVisible ? theme.colors.white : theme.colors.primary },
           ]}
           onPress={() => setExpenseScreenVisible(true)}>
-          <Text
-            style={() => [
-              screenButton.text,
-              { color: expenseScreenVisible ? theme.colors.primary : theme.colors.white },
-            ]}>
+          <Text style={expenseScreenVisible ? screenButton.focusedText : screenButton.text}>
             Expenses
           </Text>
         </Pressable>
@@ -64,16 +88,12 @@ const CalenderPageHeader = ({ month, setMonth }) => {
             { backgroundColor: expenseScreenVisible ? theme.colors.primary : theme.colors.white },
           ]}
           onPress={() => setExpenseScreenVisible(false)}>
-          <Text
-            style={() => [
-              screenButton.text,
-              { color: expenseScreenVisible ? theme.colors.white : theme.colors.primary },
-            ]}>
+          <Text style={expenseScreenVisible ? screenButton.text : screenButton.focusedText}>
             Incomes
           </Text>
         </Pressable>
       </View>
-      <Text>$-1023.00</Text>
+      <Text style={styles.overViewText}>${getMonthOverview}</Text>
     </View>
   );
 };
@@ -96,9 +116,9 @@ const styles = StyleSheet.create({
   },
   choiceSelect: {
     alignSelf: 'center',
-    marginTop: 20,
+    marginTop: 10,
     paddingVertical: 30,
-    paddingHorizontal: 20,
+    paddingHorizontal: 10,
     backgroundColor: theme.colors.white,
     borderWidth: 2,
     borderColor: theme.colors.primaryDark,
@@ -118,7 +138,7 @@ const styles = StyleSheet.create({
     borderTopWidth: 0,
     paddingHorizontal: 10,
     paddingBottom: 10,
-    marginTop: -20,
+    marginTop: -30,
     marginBottom: 100,
   },
   container: {
@@ -131,20 +151,34 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
   },
+  overViewText: {
+    fontSize: 24,
+    fontWeight: '300',
+    color: theme.colors.white,
+    textAlign: 'center',
+    marginTop: -5,
+  },
 });
 
 const screenButton = StyleSheet.create({
   background: {
-    padding: 10,
     paddingHorizontal: 10,
+    paddingVertical: 5,
     display: 'flex',
     alignItems: 'center',
     marginHorizontal: 5,
+    marginTop: 5,
     borderRadius: 20,
   },
   text: {
     fontSize: 18,
     paddingHorizontal: 10,
+    color: theme.colors.white,
+  },
+  focusedText: {
+    fontSize: 18,
+    paddingHorizontal: 10,
+    color: theme.colors.primary,
   },
 });
 
