@@ -300,9 +300,9 @@ def generate_budget(keyword: str = Body(...)):
             # Calculate additional amount that needs to be spread evenly to all categories
             additionalBudget = 0
             if 0 < nextMonthCategories < len(users_categories):
-                additionalBudget = (
-                    nextMonthBudget - nextMonthAllocated
-                ) / (len(users_categories) - nextMonthCategories)
+                additionalBudget = (nextMonthBudget - nextMonthAllocated) / (
+                    len(users_categories) - nextMonthCategories
+                )
 
             if additionalBudget <= 0:
                 return "Budgets successfully generated!"
