@@ -2,7 +2,7 @@ import React from 'react';
 import { List } from 'react-native-paper';
 import { StyleSheet, Text, View } from 'react-native';
 import { MONTHS } from '../../utils/constants';
-import { theme } from '../../../theme';
+import theme from '../../../theme';
 
 const BudgetTableComponent = ({ budget, isVisible, setVisible, setMonth, setYear }) => {
   return (

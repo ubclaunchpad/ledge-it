@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, ScrollView, SafeAreaView, Text, View, Dimensions } from 'react-native';
 import BudgetDetailsTableComponent from './BudgetDetailsTableComponent';
-import { theme } from '../../../theme';
+import theme from '../../../theme';
 
 const BudgetDetailsTable = ({ renderList }) => {
   const [splitList, setSplitList] = useState([]);

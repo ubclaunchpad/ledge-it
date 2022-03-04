@@ -4,7 +4,7 @@ import { VictoryPie, VictoryLabel } from 'victory-native';
 import { useFocusEffect } from '@react-navigation/native';
 import axios from '../../providers/axios';
 import { MONTHS } from '../../utils/constants';
-import { theme } from '../../../theme';
+import theme from '../../../theme';
 import { formatNumber } from '../../utils/formatters';
 
 const URL = process.env.SERVER_URL;

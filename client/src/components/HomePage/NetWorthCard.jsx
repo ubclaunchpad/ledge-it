@@ -4,7 +4,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { faChevronDown, faChevronUp } from '@fortawesome/free-solid-svg-icons';
 import { useFocusEffect } from '@react-navigation/native';
 import axios from '../../providers/axios';
-import { theme } from '../../../theme';
+import theme from '../../../theme';
 import { formatNumber } from '../../utils/formatters';
 
 // TODO: remove this once user support is added

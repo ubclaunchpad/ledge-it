@@ -2,41 +2,34 @@ import React, { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { FAB, Button } from 'react-native-paper';
 import Modal from './CustomModal';
-import ExpenseForm from '../modals/ExpenseForm';
-import IncomeForm from '../modals/IncomeForm';
-import { theme } from '../../theme';
+import theme from '../../theme';
+import AddData from '../modals/AddData';
 
 const DefaultActionButton = () => {
   const [isModalVisible, setModalVisible] = useState(false);
-  const [isIncomeModalVisible, setIncomeModalVisible] = useState(false);
-  const [isExpenseModalVisible, setExpenseModalVisible] = useState(false);
+  const [isAddDataModalVisible, setAddDataModalVisible] = useState('');
   return (
     <View style={styles.centeredView}>
       <Modal isModalVisible={isModalVisible} setModalVisible={setModalVisible}>
-        <Modal isModalVisible={isIncomeModalVisible} setModalVisible={setIncomeModalVisible}>
-          <IncomeForm
+        <Modal isModalVisible={!!isAddDataModalVisible} setModalVisible={setAddDataModalVisible}>
+          <AddData
             setModalVisible={setModalVisible}
-            setIncomeModalVisible={setIncomeModalVisible}
-          />
-        </Modal>
-        <Modal isModalVisible={isExpenseModalVisible} setModalVisible={setExpenseModalVisible}>
-          <ExpenseForm
-            setModalVisible={setModalVisible}
-            setExpenseModalVisible={setExpenseModalVisible}
+            setAddDataModalVisible={setAddDataModalVisible}
+            initialType={isAddDataModalVisible}
           />
         </Modal>
         <Button
           style={styles.button}
           icon="currency-usd"
           mode="contained"
-          onPress={() => setIncomeModalVisible(true)}>
+          onPress={() => setAddDataModalVisible('Income')}>
           Add Income
         </Button>
         <Button
           style={styles.button}
           icon="currency-usd-off"
           mode="contained"
-          onPress={() => setExpenseModalVisible(true)}>
+          onPress={() => setAddDataModalVisible('Expense')}>
           Add Expense
         </Button>
       </Modal>

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { View, StyleSheet } from 'react-native';
 import { Button, Menu, Provider } from 'react-native-paper';
-import { theme } from '../../../theme';
+import theme from '../../../theme';
 
 const RNPMenu = () => {
   const [visible, setVisible] = useState(false);
