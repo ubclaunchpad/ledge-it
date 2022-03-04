@@ -291,7 +291,7 @@ def generate_budget(keyword: str = Body(...)):
                 ) is not None:
                     updateCatBudget = {"value": category["value"]}
                     updateCatBudget = jsonable_encoder(updateCatBudget)
-                    
+
                     nextMonthAllocated = nextMonthAllocated + category["value"]
                     nextMonthCategories += 1
 
@@ -307,12 +307,13 @@ def generate_budget(keyword: str = Body(...)):
 
             # Calculate additional amount that needs to be spread evenly to all categories
             additionalBudget = 0
-            if (nextMonthCategories > 0):
-                additionalBudget = (nextMonthBudget - nextMonthAllocated) / nextMonthCategories
+            if nextMonthCategories > 0:
+                additionalBudget = (
+                    nextMonthBudget - nextMonthAllocated
+                ) / nextMonthCategories
 
-            if (additionalBudget <= 0):
+            if additionalBudget <= 0:
                 return "Budgets successfully generated!"
-
 
             all_categories = category_budget_collection.find(
                 {
