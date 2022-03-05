@@ -24,9 +24,9 @@ export default ({
         T
         underlayColor={underlayColor || theme.colors.white}
         onPress={onTap}
-        style={styles.highlightStyle}
+        style={backgroundStyle || styles.background}
         {...rest}>
-        <View style={backgroundStyle || styles.background}>
+        <View>
           <Text style={textStyle || styles.text}>{label}</Text>
           {iconName && (
             <Entypo name={iconName} size={iconSize || 20} color={iconColor || theme.colors.white} />
