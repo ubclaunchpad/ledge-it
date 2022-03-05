@@ -1,12 +1,11 @@
 import React, { useState } from 'react';
-import { StyleSheet, View, Text, Button } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import axios from '../providers/axios';
 import AmountBox from '../components/AmountBox';
 import StyledTextInput from '../components/StyledTextInput';
 import StyledButton from '../components/StyledButton';
 import StyledSelect from '../components/StyledSelect';
 import { formatDateBE } from '../utils/formatters';
-import theme from '../../theme';
 import ToggleButtons from '../components/ToggleButtons';
 
 const URL = process.env.SERVER_URL;

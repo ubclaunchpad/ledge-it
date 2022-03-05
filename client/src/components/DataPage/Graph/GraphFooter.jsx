@@ -1,73 +1,81 @@
-import React from "react";
-import { View, StyleSheet, Dimensions } from "react-native";
-import StyledButton from "../../StyledButton";
-import theme from "../../../../theme";
+import React from 'react';
+import { View, StyleSheet, Dimensions } from 'react-native';
+import StyledButton from '../../StyledButton';
+import theme from '../../../../theme';
 
-const GraphFooter = ({viewing, setViewing, categories, selectedCategories, setSelectedCategories, allSelected, setAllSelected}) => {
-
+const GraphFooter = ({
+  viewing,
+  setViewing,
+  categories,
+  selectedCategories,
+  setSelectedCategories,
+  allSelected,
+  setAllSelected,
+}) => {
   return (
-    <View
-      style={styles.container}>
-      <View
-        style={styles.topRow}>
+    <View style={styles.container}>
+      <View style={styles.topRow}>
         <StyledButton
           customStyles={viewing === 'Expenses' ? buttonSelectedStyle : buttonUnselectedStyle}
-          label='Expenses'
+          label="Expenses"
           onTap={() => {
             if (viewing !== 'Expenses') {
               setViewing('Expenses');
               setSelectedCategories([]);
               setAllSelected(true);
             }
-          }}/>
+          }}
+        />
         <StyledButton
           customStyles={viewing === 'Income' ? buttonSelectedStyle : buttonUnselectedStyle}
-          label='Income'
+          label="Income"
           onTap={() => {
             if (viewing !== 'Income') {
               setViewing('Income');
               setSelectedCategories([]);
               setAllSelected(true);
             }
-          }}/>
+          }}
+        />
       </View>
-      <View
-        style={styles.categorySelectionArea}>
-          <StyledButton
-            key={'all'}
-            label='All'
-            customStyles={allSelected ? buttonSelectedStyle : buttonUnselectedStyle}
-            onTap={() => {
-              setSelectedCategories([]);
-              setAllSelected(true);
-            }}
-          />
-        {Array.isArray(categories) && 
-        categories.map(categoryName => {
-          const categoryIsSelected = Array.isArray(selectedCategories) ? selectedCategories.includes(categoryName) : false; 
-          const btnStyle = categoryIsSelected ? buttonSelectedStyle : buttonUnselectedStyle; 
-          return (
-            <StyledButton
-              key={categoryName}
-              label={categoryName}
-              customStyles={btnStyle}
-              onTap={() => {
-                if (allSelected) {
-                  setAllSelected(false);
-                }
-                if (categoryIsSelected) {
-                  setSelectedCategories(selectedCategories.filter(c => c!== categoryName));
-                } else {
-                  setSelectedCategories(selectedCategories.concat(categoryName));
-                }
-              }}
-            />
-          );
-        })}
+      <View style={styles.categorySelectionArea}>
+        <StyledButton
+          key="all"
+          label="All"
+          customStyles={allSelected ? buttonSelectedStyle : buttonUnselectedStyle}
+          onTap={() => {
+            setSelectedCategories([]);
+            setAllSelected(true);
+          }}
+        />
+        {Array.isArray(categories) &&
+          categories.map((categoryName) => {
+            const categoryIsSelected = Array.isArray(selectedCategories)
+              ? selectedCategories.includes(categoryName)
+              : false;
+            const btnStyle = categoryIsSelected ? buttonSelectedStyle : buttonUnselectedStyle;
+            return (
+              <StyledButton
+                key={categoryName}
+                label={categoryName}
+                customStyles={btnStyle}
+                onTap={() => {
+                  if (allSelected) {
+                    setAllSelected(false);
+                  }
+                  if (categoryIsSelected) {
+                    setSelectedCategories(selectedCategories.filter((c) => c !== categoryName));
+                  } else {
+                    setSelectedCategories(selectedCategories.concat(categoryName));
+                  }
+                }}
+              />
+            );
+          })}
       </View>
     </View>
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {
@@ -90,7 +98,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignContent: 'flex-start',
     flexWrap: 'wrap',
-  }
+  },
 });
 
 const buttonSelectedStyle = StyleSheet.create({

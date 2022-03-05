@@ -1,8 +1,17 @@
 import React, { useState } from 'react';
 import { Text, View } from 'react-native';
-import GraphFooter from '../components/DataPage/Graph/GraphFooter'; 
+import GraphFooter from '../components/DataPage/Graph/GraphFooter';
 
-const exampleExpenseCategories = ['Food', 'Housing', 'Tuition', 'Misc', 'Gifts', 'Technology', 'Clothing', 'Transit'];
+const exampleExpenseCategories = [
+  'Food',
+  'Housing',
+  'Tuition',
+  'Misc',
+  'Gifts',
+  'Technology',
+  'Clothing',
+  'Transit',
+];
 const exampleIncomeCategories = ['Work', 'Transfer', 'Gifts'];
 
 const AnalyticsPage = () => {
@@ -10,13 +19,13 @@ const AnalyticsPage = () => {
   const [allSelected, setAllSelected] = useState(true);
   const [viewing, setViewing] = useState('Expenses');
 
-  const showState = ()  => {
+  const showState = () => {
     if (allSelected) {
       return `\n\nAll ${viewing} categories are selected`;
     } else {
-      return `\n\n${viewing} categories: ` + selectedCategories.join(', ') + ' are selected';
+      return `\n\n${viewing} categories: ${selectedCategories.join(', ')} are selected`;
     }
-  }
+  };
 
   return (
     <View>
@@ -30,7 +39,8 @@ const AnalyticsPage = () => {
         allSelected={allSelected}
         setAllSelected={setAllSelected}
         viewing={viewing}
-        setViewing={setViewing}/>
+        setViewing={setViewing}
+      />
     </View>
   );
 };
