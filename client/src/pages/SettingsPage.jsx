@@ -9,6 +9,7 @@ import ThemesSetting from '../components/SettingsPage/ThemesSetting';
 import PrivacySetting from '../components/SettingsPage/PrivacySetting';
 import HelpPage from '../components/SettingsPage/HelpPage';
 import CurrencyPicker from '../components/SettingsPage/CurrencyPicker';
+import PlaidSetting from '../components/SettingsPage/PlaidSetting';
 import { logout } from '../utils/auth';
 
 const setSettingOptions = (state, setState, selectedCurrency, setSelectedCurrency) => {
@@ -48,6 +49,12 @@ const setSettingOptions = (state, setState, selectedCurrency, setSelectedCurrenc
       overlayContent: <ThemesSetting state={state} setState={setState} />,
     },
     {
+      name: 'Plaid',
+      activateBy: <FontAwesome name="chevron-right" size={24} color={theme.colors.primary} />,
+      activate: () => setState({ isPlaidModalOpen: true }),
+      overlayContent: <PlaidSetting state={state} setState={setState} />,
+    },
+    {
       name: 'Privacy & Security',
       activateBy: <FontAwesome name="chevron-right" size={24} color={theme.colors.primary} />,
       activate: () => setState({ isPrivacyModalOpen: true }),
@@ -70,6 +77,7 @@ const SettingsPage = ({ setLoggedIn }) => {
     isThemesModalOpen: false,
     isPrivacyModalOpen: false,
     isHelpModalOpen: false,
+    isPlaidModalOpen: false,
   });
   const [selectedCurrency, setSelectedCurrency] = useState('CAD');
 
