@@ -1,13 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, Text, View, Button } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
 import axios from 'axios';
 import TheLink from './TheLink';
+import StyledButton from '../components/StyledButton';
+import theme from '../../theme';
 
 export default function Plaid() {
   const [linkToken, setLinkToken] = useState(false);
   const [accessToken, setAccessToken] = useState(false);
-  const [transactions, setTransactions] = useState(false);
   const [linkToggle, setLinkToggle] = useState(false);
+  const [loading, setLoading] = useState(undefined);
 
   const baseURL = process.env.SERVER_URL;
 
@@ -16,40 +18,87 @@ export default function Plaid() {
       const response = await axios.post(`${baseURL}/api/create_link_token`);
       setLinkToken(response.data.link_token);
     };
-
     getLinkToken();
+  }, [baseURL]);
+
+  useEffect(() => {
+    const fetchAccessToken = async () => {
+      const response = await axios.get(`${baseURL}/api/access_token`);
+      console.log(response.data);
+      if (response.data.access_token) {
+        setAccessToken(response.data.access_token);
+      }
+    };
+    fetchAccessToken();
   }, [baseURL]);
 
   // Sets transactions with current access token
   const fetchTransactions = async () => {
-    const response = await axios.get(`${baseURL}/api/transactions`, {
+    setLoading(true);
+    await axios.get(`${baseURL}/api/transactions`, {
       access_token: accessToken,
+      params: {
+        access_token: accessToken,
+      },
     });
-    setTransactions(response.data.transactions);
+    setLoading(false);
   };
 
   return (
     <>
       {accessToken && (
-        <View style={styles.button}>
-          <Button onPress={fetchTransactions} title="Fetch Transactions" />
-        </View>
+        <>
+          <View style={styles.textView}>
+            <Text style={styles.text}>
+              Your bank account has successfully been linked. Fetch your latest transactions by
+              clicking the button below.
+            </Text>
+          </View>
+          <View style={styles.button}>
+            <StyledButton
+              onPress={fetchTransactions}
+              label="Fetch Transactions"
+              customStyles={{
+                background: {
+                  backgroundColor: theme.colors.primary,
+                  padding: 10,
+                  borderRadius: 20,
+                },
+                text: {
+                  fontSize: 18,
+                  color: theme.colors.white,
+                },
+              }}
+            />
+          </View>
+          <View style={styles.textViewSmall}>
+            {loading ? (
+              <Text style={styles.textSmall}>Loading...</Text>
+            ) : loading === false ? (
+              <Text style={styles.textSmall}>Your transactions have successfully been fetched</Text>
+            ) : (
+              <></>
+            )}
+          </View>
+        </>
       )}
-      {!linkToggle && (
+      {!linkToggle && !accessToken && (
         <View style={styles.button}>
-          <Button onPress={() => setLinkToggle(true)} title="Link With Plaid" />
-        </View>
-      )}
-      {transactions && (
-        <View style={styles.transactionView}>
-          {transactions.map((transaction, index) => {
-            return (
-              <View key={index} style={styles.singleTransaction}>
-                <Text>Name: {transaction.name}</Text>
-                <Text>Amount: ${transaction.amount.toFixed(2)}</Text>
-              </View>
-            );
-          })}
+          <StyledButton
+            onPress={() => setLinkToggle(true)}
+            label="Link With Plaid"
+            customStyles={{
+              background: {
+                backgroundColor: theme.colors.primary,
+                padding: 10,
+                borderRadius: 20,
+              },
+              text: {
+                fontSize: 18,
+                color: theme.colors.white,
+              },
+            }}
+          />
         </View>
       )}
       {linkToken && !accessToken && linkToggle && (
@@ -77,5 +126,28 @@ const styles = StyleSheet.create({
   },
   singleTransaction: {
     padding: 10,
+  },
+  text: {
+    fontSize: 20,
+    textAlign: 'center',
+    color: theme.colors.white,
+  },
+  textView: {
+    display: 'flex',
+    width: '80%',
+    padding: 10,
+    borderRadius: 10,
+    backgroundColor: theme.colors.primary,
+    marginBottom: -20,
+    marginTop: 20,
+  },
+  textSmall: {
+    fontSize: 16,
+    textAlign: 'center',
+  },
+  textViewSmall: {
+    marginTop: -50,
+    display: 'flex',
+    width: '80%',
   },
 });
