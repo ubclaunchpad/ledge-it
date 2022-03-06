@@ -187,21 +187,23 @@ def get_access_token(body: PublicTokenBody):
 
 
 @router.get("/api/transactions")
-def get_transactions(access_token: str, current_user: User = Depends(get_current_active_user)):
+def get_transactions(
+    access_token: str, current_user: User = Depends(get_current_active_user)
+):
     start_date = (datetime.now() - timedelta(days=30)).date()
     if "plaid_last_fetch" in current_user:
         start_date = date.fromisoformat(current_user["plaid_last_fetch"])
     else:
-        current_user["plaid_last_fetch"] = (datetime.now() + timedelta(days=1)).date().isoformat()
+        current_user["plaid_last_fetch"] = (
+            (datetime.now() + timedelta(days=1)).date().isoformat()
+        )
 
     if "plaid_access_token" in current_user:
         access_token = current_user["plaid_access_token"]
     else:
         current_user["plaid_access_token"] = access_token
 
-    user_collection.update_one(
-        {"email": current_user["email"]}, {"$set": current_user}
-    )
+    user_collection.update_one({"email": current_user["email"]}, {"$set": current_user})
 
     end_date = datetime.now().date()
     try:
@@ -224,8 +226,9 @@ def get_transactions(access_token: str, current_user: User = Depends(get_current
                             name=transaction["name"],
                             date=transaction["date"],
                             currency=transaction["iso_currency_code"],
-                            price=transaction["amount"]
-                        ), current_user
+                            price=transaction["amount"],
+                        ),
+                        current_user,
                     )
                 else:
                     create_income(
@@ -234,8 +237,9 @@ def get_transactions(access_token: str, current_user: User = Depends(get_current
                             name=transaction["name"],
                             date=transaction["date"],
                             currency=transaction["iso_currency_code"],
-                            amount=transaction["amount"]
-                        ), current_user
+                            amount=transaction["amount"],
+                        ),
+                        current_user,
                     )
             except:
                 continue
