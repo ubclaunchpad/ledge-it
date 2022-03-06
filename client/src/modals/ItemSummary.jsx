@@ -23,22 +23,14 @@ const ItemSummary = ({ modalVisible, setModalVisible, item, userCategories, type
 
   const onUpdate = () => {
     axios
-      .put(
-        `${URL}/${type === 'Expenses' ? 'expense' : 'income'}`,
-        JSON.stringify({
-          name,
-          description,
-          date: formatDateBE(date),
-          [type === 'Expenses' ? 'price' : 'amount']: price,
-          location,
-          category,
-        }),
-        {
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        },
-      )
+      .put(`${URL}/${type === 'Expenses' ? 'expense' : 'income'}/${item._id}`, {
+        name,
+        description,
+        date: formatDateBE(date),
+        [type === 'Expenses' ? 'price' : 'amount']: price,
+        location,
+        category,
+      })
       .then(({ data }) => console.log(data))
       .catch((err) => console.log(err));
     setModalVisible(false);
@@ -49,15 +41,12 @@ const ItemSummary = ({ modalVisible, setModalVisible, item, userCategories, type
       <View style={styles.content}>
         <Text style={styles.title}>{type === 'Expenses' ? 'Expense' : 'Income'} Summary</Text>
         <AmountBox
-          fields={[
-            price || 0.0,
-            name,
-            description,
-            formatDateFE(date),
-            category || '',
-            tag,
-            location,
-          ]}
+          date={date}
+          name={name}
+          category={category}
+          amount={Number(price || 0) * -1}
+          type={type === 'Expenses' ? 'Expense' : 'Income'}
+          rounded
         />
         <StyledTextInput
           label={type === 'Expenses' ? 'Price' : 'Amount'}

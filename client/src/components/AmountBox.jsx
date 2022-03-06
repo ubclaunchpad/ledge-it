@@ -3,9 +3,10 @@ import { Text, StyleSheet, View } from 'react-native';
 import theme from '../../theme';
 import StyledButton from './StyledButton';
 
-export default ({ date, amount, category, name }) => {
+export default ({ date, amount, category, name, type, rounded = false }) => {
   return (
-    <View style={styles.box}>
+    <View
+      style={[styles.box, rounded && { borderBottomRightRadius: 20, borderBottomLeftRadius: 20 }]}>
       <View style={styles.header}>
         <Text style={date ? styles.available : styles.placeholder}>{date || 'Date'}</Text>
         <StyledButton
@@ -23,10 +24,16 @@ export default ({ date, amount, category, name }) => {
         </Text>
       </View>
       <View style={styles.footer}>
-        <Text style={category ? styles.available : styles.placeholder}>
+        <Text style={[category ? styles.available : styles.placeholder, { width: '50%' }]}>
           {category || 'Category'}
         </Text>
-        <Text style={name ? styles.available : styles.placeholder}>{name || 'Name'}</Text>
+        <Text
+          style={[
+            name ? styles.available : styles.placeholder,
+            { width: '50%', textAlign: 'right' },
+          ]}>
+          {name || (type === 'Expense' ? 'Name' : 'Source')}
+        </Text>
       </View>
     </View>
   );
