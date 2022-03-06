@@ -1,3 +1,5 @@
+from datetime import date
+
 from .mongo_db_model import MongoDBModel
 from .category import Category
 from typing import Optional, List
@@ -24,3 +26,5 @@ class User(MongoDBModel):
     active: Optional[bool] = None
     expense_categories_list: List[Category] = default_expense_categories
     income_categories_list: List[Category] = default_income_categories
+    plaid_access_token: Optional[str] = None
+    plaid_last_fetch: Optional[date] = None

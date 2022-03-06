@@ -22,17 +22,23 @@ from plaid.model.ach_class import ACHClass
 from plaid.model.transfer_create_idempotency_key import TransferCreateIdempotencyKey
 from plaid.model.transfer_user_address_in_request import TransferUserAddressInRequest
 from plaid.api import plaid_api
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends
 from fastapi.encoders import jsonable_encoder
 from pydantic import BaseModel
 from datetime import datetime
 from datetime import timedelta
 import plaid
 import os
-import datetime
+from datetime import datetime, date
 import json
 import time
 from dotenv import load_dotenv
+
+from .expense import create_expense
+from .income import create_income
+from ..models import AddExpense, User, AddIncome
+from ..middleware import get_current_active_user
+from ..database import user_collection
 
 load_dotenv()
 
@@ -99,7 +105,6 @@ products = []
 for product in PLAID_PRODUCTS:
     products.append(Products(product))
 
-
 # We store the access_token in memory - in production, store it in a secure
 # persistent data store.
 access_token = None
@@ -151,6 +156,13 @@ class PublicTokenBody(BaseModel):
     public_token: str
 
 
+@router.get("/api/access_token")
+def get_access_token(current_user: User = Depends(get_current_active_user)):
+    if "plaid_access_token" in current_user:
+        return {"access_token": current_user["plaid_access_token"]}
+    return
+
+
 @router.post("/api/set_access_token")
 def get_access_token(body: PublicTokenBody):
     global access_token
@@ -175,21 +187,60 @@ def get_access_token(body: PublicTokenBody):
 
 
 @router.get("/api/transactions")
-def get_transactions():
-    # Pull transactions for the last 30 days
-    start_date = datetime.datetime.now() - timedelta(days=30)
-    end_date = datetime.datetime.now()
+def get_transactions(access_token: str, current_user: User = Depends(get_current_active_user)):
+    start_date = (datetime.now() - timedelta(days=30)).date()
+    if "plaid_last_fetch" in current_user:
+        start_date = date.fromisoformat(current_user["plaid_last_fetch"])
+    else:
+        current_user["plaid_last_fetch"] = (datetime.now() + timedelta(days=1)).date().isoformat()
+
+    if "plaid_access_token" in current_user:
+        access_token = current_user["plaid_access_token"]
+    else:
+        current_user["plaid_access_token"] = access_token
+
+    user_collection.update_one(
+        {"email": current_user["email"]}, {"$set": current_user}
+    )
+
+    end_date = datetime.now().date()
     try:
         options = TransactionsGetRequestOptions()
         request = TransactionsGetRequest(
             access_token=access_token,
-            start_date=start_date.date(),
-            end_date=end_date.date(),
+            start_date=start_date,
+            end_date=end_date,
             options=options,
         )
         response = client.transactions_get(request)
-        pretty_print_response(response.to_dict())
-        return jsonable_encoder(response.to_dict())
+        response = jsonable_encoder(response.to_dict())
+
+        for transaction in response["transactions"]:
+            try:
+                if transaction["amount"] > 0:
+                    create_expense(
+                        AddExpense(
+                            category="Other",
+                            name=transaction["name"],
+                            date=transaction["date"],
+                            currency=transaction["iso_currency_code"],
+                            price=transaction["amount"]
+                        ), current_user
+                    )
+                else:
+                    create_income(
+                        AddIncome(
+                            category="Other",
+                            name=transaction["name"],
+                            date=transaction["date"],
+                            currency=transaction["iso_currency_code"],
+                            amount=transaction["amount"]
+                        ), current_user
+                    )
+            except:
+                continue
+
+        return response
     except ApiException as e:
         error_response = format_error(e)
         return jsonable_encoder(error_response)
