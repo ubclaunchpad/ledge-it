@@ -237,7 +237,7 @@ def get_transactions(
                             name=transaction["name"],
                             date=transaction["date"],
                             currency=transaction["iso_currency_code"],
-                            amount=transaction["amount"]*-1,
+                            amount=transaction["amount"] * -1,
                         ),
                         current_user,
                     )
