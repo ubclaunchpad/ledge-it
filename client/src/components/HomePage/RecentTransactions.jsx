@@ -118,10 +118,17 @@ const styles = StyleSheet.create({
     display: 'flex',
     justifyContent: 'center',
     margin: 20,
-    borderWidth: 4,
+    borderWidth: 0,
     borderRadius: 10,
     borderColor: theme.colors.primaryDark,
+    backgroundColor: theme.colors.textLight,
     paddingBottom: 10,
+    
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.7,
+    shadowRadius: 2,  
+    elevation: 5,
   },
   title: {
     alignSelf: 'center',

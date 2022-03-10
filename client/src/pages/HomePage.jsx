@@ -30,6 +30,7 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     justifyContent: 'center',
     alignContent: 'center',
+    backgroundColor: '#ebebeb'
   },
   content: {
     display: 'flex',

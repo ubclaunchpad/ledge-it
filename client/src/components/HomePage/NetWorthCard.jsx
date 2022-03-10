@@ -1,7 +1,5 @@
 import React, { useCallback, useState } from 'react';
 import { StyleSheet, View, Text, Dimensions, TouchableOpacity } from 'react-native';
-import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
-import { faChevronDown, faChevronUp } from '@fortawesome/free-solid-svg-icons';
 import { useFocusEffect } from '@react-navigation/native';
 import axios from '../../providers/axios';
 import theme from '../../../theme';
@@ -15,8 +13,9 @@ const URL = process.env.SERVER_URL;
 const NetWorthCard = () => {
   const [netWorth, setNetWorth] = useState(0);
   const [income, setIncome] = useState(0);
-  const [expenses, setExpenses] = useState(0);
-  const [isExpanded, setExpand] = useState(false);
+  const [expense, setExpenses] = useState(0);
+  const [selected, setSelected] = useState('net');
+  const [currNum, setCurrNum] = useState(0);
 
   const getNetWorthData = () => {
     axios
@@ -25,6 +24,7 @@ const NetWorthCard = () => {
         setIncome(data.all_time_income);
         setExpenses(data.all_time_expenses);
         setNetWorth(data.current);
+        setCurrNum(netWorth);
       })
       .catch((err) => console.log(err));
   };
@@ -37,43 +37,48 @@ const NetWorthCard = () => {
 
   return (
     <View style={styles.container}>
-      <View style={styles.content}>
-        <TouchableOpacity
-          style={styles.chevron}
-          onPress={() => {
-            setExpand(!isExpanded);
-          }}>
-          <View style={styles.text}>
-            <Text style={[styles.mainText, styles.net]}>NET</Text>
-            <Text style={[styles.mainText, styles.amount]}>
-              {netWorth < 0 && '-'}${formatNumber(netWorth)}
-            </Text>
-          </View>
-          {isExpanded ? (
-            <FontAwesomeIcon icon={faChevronUp} color={theme.colors.primary} size={32} />
-          ) : (
-            <FontAwesomeIcon icon={faChevronDown} color={theme.colors.primary} size={32} />
-          )}
-        </TouchableOpacity>
+      
+      <View style={styles.text}>
+        <Text style={[styles.mainText, styles.amount]}>
+          ${currNum < 0 && '-'}{formatNumber(currNum)}
+        </Text>
       </View>
+      <View style={styles.buttons}>
+        
+        <TouchableOpacity 
+          onPress={() => {
+              setSelected('net')
+              setCurrNum(netWorth)
+            }
+          }
+          style={[styles.btn, selected == 'net' ? styles.selBtn : styles.notSelbtn]}
+        >
+          <Text style={selected == 'net' ? styles.selBtnText : styles.notSelBtnText}>All Time Net</Text>
+        </TouchableOpacity>
 
-      {isExpanded && (
-        <View style={styles.subContent}>
-          <View style={[styles.content, styles.sub]}>
-            <Text style={[styles.mainText, styles.subText, styles.label]}>All Time Income</Text>
-            <Text style={[styles.mainText, styles.subText, styles.income]}>
-              ${formatNumber(income)}
-            </Text>
-          </View>
+        <TouchableOpacity 
+          onPress={() => {
+              setSelected('income')
+              setCurrNum(income)
+            }
+          }
+          style={[styles.btn, selected == 'income' ? styles.selBtn : styles.notSelBtn]}
+        >
+          <Text style={selected == 'income' ? styles.selBtnText : styles.notSelBtnText}>Total Income</Text>
+        </TouchableOpacity>
 
-          <View style={[styles.content, styles.contentContainer, styles.sub]}>
-            <Text style={[styles.mainText, styles.subText, styles.label]}>All Time Expenses</Text>
-            <Text style={[styles.mainText, styles.subText, styles.expense]}>
-              ${formatNumber(expenses)}
-            </Text>
-          </View>
-        </View>
-      )}
+        <TouchableOpacity 
+          onPress={() => {
+              setSelected('expense')
+              setCurrNum(expense)
+            }
+          }
+          style={[styles.btn, selected == 'expense' ? styles.selBtn : styles.notSelBtn]}
+        >
+          <Text style={selected == 'expense' ? styles.selBtnText : styles.notSelBtnText}>Total Expense</Text>
+        </TouchableOpacity>
+      
+      </View>
     </View>
   );
 };
@@ -84,89 +89,63 @@ const styles = StyleSheet.create({
     width: Dimensions.get('window').width,
     justifyContent: 'center',
     alignItems: 'center',
-  },
-
-  contentContainer: {
-    zIndex: 2,
-  },
-
-  content: {
-    width: Dimensions.get('window').width - 30,
-    marginTop: 20,
-    marginBottom: 2,
-    paddingHorizontal: 3,
-    paddingVertical: 5,
-    borderWidth: 4,
-    borderRadius: 20,
-    borderColor: theme.colors.primaryDark,
-  },
-
-  subContent: {
-    borderWidth: 3,
-    borderRadius: 20,
-    borderColor: theme.colors.primaryDark,
-    borderTopWidth: 0,
-    borderTopRightRadius: 0,
-    borderTopLeftRadius: 0,
-    marginTop: -20,
-    paddingVertical: 25,
-    paddingBottom: 5,
-    width: Dimensions.get('window').width - 30,
-  },
-
-  sub: {
-    borderWidth: 0,
-    paddingLeft: 10,
-    paddingRight: 15,
-    marginTop: 0,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    backgroundColor: theme.colors.primary,
+    borderBottomRightRadius: 20,
+    borderBottomLeftRadius: 20,
+    height: 166,
   },
 
   text: {
     display: 'flex',
     justifyContent: 'center',
-    paddingLeft: 10,
-    paddingVertical: 5,
   },
 
   mainText: {
-    color: theme.colors.primary,
+    color: theme.colors.textLight,
     fontWeight: 'bold',
   },
 
-  subText: {
-    fontSize: 27,
-    fontWeight: '600',
-  },
-
-  label: {
-    fontSize: 20,
-  },
-
-  net: {
-    fontSize: 18,
-  },
   amount: {
-    fontSize: 38,
-    marginTop: -7,
+    fontSize: 48,
   },
 
-  income: {
-    color: theme.colors.green,
-  },
-
-  expense: {
-    color: theme.colors.red,
-  },
-
-  chevron: {
-    paddingRight: 15,
+  buttons: {
+    display: 'flex',
     flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    marginTop: 10,
   },
+
+  btn: {
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+    borderRadius: 20,
+    borderWidth: 4,
+    borderColor: theme.colors.primaryDark,
+    marginHorizontal: 3,
+    backgroundColor: theme.colors.textLight,
+
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.7,
+    shadowRadius: 2,  
+    elevation: 5
+  },
+
+  notSelBtn: {
+    backgroundColor: theme.colors.textLight,
+  },
+  
+  selBtn: {
+    backgroundColor: theme.colors.primaryDark,
+  },
+
+  notSelBtnText: {
+    color: theme.colors.primaryDark,
+  },
+
+  selBtnText: {
+    color: theme.colors.textLight,
+  }
 });
 
 export default NetWorthCard;

@@ -83,15 +83,21 @@ const styles = StyleSheet.create({
     width: Dimensions.get('window').width - 30,
     justifyContent: 'center',
     alignItems: 'center',
-    borderWidth: 4,
+    borderWidth: 0,
     borderRadius: 20,
-    backgroundColor: theme.colors.primary,
+    backgroundColor: theme.colors.textLight,
     borderColor: theme.colors.primaryDark,
+    
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.7,
+    shadowRadius: 2,  
+    elevation: 5
   },
 
   text: {
     fontWeight: 'bold',
-    color: theme.colors.white,
+    color: theme.colors.textDark,
     fontSize: 20,
   },
 });
