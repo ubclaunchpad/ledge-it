@@ -38,30 +38,32 @@ export default BudgetDetailsTableComponent;
 const styles = StyleSheet.create({
   list: {
     marginVertical: 10,
+    backgroundColor: theme.colors.textLight,
   },
   header: {
     fontSize: 30,
-    color: theme.colors.textLight,
+    color: theme.colors.textDark,
   },
   subheader: {
     fontSize: 16,
     fontWeight: 'bold',
-    color: theme.colors.textLight,
+    color: theme.colors.textDark,
   },
   text: {
     fontSize: 12,
-    color: theme.colors.textLight,
+    color: theme.colors.textDark,
   },
   price: {
     fontSize: 20,
     fontWeight: 'bold',
-    color: theme.colors.white,
+    color: theme.colors.textDark,
     justifyContent: 'space-evenly',
   },
   listItem: {
-    backgroundColor: theme.colors.primary,
-    marginHorizontal: 15,
+    backgroundColor: theme.colors.textLight,
     marginVertical: 5,
-    borderRadius: 10,
+    borderBottomWidth: 1,
+    width: '100%',
+
   },
 });

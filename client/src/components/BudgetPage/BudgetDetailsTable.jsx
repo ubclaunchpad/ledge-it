@@ -53,13 +53,16 @@ export default BudgetDetailsTable;
 const styles = StyleSheet.create({
   container: {
     height: Dimensions.get('window').height - 100,
+    backgroundColor: theme.colors.primary,
   },
   scrollView: {
     borderTopRightRadius: 10,
     borderTopLeftRadius: 10,
   },
   header: {
-    backgroundColor: theme.colors.primaryDark,
+    backgroundColor: theme.gradient[0],
+    borderTopRightRadius: 10,
+    borderTopLeftRadius: 10,
   },
   text: {
     fontSize: 20,

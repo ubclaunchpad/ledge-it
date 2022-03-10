@@ -16,7 +16,7 @@ const theme = {
     textLight: '#FFFFFF',
   },
   gradient: [
-    '#4F9798',
+    '#92CEEF',
     '#71A79F',
     '#93B7A6',
     '#B5C7AD',
