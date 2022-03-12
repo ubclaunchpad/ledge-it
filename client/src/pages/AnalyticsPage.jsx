@@ -180,6 +180,10 @@ const AnalyticsPage = () => {
   const [allSelected, setAllSelected] = useState(true);
   const [viewing, setViewing] = useState('Expenses');
 
+  const handleFilteringData = (data, categories) => {
+    return data.filter((row) => {return categories.includes(row.category)})
+  }
+
   const handleProcessingData = (data) => {
     const selectedData = data.map((obj) => {
       return {
@@ -226,8 +230,12 @@ const AnalyticsPage = () => {
 
   useEffect(() => {
     // Make a call to the API here! Then pass it on to the functions below:
-    handleProcessingData(unprocessedData);
-  }, []);
+    
+  })
+  useEffect(() => {
+    let filteredData = handleFilteringData(unprocessedData, selectedCategories);
+    handleProcessingData(filteredData);
+  }, [selectedCategories]);
 
   return (
     <View style={styles.container}>
