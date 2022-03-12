@@ -7,7 +7,6 @@ import { SlideAreaChart } from '@connectedcars/react-native-slide-charts';
 import { Stop, LinearGradient } from 'react-native-svg';
 import theme from '../../../theme';
 
-let priceToDisplay = '';
 let earliestExpense = new Date();
 
 const CustomAreaGraph = ({ dateStringData, dateData }) => {
@@ -15,6 +14,7 @@ const CustomAreaGraph = ({ dateStringData, dateData }) => {
   const [dateHeader, setDateHeader] = useState('All Time');
   const [priceHeader, setPriceHeader] = useState(0);
   const [selectedRange, setSelectedRange] = useState('All');
+  const [expenseMap, setExpenseMap] = useState(null);
 
   const calculateEarliest = (data) => {
     if (data.length > 0) {
@@ -72,16 +72,26 @@ const CustomAreaGraph = ({ dateStringData, dateData }) => {
     calculateTotal(filteredData);
   };
 
+  const handleMapGeneration = (data) => {
+    const expMap = new Map();
+    data.forEach((row) => {
+      expMap.set(row.x, row.y);
+    });
+    setExpenseMap(expMap);
+  };
+
   const displayPrice = (scaleX, x, scaleY, y) => {
     const date = scaleX.invert(x).toISOString().split('T')[0];
     // TODO: use hashmap to remove O(n) find operation
-    const data = dateStringData.find((obj) => obj.x === date);
-    if (data !== undefined) {
-      priceToDisplay = `$${data.y.toString()}`;
-    } else {
-      priceToDisplay = 'N/A';
+    if (expenseMap === null) {
+      return 'N/A';
     }
-    return priceToDisplay;
+    const data = expenseMap.get(date);
+
+    if (data !== undefined) {
+      return data.toString();
+    }
+    return 'N/A';
   };
 
   const customAreaChartFillGradient = (props) => (
@@ -94,7 +104,8 @@ const CustomAreaGraph = ({ dateStringData, dateData }) => {
   useEffect(() => {
     calculateEarliest(dateData);
     calculateTotal(dateData);
-  }, [dateData]);
+    handleMapGeneration(dateStringData);
+  }, [dateData, dateStringData]);
 
   return (
     <View style={styles.container}>
