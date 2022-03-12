@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { SafeAreaView, StyleSheet } from 'react-native';
+import { View, StyleSheet } from 'react-native';
 import CustomAreaGraph from '../components/AnalyticPage/CustomAreaGraph';
 import GraphFooter from '../components/DataPage/Graph/GraphFooter';
 import theme from '../../theme';
 
+// TODO: fetch from BE and update according to the categories selected
 const unprocessedData = [
   {
     _id: '6222fb24ad4f0b119bedcaf2',
@@ -179,14 +180,6 @@ const AnalyticsPage = () => {
   const [allSelected, setAllSelected] = useState(true);
   const [viewing, setViewing] = useState('Expenses');
 
-  const showState = () => {
-    if (allSelected) {
-      return `\n\nAll ${viewing} categories are selected`;
-    } else {
-      return `\n\n${viewing} categories: ${selectedCategories.join(', ')} are selected`;
-    }
-  };
-
   const handleProcessingData = (data) => {
     const selectedData = data.map((obj) => {
       return {
@@ -237,7 +230,7 @@ const AnalyticsPage = () => {
   }, []);
 
   return (
-    <SafeAreaView style={styles.container}>
+    <View style={styles.container}>
       <CustomAreaGraph dateStringData={compressedData} dateData={processedData} />
       <GraphFooter
         categories={viewing === 'Expenses' ? exampleExpenseCategories : exampleIncomeCategories}
@@ -248,7 +241,7 @@ const AnalyticsPage = () => {
         viewing={viewing}
         setViewing={setViewing}
       />
-    </SafeAreaView>
+    </View>
   );
 };
 

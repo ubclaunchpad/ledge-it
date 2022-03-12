@@ -2,15 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { Text, View, StyleSheet } from 'react-native';
 import { Button, DataTable } from 'react-native-paper';
 import * as shape from 'd3-shape';
-import {
-  SlideAreaChart,
-  CursorProps,
-  ToolTipProps,
-  ToolTipTextRenderersInput,
-  GradientProps,
-} from '@connectedcars/react-native-slide-charts';
+import { SlideAreaChart } from '@connectedcars/react-native-slide-charts';
 
 import { Stop, LinearGradient } from 'react-native-svg';
+import theme from '../../../theme';
 
 let priceToDisplay = '';
 let earliestExpense = new Date();
@@ -79,6 +74,7 @@ const CustomAreaGraph = ({ dateStringData, dateData }) => {
 
   const displayPrice = (scaleX, x, scaleY, y) => {
     const date = scaleX.invert(x).toISOString().split('T')[0];
+    // TODO: use hashmap to remove O(n) find operation
     const data = dateStringData.find((obj) => obj.x === date);
     if (data !== undefined) {
       priceToDisplay = `$${data.y.toString()}`;
@@ -88,14 +84,12 @@ const CustomAreaGraph = ({ dateStringData, dateData }) => {
     return priceToDisplay;
   };
 
-  const customAreaChartFillGradient = (props) => {
-    return (
-      <LinearGradient x1="0%" y1="0%" x2="0%" y2="100%" {...props}>
-        <Stop stopColor="white" offset="20%" stopOpacity="0.9" />
-        <Stop stopColor="#24838F" offset="100%" stopOpacity="0.2" />
-      </LinearGradient>
-    );
-  };
+  const customAreaChartFillGradient = (props) => (
+    <LinearGradient x1="0%" y1="0%" x2="0%" y2="100%" {...props}>
+      <Stop stopColor="white" offset="20%" stopOpacity="0.9" />
+      <Stop stopColor="#24838F" offset="100%" stopOpacity="0.2" />
+    </LinearGradient>
+  );
 
   useEffect(() => {
     calculateEarliest(dateData);
@@ -109,7 +103,7 @@ const CustomAreaGraph = ({ dateStringData, dateData }) => {
         <Text style={styles.dateHeader}>{dateHeader}</Text>
         <SlideAreaChart
           scrollable
-          style={{ backgroundColor: '#24838F' }}
+          style={{ backgroundColor: theme.colors.primary }}
           shouldCancelWhenOutside={false}
           yo
           data={dateData}
@@ -118,7 +112,7 @@ const CustomAreaGraph = ({ dateStringData, dateData }) => {
           axisHeight={0}
           animated={false}
           paddingBottom={8}
-          chartLineColor="#195D66"
+          chartLineColor={theme.colors.primaryDark}
           chartLineWidth={2}
           cursorProps={{
             cursorBorderColor: '#808080',
@@ -155,83 +149,71 @@ const CustomAreaGraph = ({ dateStringData, dateData }) => {
             ],
           }}
         />
-        <DataTable style={{ backgroundColor: '#24838F', paddingBottom: 10 }}>
+        <DataTable style={{ backgroundColor: theme.colors.primary, paddingBottom: 10 }}>
           <DataTable.Row>
             <DataTable.Cell numeric>
               <Button
                 style={{
-                  backgroundColor: selectedRange === '1W' ? '#00ABF0' : '#24838F',
+                  backgroundColor: selectedRange === '1W' ? '#00ABF0' : theme.colors.primary,
                   borderRadius: 20,
                 }}
                 color="white"
-                onPress={() => {
-                  handleRangeChange('1W');
-                }}>
+                onPress={() => handleRangeChange('1W')}>
                 1W
               </Button>
             </DataTable.Cell>
             <DataTable.Cell numeric>
               <Button
                 style={{
-                  backgroundColor: selectedRange === '1M' ? '#00ABF0' : '#24838F',
+                  backgroundColor: selectedRange === '1M' ? '#00ABF0' : theme.colors.primary,
                   borderRadius: 20,
                 }}
                 color="white"
-                onPress={() => {
-                  handleRangeChange('1M');
-                }}>
+                onPress={() => handleRangeChange('1M')}>
                 1M
               </Button>
             </DataTable.Cell>
             <DataTable.Cell numeric>
               <Button
                 style={{
-                  backgroundColor: selectedRange === '3M' ? '#00ABF0' : '#24838F',
+                  backgroundColor: selectedRange === '3M' ? '#00ABF0' : theme.colors.primary,
                   borderRadius: 20,
                 }}
                 color="white"
-                onPress={() => {
-                  handleRangeChange('3M');
-                }}>
+                onPress={() => handleRangeChange('3M')}>
                 3M
               </Button>
             </DataTable.Cell>
             <DataTable.Cell numeric>
               <Button
                 style={{
-                  backgroundColor: selectedRange === '1Y' ? '#00ABF0' : '#24838F',
+                  backgroundColor: selectedRange === '1Y' ? '#00ABF0' : theme.colors.primary,
                   borderRadius: 20,
                 }}
                 color="white"
-                onPress={() => {
-                  handleRangeChange('1Y');
-                }}>
+                onPress={() => handleRangeChange('1Y')}>
                 1Y
               </Button>
             </DataTable.Cell>
             <DataTable.Cell numeric>
               <Button
                 style={{
-                  backgroundColor: selectedRange === '2Y' ? '#00ABF0' : '#24838F',
+                  backgroundColor: selectedRange === '2Y' ? '#00ABF0' : theme.colors.primary,
                   borderRadius: 20,
                 }}
                 color="white"
-                onPress={() => {
-                  handleRangeChange('2Y');
-                }}>
+                onPress={() => handleRangeChange('2Y')}>
                 2Y
               </Button>
             </DataTable.Cell>
             <DataTable.Cell numeric>
               <Button
                 style={{
-                  backgroundColor: selectedRange === 'All' ? '#00ABF0' : '#24838F',
+                  backgroundColor: selectedRange === 'All' ? '#00ABF0' : theme.colors.primary,
                   borderRadius: 20,
                 }}
                 color="white"
-                onPress={() => {
-                  handleRangeChange('All');
-                }}>
+                onPress={() => handleRangeChange('All')}>
                 All
               </Button>
             </DataTable.Cell>
@@ -251,7 +233,7 @@ const styles = StyleSheet.create({
     flexGrow: 1,
   },
   priceHeader: {
-    backgroundColor: '#24838F',
+    backgroundColor: theme.colors.primary,
     fontSize: 36,
     fontWeight: '600',
     color: 'white',
@@ -259,7 +241,7 @@ const styles = StyleSheet.create({
     paddingTop: 60,
   },
   dateHeader: {
-    backgroundColor: '#24838F',
+    backgroundColor: theme.colors.primary,
     justifyContent: 'center',
     fontSize: 18,
     fontWeight: '600',

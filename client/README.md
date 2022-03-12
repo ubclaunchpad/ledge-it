@@ -14,7 +14,7 @@ Make sure you have `node` installed globally on your device. You can verify this
 which should give you the version of `node` you have installed. If you do not have node installed please follow the
 instructions [here](https://nodejs.org/en/download/).
 
-Run `npm install` to install all dependencies.
+Run `npm run install-legacy` to install all dependencies.
 
 #### Expo
 
