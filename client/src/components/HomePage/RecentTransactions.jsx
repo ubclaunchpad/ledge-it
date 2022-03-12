@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { StyleSheet, Text, SafeAreaView, View } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
 import axios from '../../providers/axios';
-import { theme } from '../../../theme';
+import theme from '../../../theme';
 import { formatNumber } from '../../utils/formatters';
 
 const URL = process.env.SERVER_URL;

@@ -3,7 +3,7 @@ import React from 'react';
 import { Dimensions, StyleSheet, Text } from 'react-native';
 import { faChevronDown, faChevronUp } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
-import { theme } from '../../theme';
+import theme from '../../theme';
 
 const StyledSelect = ({
   label,

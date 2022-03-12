@@ -16,14 +16,14 @@ router = APIRouter()
     response_description="Get NetWorth by id",
     response_model=NetWorth,
 )
-def get_net_worth_by_id(id, current_user: User = Depends(get_current_active_user)):
+def get_net_worth_by_id(current_user: User = Depends(get_current_active_user)):
     if (
-        nwm := net_worth_collection.find_one(
-            {"_id": id, "email": current_user["email"]}
-        )
+        nwm := net_worth_collection.find_one({"email": current_user["email"]})
     ) is not None:
         return nwm
-    raise HTTPException(status_code=404, detail=f"NetWorth with id {id} not found")
+    raise HTTPException(
+        status_code=404, detail=f"NetWorth with email {current_user['email']} not found"
+    )
 
 
 @router.post(
@@ -31,15 +31,20 @@ def get_net_worth_by_id(id, current_user: User = Depends(get_current_active_user
     response_description="Add new Net worth model",
     response_model=NetWorth,
 )
-def create_net_worth(
-    nwm: NetWorth = Body(...), current_user: User = Depends(get_current_active_user)
-):
+def create_net_worth(current_user: User = Depends(get_current_active_user)):
     if net_worth_collection.find_one({"email": current_user["email"]}) is not None:
         raise HTTPException(
             status_code=404,
             detail=f"Net worth for user: {current_user.email} already exists",
         )
-    nwm.email = current_user["email"]
+    net_worth = {
+        "email": current_user["email"],
+        "current": 0,
+        "all_time_expenses": 0,
+        "all_time_income": 0,
+        "history": [],
+    }
+    nwm = NetWorth(**net_worth)
     nwm = jsonable_encoder(nwm)
     new_nwm = net_worth_collection.insert_one(nwm)
     created_nwm = net_worth_collection.find_one(

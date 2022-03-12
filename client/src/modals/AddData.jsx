@@ -1,40 +1,38 @@
-import React from 'react';
-import { StyleSheet, Text, Pressable, View } from 'react-native';
+import React, { useState } from 'react';
+import { StyleSheet, View } from 'react-native';
+import ExpenseForm from './ExpenseForm';
+import IncomeForm from './IncomeForm';
 
-const AddData = ({ setModalVisible }) => {
+const AddData = ({ setModalVisible, setAddDataModalVisible, initialType }) => {
+  const [type, setType] = useState(initialType || 'Expense');
+
   return (
-    <View style={styles.centeredView}>
-      <Text style={styles.modalText}>Add Expense/Income Modal</Text>
-      <Pressable style={[styles.button, styles.buttonClose]} onPress={() => setModalVisible(false)}>
-        <Text style={styles.textStyle}>This is the add expense/income modal</Text>
-      </Pressable>
+    <View style={styles.content}>
+      {type === 'Expense' ? (
+        <ExpenseForm
+          setModalVisible={setModalVisible}
+          setExpenseModalVisible={setAddDataModalVisible}
+          type={type}
+          setType={setType}
+        />
+      ) : (
+        <IncomeForm
+          setModalVisible={setModalVisible}
+          setIncomeModalVisible={setAddDataModalVisible}
+          type={type}
+          setType={setType}
+        />
+      )}
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  centeredView: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginTop: 22,
-  },
-  button: {
-    borderRadius: 20,
-    padding: 10,
-    elevation: 2,
-  },
-  buttonClose: {
-    backgroundColor: '#2196F3',
-  },
-  textStyle: {
-    color: 'white',
-    fontWeight: 'bold',
-    textAlign: 'center',
-  },
-  modalText: {
-    marginBottom: 15,
-    textAlign: 'center',
+  content: {
+    flexDirection: 'column',
+    justifyContent: 'flex-start',
+    marginHorizontal: 20,
+    marginBottom: 20,
   },
 });
 

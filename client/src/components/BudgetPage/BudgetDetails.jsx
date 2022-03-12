@@ -4,7 +4,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { useFocusEffect } from '@react-navigation/native';
 import axios from '../../providers/axios';
 import BudgetDetailsTable from './BudgetDetailsTable';
-import { theme } from '../../../theme';
+import theme from '../../../theme';
 import { MONTHS } from '../../utils/constants';
 
 const URL = process.env.SERVER_URL;
