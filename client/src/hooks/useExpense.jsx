@@ -2,10 +2,12 @@ import { useState, useEffect } from 'react';
 import axios from '../providers/axios';
 import { formatDateBE } from '../utils/formatters';
 
-const useExpenses = () => {
+const URL = process.env.SERVER_URL;
+
+const useExpense = () => {
   const [refetch, setRefetch] = useState(0);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
+  const [expenseLoading, setExpenseLoading] = useState(false);
+  const [expenseErrors, setExpenseErrors] = useState(null);
   const [expenses, setExpenses] = useState([]);
 
   useEffect(() => {
@@ -13,22 +15,22 @@ const useExpenses = () => {
   }, [refetch]);
 
   const getExpenses = () => {
-    setLoading(true);
+    setExpenseLoading(true);
     axios
       .get(`${URL}/expenses`)
       .then(({ data }) => setExpenses(data))
       .catch((err) => {
         console.log(`${err}`);
-        setError(err);
+        setExpenseErrors(err);
       })
-      .finally(() => setLoading(false));
+      .finally(() => setExpenseLoading(false));
   };
 
   const addExpense = ({ name, description, date, price, currency, location, category, tag }) => {
-    setLoading(true);
+    setExpenseLoading(true);
     axios
       .post(
-        `${URL}/expense/`,
+        `${URL}/expense`,
         JSON.stringify({
           name,
           description,
@@ -52,20 +54,20 @@ const useExpenses = () => {
       })
       .catch((err) => {
         console.log(err);
-        setError(err);
+        setExpenseErrors(err);
       })
       .finally(() => {
-        setLoading(false);
+        setExpenseLoading(false);
       });
   };
 
   return {
-    loading,
-    error,
+    expenseLoading,
+    expenseErrors,
     expenses,
     getExpenses,
     addExpense,
   };
 };
 
-export default useExpenses;
+export default useExpense;

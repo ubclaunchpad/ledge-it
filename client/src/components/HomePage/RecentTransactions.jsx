@@ -1,11 +1,10 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { StyleSheet, Text, SafeAreaView, View } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
-import axios from '../../providers/axios';
+import useExpense from '../../hooks/useExpense';
+import useIncome from '../../hooks/useIncome';
 import theme from '../../../theme';
 import { formatNumber } from '../../utils/formatters';
-
-const URL = process.env.SERVER_URL;
 
 // merge two sorted arrays
 const getTransactionsToDisplay = (incomes, expenses) => {
@@ -45,34 +44,23 @@ const getTransactionsToDisplay = (incomes, expenses) => {
 const RecentTransactions = () => {
   // merge expense and income dataset and come up with an array sorted by date
   // only show 10 items max
-  const [incomeData, setIncomeData] = useState([]);
-  const [expenseData, setExpenseData] = useState([]);
+
+  // TODO: behaviour during loading for either incomes or expenses; likewise, error-handling
+  const { incomeLoading, incomeErrors, incomes, getIncomes } = useIncome();
+  const { expenseLoading, expensveErrors, expenses, getExpenses } = useExpense();
+
   const [displayData, setDisplayData] = useState([]);
 
   useFocusEffect(
     useCallback(() => {
       getExpenses();
       getIncomes();
-    }, []),
+    }, [getExpenses, getIncomes]),
   );
 
   useEffect(() => {
-    setDisplayData(getTransactionsToDisplay(incomeData.slice(0, 10), expenseData.slice(0, 10)));
-  }, [incomeData, expenseData]);
-
-  const getExpenses = () => {
-    axios
-      .get(`${URL}/expenses`)
-      .then(({ data }) => setExpenseData(data))
-      .catch((err) => console.log(`${err}`));
-  };
-
-  const getIncomes = () => {
-    axios
-      .get(`${URL}/incomes`)
-      .then(({ data }) => setIncomeData(data))
-      .catch((err) => console.log(`${err}`));
-  };
+    setDisplayData(getTransactionsToDisplay(incomes.slice(0, 10), expenses.slice(0, 10)));
+  }, [incomes, expenses]);
 
   return (
     <SafeAreaView style={styles.centeredView}>
