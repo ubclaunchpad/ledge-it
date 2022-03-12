@@ -13,8 +13,11 @@ export const METHODS = {
 /**
  * Sort a list of transactions.
  *
- * TODO: this spaghetti-fied when I realized the field names differ (price, value; "date" versus month and year)
- *       we should resolve!
+ * TODO: Break helper into two different methods to account for differences in field names.
+ *
+ * TODO: When sorting by price – remove the “groups” behaviour and just show the list of the items (i.e. no month headers).
+ * When sorting by date, the groups should reappear. The month “groups” AND the entries within them should be sorted.
+ * So if we sort old->new, then Nov/21 should come before Dec/21 and all the entries in Nov/21 should also be sorted old->new (currently they remain new->old).
  *
  * @param {Date[]} list
  * @param {number} method from METHODS enum
