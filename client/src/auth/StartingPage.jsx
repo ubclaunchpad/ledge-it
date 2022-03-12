@@ -30,8 +30,7 @@ const StartingPage = ({ setPage }) => {
             <SvgXml
               xml={Graph}
               alt="graph"
-              width={Dimensions.get('window').width + 20}
-              style={{ marginLeft: -20 }}
+              style={{ scaleX: Dimensions.get('window').width / 380 }}
             />
           </View>
         </View>
@@ -85,7 +84,6 @@ const styles = StyleSheet.create({
   },
 
   buttons: {
-    marginTop: 20,
     width: Dimensions.get('window').width,
     display: 'flex',
     justifyContent: 'center',

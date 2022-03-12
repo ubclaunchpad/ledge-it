@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { View, StyleSheet } from 'react-native';
+import { SafeAreaView, StyleSheet } from 'react-native';
 import CustomAreaGraph from '../components/AnalyticPage/CustomAreaGraph';
+import GraphFooter from '../components/DataPage/Graph/GraphFooter';
+import theme from '../../theme';
 
 const unprocessedData = [
   {
@@ -158,9 +160,32 @@ const unprocessedData = [
   },
 ];
 
+const exampleExpenseCategories = [
+  'Food',
+  'Housing',
+  'Tuition',
+  'Misc',
+  'Gifts',
+  'Technology',
+  'Clothing',
+  'Transit',
+];
+const exampleIncomeCategories = ['Work', 'Transfer', 'Gifts'];
+
 const AnalyticsPage = () => {
   const [compressedData, setCompressedData] = useState([]);
   const [processedData, setProcessedData] = useState([]);
+  const [selectedCategories, setSelectedCategories] = useState([]);
+  const [allSelected, setAllSelected] = useState(true);
+  const [viewing, setViewing] = useState('Expenses');
+
+  const showState = () => {
+    if (allSelected) {
+      return `\n\nAll ${viewing} categories are selected`;
+    } else {
+      return `\n\n${viewing} categories: ${selectedCategories.join(', ')} are selected`;
+    }
+  };
 
   const handleProcessingData = (data) => {
     const selectedData = data.map((obj) => {
@@ -212,9 +237,18 @@ const AnalyticsPage = () => {
   }, []);
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <CustomAreaGraph dateStringData={compressedData} dateData={processedData} />
-    </View>
+      <GraphFooter
+        categories={viewing === 'Expenses' ? exampleExpenseCategories : exampleIncomeCategories}
+        selectedCategories={selectedCategories}
+        setSelectedCategories={setSelectedCategories}
+        allSelected={allSelected}
+        setAllSelected={setAllSelected}
+        viewing={viewing}
+        setViewing={setViewing}
+      />
+    </SafeAreaView>
   );
 };
 
@@ -225,7 +259,7 @@ const styles = StyleSheet.create({
     flexGrow: 1,
   },
   priceHeader: {
-    backgroundColor: '#24838F',
+    backgroundColor: theme.colors.primary,
     fontSize: 36,
     fontWeight: '600',
     color: 'white',
@@ -233,7 +267,7 @@ const styles = StyleSheet.create({
     paddingTop: 60,
   },
   dateHeader: {
-    backgroundColor: '#24838F',
+    backgroundColor: theme.colors.primary,
     justifyContent: 'center',
     fontSize: 18,
     fontWeight: '600',

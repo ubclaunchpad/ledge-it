@@ -49,7 +49,7 @@ const setSettingOptions = (state, setState, selectedCurrency, setSelectedCurrenc
       overlayContent: <ThemesSetting state={state} setState={setState} />,
     },
     {
-      name: 'Plaid',
+      name: 'Link your bank account',
       activateBy: <FontAwesome name="chevron-right" size={24} color={theme.colors.primary} />,
       activate: () => setState({ isPlaidModalOpen: true }),
       overlayContent: <PlaidSetting state={state} setState={setState} />,
