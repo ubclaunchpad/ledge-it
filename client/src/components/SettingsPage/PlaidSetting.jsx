@@ -38,7 +38,7 @@ export default function PlaidSetting({ state, setState }) {
             iconSize={36}
             iconColor={theme.colors.primary}
           />
-          <Text style={styles.titleText}>Integrate Plaid</Text>
+          <Text style={styles.titleText}>Plaid Link</Text>
         </View>
         <View style={styles.themesSelections}>
           <Plaid />

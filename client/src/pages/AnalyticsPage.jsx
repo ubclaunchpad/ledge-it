@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Text, View } from 'react-native';
+import { SafeAreaView, Text } from 'react-native';
 import GraphFooter from '../components/DataPage/Graph/GraphFooter';
 
 const exampleExpenseCategories = [
@@ -28,9 +28,7 @@ const AnalyticsPage = () => {
   };
 
   return (
-    <View>
-      <Text>Analytics Page</Text>
-      <Text>This is the data visualization page</Text>
+    <SafeAreaView>
       <Text>{showState()}</Text>
       <GraphFooter
         categories={viewing === 'Expenses' ? exampleExpenseCategories : exampleIncomeCategories}
@@ -41,7 +39,7 @@ const AnalyticsPage = () => {
         viewing={viewing}
         setViewing={setViewing}
       />
-    </View>
+    </SafeAreaView>
   );
 };
 

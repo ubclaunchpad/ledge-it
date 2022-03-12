@@ -26,7 +26,7 @@ export default ({
         onPress={onTap}
         style={backgroundStyle || styles.background}
         {...rest}>
-        <View>
+        <View style={styles.textView}>
           <Text style={textStyle || styles.text}>{label}</Text>
           {iconName && (
             <Entypo name={iconName} size={iconSize || 20} color={iconColor || theme.colors.white} />
@@ -54,4 +54,5 @@ const defaultStyles = StyleSheet.create({
     fontWeight: 'bold',
   },
   highlightStyle: {},
+  textView: {},
 });
