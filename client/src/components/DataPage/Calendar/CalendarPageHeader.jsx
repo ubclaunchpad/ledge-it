@@ -28,9 +28,8 @@ const CalenderPageHeader = ({ month, setMonth, year }) => {
   const dropdownTextStyle = monthDropdownVisible ? styles.placeholder : styles.text;
 
   const getMonthOverview = () => {
-    const d = new Date();
-    const start_time = new Date(d.getFullYear(), d.getMonth(), 1);
-    const end_time = new Date(d.getFullYear(), d.getMonth() + 1, 0);
+    const start_time = new Date(year, month, 1);
+    const end_time = new Date(year, month + 1, 0);
     let income, expense;
     axios
       .get(`${URL}/income/ranged/${start_time}/${end_time}`, {})
@@ -93,7 +92,7 @@ const CalenderPageHeader = ({ month, setMonth, year }) => {
           </Text>
         </Pressable>
       </View>
-      <Text style={styles.overViewText}>${getMonthOverview}</Text>
+      <Text style={styles.overViewText}>${getMonthOverview()}</Text>
     </View>
   );
 };
