@@ -9,12 +9,15 @@ import { MONTHS } from '../../utils/constants';
 import CategoryPieChart from './BudgetPieChart'
 import BudgetProgressBar from './BudgetProgressBar';
 import StyledButton from '../StyledButton';
+import Modal from '../CustomModal';
 
 const URL = process.env.SERVER_URL;
 
 const BudgetDetails = ({ currentMonth, currentYear, isVisible, setVisible }) => {
   const [databaseExpense, setDatabaseExpense] = useState([]);
   const [categoryBudgetData, setCategoryBudgetData] = useState([]);
+  const [sortModalVisible, setSortModalVisible] = useState(false);
+  const [sortMethod, setSortMethod] = useState('shigh->slow'); //pass this as props to budgetDetails component, do the sorting in that component
 
   useFocusEffect(
     useCallback(() => {
@@ -61,12 +64,9 @@ const BudgetDetails = ({ currentMonth, currentYear, isVisible, setVisible }) => 
           <Text style={styles.title}>{MONTHS[currentMonth - 1]}</Text>
         </View>
       </View>
-      {databaseExpense.length > 0 ? (
-        // pie chart --  done
-        // progress bar -- done
-        // styling
-        // sort options          
+      {databaseExpense.length > 0 ? (         
         <View>
+          {/* refactor to single BudgetDetailHeader component */}
           <CategoryPieChart 
             currentMonth={currentMonth} 
             categoryBudgetData={categoryBudgetData}
@@ -80,20 +80,54 @@ const BudgetDetails = ({ currentMonth, currentYear, isVisible, setVisible }) => 
               ratio={ratio}
             />
             <StyledButton
-              // customStyles={dropDownStyles}
+              customStyles={dropDownStyles}
               label="Sort"
-              // onTap={() => setSortModalVisible(true)}
-              iconName={'chevron-down'}
+              onTap={() => setSortModalVisible(true)}
+              iconName={sortModalVisible ? 'chevron-up' : 'chevron-down'}
             />
           </View>
-          {/* sort button */}
-          <BudgetDetailsTable renderList={databaseExpense} /> 
+          <BudgetDetailsTable 
+            renderList={databaseExpense} 
+            sortMethod={sortMethod}
+          /> 
         </View>
       ) : (
         <View>
           <Text style={styles.message}>No expenses in this month</Text>
         </View>
       )}
+      <Modal isModalVisible={sortModalVisible} setModalVisible={setSortModalVisible}>
+            <View>
+              <StyledButton
+                onTap={() => {
+                  setSortMethod('vhigh->vlow')
+                }}
+                customStyles={btnCustomStyles}
+                label="Budget Value (high to low)"
+              />
+              <StyledButton
+                onTap={() => {
+                  setSortMethod('vlow->vhigh')
+                }}
+                customStyles={btnCustomStyles}
+                label="Budget Value (low to high)"
+              />
+              <StyledButton
+                onTap={() => {
+                  setSortMethod('shigh->slow')
+                }}
+                customStyles={btnCustomStyles}
+                label="Budget Spent (high to low)"
+              />
+              <StyledButton
+                onTap={() => {
+                  setSortMethod('slow->shigh')
+                }}
+                customStyles={btnCustomStyles}
+                label="Budget Spent (low to high)"
+              />
+            </View>
+          </Modal>
     </SafeAreaView>
   );
 };
@@ -133,8 +167,49 @@ const styles = StyleSheet.create({
   row: {
     display: 'flex',
     flexDirection: 'row',
-    justifyContent: 'center',
+    justifyContent: 'space-between',
     alignItems: 'center',
+    marginHorizontal: 10,
     marginBottom: 15,
   }
+});
+
+const dropDownStyles = StyleSheet.create({
+  background: {
+    backgroundColor: theme.colors.primary,
+    borderRadius: 20,
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    borderColor: theme.colors.textLight,
+    borderWidth: 2,
+    justifyContent: 'center',
+    paddingVertical: 1,
+    paddingHorizontal: 7,
+  },
+
+  text: {
+    color: theme.colors.white,
+    fontSize: 18,
+    fontWeight: 'bold',
+  },
+});
+
+const btnCustomStyles = StyleSheet.create({
+  background: {
+    color: theme.colors.white,
+    borderColor: theme.colors.primary,
+    borderWidth: 2,
+    padding: 10,
+    borderRadius: 20,
+    backgroundColor: 'transparent',
+    height: 40,
+    margin: 8,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+
+  text: {
+    color: theme.colors.primary,
+  },
 });

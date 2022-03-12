@@ -4,15 +4,12 @@ import theme from '../../../theme';
 import { formatNumber } from '../../utils/formatters';
 
 const BudgetProgressBar = ({calculateBudget, ratio}) => {
-    
-    const pbarWidth = `${Math.min(ratio, 0.8 * Dimensions.get('window').width)}%`;
-
     return (
         <View style={styles.pbar} key="pbar">
             <View
                 style={[
                 StyleSheet.absoluteFill,
-                { backgroundColor: theme.colors.green, borderRadius: 20, width: pbarWidth },
+                { backgroundColor: theme.colors.green, borderRadius: 20, width: ratio },
             ]}>
                 <Text style={styles.pbarTextExpense}>{ratio}</Text>
             </View>
@@ -24,15 +21,11 @@ const BudgetProgressBar = ({calculateBudget, ratio}) => {
 const styles = StyleSheet.create({ 
     pbar: {
         height: 30,
-        width: '80%',
-        marginTop: 20,
-        marginHorizontal: 10,
+        width: '70%',
         borderRadius: 20,
         borderColor: theme.colors.green,
         backgroundColor: theme.colors.white,
-        flexDirection: 'row',
-        justifyContent: 'flex-start',
-        alignSelf: 'center',
+        overflow: 'hidden',
     },
     
     pbarTextExpense: {
@@ -45,11 +38,11 @@ const styles = StyleSheet.create({
     },
     
     pbarTextBudget: {
-    fontSize: 18,
-    fontWeight: '600',
-    position: 'absolute',
-    right: 10,
-    top: 4,
+        fontSize: 18,
+        fontWeight: '600',
+        position: 'absolute',
+        right: 10,
+        top: 4,
     },
 })
 

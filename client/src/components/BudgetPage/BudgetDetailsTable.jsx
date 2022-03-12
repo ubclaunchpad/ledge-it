@@ -1,11 +1,37 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { StyleSheet, ScrollView, SafeAreaView, Text, View, Dimensions } from 'react-native';
+import axios from '../../providers/axios';
+import { useFocusEffect } from '@react-navigation/native';
 import BudgetDetailsTableComponent from './BudgetDetailsTableComponent';
 import theme from '../../../theme';
 
-const BudgetDetailsTable = ({ renderList }) => {
+const URL = process.env.SERVER_URL;
+
+const BudgetDetailsTable = ({ renderList, sortMethod }) => {
   const [splitList, setSplitList] = useState([]);
   const [stickyList, setStickyList] = useState([]);
+  const [categoryBudget, setCategoryBudget] = useState([]);  
+
+  const getCategoryBudgets = () => {
+    const d = new Date();
+    axios
+      .get(`${URL}/budget/category/all`, {
+        params: {
+          month: d.getMonth() + 1,
+          year: d.getFullYear(),
+        },
+      })
+      .then((res) => {
+        setCategoryBudget(res.data);
+      })
+      .catch((e) => console.log(e));
+  }
+
+  useFocusEffect(
+    useCallback(() => {
+      getCategoryBudgets();
+    }, []),
+  );
 
   useEffect(() => {
     const tempList = [];
@@ -13,36 +39,82 @@ const BudgetDetailsTable = ({ renderList }) => {
     const stickyIndex = [];
     const categoryIndex = new Map();
 
+    getCategoryBudgets();
+
     renderList.forEach((expense) => {
       const { category } = expense;
+
       if (!categoryIndex.has(category)) {
         categoryIndex.set(category, currentIndex);
         stickyIndex.push(currentIndex * 2);
         currentIndex++;
-        tempList.push({ category, valueTotal: 0, spentTotal: 0, splitCategories: [] });
+
+        let valueTotal = 0;
+
+        categoryBudget.forEach((budget) => {
+          const budgetCategory = budget.category;
+          if (category == budgetCategory) {
+            valueTotal = budget.value;
+          }
+        })
+
+        tempList.push({ category, valueTotal: valueTotal, spentTotal: 0, splitCategories: [] });
       }
+    
       tempList[categoryIndex.get(category)].splitCategories.push(expense);
+      tempList[categoryIndex.get(category)].spentTotal += expense.price;
     });
 
     setSplitList(tempList);
     setStickyList(stickyIndex);
+    
+
+    switch(sortMethod) {
+      
+      case "vhigh->vlow":
+        splitList.sort((a,b) => {
+          b.value - a.value
+        });
+        break;
+      
+      case "vlow->vhigh": {
+        splitList.sort((a,b) => {
+          a.value - b.value
+        });
+        break;
+      }
+
+      case "shigh->slow": {
+        splitList.sort((a,b) => {
+          b.spent - a.spent
+        });
+        break;
+      }
+
+      case "slow->shigh": {
+        splitList.sort((a,b) => {
+          a.spent - b.spent
+        });
+        break;
+      }  
+    }
   }, [renderList]);
+
 
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView style={styles.scrollView} stickyHeaderIndices={stickyList}>
         {splitList.map((budget) => [
-          <View style={styles.header}>
+          <View style={styles.header}>  
             <Text style={styles.text}>
-              {/* Category: {budget.category} ${budget.valueTotal}/ ${budget.spentTotal} */}
-              {budget.category}
+              {budget.category}     ${budget.spentTotal} / ${budget.valueTotal}
             </Text>
           </View>,
-          <View>
+          <View style>
             <BudgetDetailsTableComponent expenses={budget.splitCategories} />
           </View>,
         ])}
-        <View style={{ height: 200 }} />
+        {/* <View style={{ height: 200 }} /> */}
       </ScrollView>
     </SafeAreaView>
   );
@@ -60,7 +132,11 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: 10,
   },
   header: {
-    backgroundColor: theme.gradient[0],
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    backgroundColor: theme.gradient[0], //add js to css??
     borderTopRightRadius: 10,
     borderTopLeftRadius: 10,
   },
