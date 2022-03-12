@@ -17,7 +17,7 @@ const BudgetDetails = ({ currentMonth, currentYear, isVisible, setVisible }) => 
   const [databaseExpense, setDatabaseExpense] = useState([]);
   const [categoryBudgetData, setCategoryBudgetData] = useState([]);
   const [sortModalVisible, setSortModalVisible] = useState(false);
-  const [sortMethod, setSortMethod] = useState('shigh->slow'); //pass this as props to budgetDetails component, do the sorting in that component
+  const [sortMethod, setSortMethod] = useState('shigh->slow');
 
   useFocusEffect(
     useCallback(() => {
@@ -84,6 +84,8 @@ const BudgetDetails = ({ currentMonth, currentYear, isVisible, setVisible }) => 
               label="Sort"
               onTap={() => setSortModalVisible(true)}
               iconName={sortModalVisible ? 'chevron-up' : 'chevron-down'}
+              underlayColor={theme.colors.primaryBackground}
+              activeOpacity={1}
             />
           </View>
           <BudgetDetailsTable 
@@ -101,6 +103,7 @@ const BudgetDetails = ({ currentMonth, currentYear, isVisible, setVisible }) => 
               <StyledButton
                 onTap={() => {
                   setSortMethod('vhigh->vlow')
+                  setSortModalVisible(false);
                 }}
                 customStyles={btnCustomStyles}
                 label="Budget Value (high to low)"
@@ -108,6 +111,7 @@ const BudgetDetails = ({ currentMonth, currentYear, isVisible, setVisible }) => 
               <StyledButton
                 onTap={() => {
                   setSortMethod('vlow->vhigh')
+                  setSortModalVisible(false);
                 }}
                 customStyles={btnCustomStyles}
                 label="Budget Value (low to high)"
@@ -115,6 +119,7 @@ const BudgetDetails = ({ currentMonth, currentYear, isVisible, setVisible }) => 
               <StyledButton
                 onTap={() => {
                   setSortMethod('shigh->slow')
+                  setSortModalVisible(false);
                 }}
                 customStyles={btnCustomStyles}
                 label="Budget Spent (high to low)"
@@ -122,6 +127,7 @@ const BudgetDetails = ({ currentMonth, currentYear, isVisible, setVisible }) => 
               <StyledButton
                 onTap={() => {
                   setSortMethod('slow->shigh')
+                  setSortModalVisible(false);
                 }}
                 customStyles={btnCustomStyles}
                 label="Budget Spent (low to high)"

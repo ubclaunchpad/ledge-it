@@ -103,19 +103,21 @@ const BudgetDetailsTable = ({ renderList, sortMethod }) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <ScrollView style={styles.scrollView} stickyHeaderIndices={stickyList}>
-        {splitList.map((budget) => [
-          <View style={styles.header}>  
-            <Text style={styles.text}>
-              {budget.category}     ${budget.spentTotal} / ${budget.valueTotal}
-            </Text>
-          </View>,
-          <View style>
-            <BudgetDetailsTableComponent expenses={budget.splitCategories} />
-          </View>,
-        ])}
-        {/* <View style={{ height: 200 }} /> */}
-      </ScrollView>
+      <View style={{borderRadius: 10, overflow: 'hidden'}}>
+        <ScrollView style={styles.scrollView} stickyHeaderIndices={stickyList}>
+          {splitList.map((budget) => [
+            <View style={styles.header}>  
+              <Text style={styles.text}>
+                {budget.category}     ${budget.spentTotal} / ${budget.valueTotal}
+              </Text>
+            </View>,
+            <View style>
+              <BudgetDetailsTableComponent expenses={budget.splitCategories} />
+            </View>,
+          ])}
+          <View style={{ height: 220 }} />
+        </ScrollView>
+      </View>
     </SafeAreaView>
   );
 };
@@ -128,8 +130,6 @@ const styles = StyleSheet.create({
     backgroundColor: theme.colors.primary,
   },
   scrollView: {
-    borderTopRightRadius: 10,
-    borderTopLeftRadius: 10,
   },
   header: {
     display: 'flex',
@@ -137,8 +137,6 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     backgroundColor: theme.gradient[0], //add js to css??
-    borderTopRightRadius: 10,
-    borderTopLeftRadius: 10,
   },
   text: {
     fontSize: 20,
