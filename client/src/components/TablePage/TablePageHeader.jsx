@@ -5,7 +5,7 @@ import { faChevronRight } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { FontAwesome5 } from '@expo/vector-icons';
 import SortMenu from './SortMenu';
-import { theme } from '../../../theme';
+import theme from '../../../theme';
 
 const TablePageHeader = ({
   categories,

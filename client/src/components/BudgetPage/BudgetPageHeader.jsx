@@ -142,11 +142,17 @@ const dropDownStyles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
   },
-
   text: {
     color: appTheme.colors.white,
     fontSize: 18,
     fontWeight: 'bold',
+    marginRight: 10,
+  },
+  textView: {
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
   },
 });
 

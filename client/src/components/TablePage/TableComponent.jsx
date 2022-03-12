@@ -4,7 +4,7 @@ import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { Swipeable } from 'react-native-gesture-handler';
 import axios from '../../providers/axios';
 import { MONTHS } from '../../utils/constants';
-import { theme } from '../../../theme';
+import theme from '../../../theme';
 import ItemSummary from '../../modals/ItemSummary';
 import { getDay, getMonth, getYear } from '../../utils/formatters';
 

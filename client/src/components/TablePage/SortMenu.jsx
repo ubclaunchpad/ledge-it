@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { View, StyleSheet } from 'react-native';
 import StyledButton from '../StyledButton';
 import Modal from '../CustomModal';
-import { theme } from '../../../theme';
+import theme from '../../../theme';
 import { METHODS } from '../../utils/sorts';
 
 const SortMenu = ({ sortFunction }) => {

@@ -5,12 +5,21 @@ import { setAxiosHeaders } from '../providers/axios';
 const URL = process.env.SERVER_URL;
 
 export const login = async (email, password) => {
-  // console.log({ email, password, URL });
   return axios.post(`${URL}/login`, `username=${email}&password=${password}`, {
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded',
     },
   });
+};
+
+export const logout = async () => {
+  try {
+    await AsyncStorage.removeItem('expiry');
+    await AsyncStorage.removeItem('auth_token');
+    return axios.post(`${URL}/logout/`);
+  } catch (e) {
+    console.log(e);
+  }
 };
 
 export const saveToken = async (token, expiry) => {

@@ -1,19 +1,33 @@
 import React from 'react';
 import { View, Text, StyleSheet, TouchableHighlight } from 'react-native';
 import { Entypo } from '@expo/vector-icons';
-import { theme } from '../../theme';
+import theme from '../../theme';
 
-export default ({ label, onTap, customStyles, iconName, iconSize, iconColor, activeOpacity }) => {
+export default ({
+  label,
+  onTap,
+  customStyles,
+  iconName,
+  iconSize,
+  iconColor,
+  activeOpacity,
+  underlayColor,
+  backgroundStyle,
+  textStyle,
+  ...rest
+}) => {
   const styles = customStyles || defaultStyles;
   return (
     <View style={styles.pressable}>
       <TouchableHighlight
         activeOpacity={activeOpacity || 0.65}
         T
-        underlayColor={theme.colors.white}
-        onPress={onTap}>
-        <View style={styles.background}>
-          <Text style={styles.text}>{label}</Text>
+        underlayColor={underlayColor || theme.colors.white}
+        onPress={onTap}
+        style={backgroundStyle || styles.background}
+        {...rest}>
+        <View style={styles.textView}>
+          <Text style={textStyle || styles.text}>{label}</Text>
           {iconName && (
             <Entypo name={iconName} size={iconSize || 20} color={iconColor || theme.colors.white} />
           )}
@@ -39,4 +53,6 @@ const defaultStyles = StyleSheet.create({
     color: theme.colors.textLight,
     fontWeight: 'bold',
   },
+  highlightStyle: {},
+  textView: {},
 });

@@ -5,7 +5,7 @@ import axios from '../providers/axios';
 import ScrollTable from '../components/TablePage/ScrollTable';
 import TablePageHeader from '../components/TablePage/TablePageHeader';
 import DefaultActionButton from '../components/ActionButton';
-import { theme } from '../../theme';
+import theme from '../../theme';
 import { formatString } from '../utils/formatters';
 import { METHODS, sortTransactions } from '../utils/sorts';
 
