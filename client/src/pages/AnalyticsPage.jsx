@@ -20,20 +20,21 @@ const AnalyticsPage = () => {
   const [incomeCategories, setIncomeCategories] = useState([]);
 
   const handleFilteringData = (data, categories) => {
-    return data.filter((row) => {return categories.includes(row.category)})
-  }
+    return data.filter((row) => {
+      return categories.includes(row.category);
+    });
+  };
 
   const handleProcessingData = (data) => {
-    
-    if (data === undefined || data === null || data.length < 1){
+    if (data === undefined || data === null || data.length < 1) {
       setCompressedData([]);
       setProcessedData([]);
       return;
     }
 
-    let selectedData = []
+    let selectedData = [];
 
-    if (data[0].price !== undefined){
+    if (data[0].price !== undefined) {
       // If its an expense
       selectedData = data.map((obj) => {
         return {
@@ -110,10 +111,12 @@ const AnalyticsPage = () => {
       axios
         .get(`${URL}/expense_categories`)
         .then(({ data }) => {
-          let categories = data.map((cat) => {return (cat.name)})
-          setExpenseCategories(categories)
+          const categories = data.map((cat) => {
+            return cat.name;
+          });
+          setExpenseCategories(categories);
         })
-          
+
         .catch((err) => console.log(err));
     }, []),
   );
@@ -123,27 +126,25 @@ const AnalyticsPage = () => {
       axios
         .get(`${URL}/income_categories`)
         .then(({ data }) => {
-          let categories = data.map((cat) => {return (cat.name)})
-          setIncomeCategories(categories)
+          const categories = data.map((cat) => {
+            return cat.name;
+          });
+          setIncomeCategories(categories);
         })
-          
+
         .catch((err) => console.log(err));
     }, []),
   );
 
   useEffect(() => {
-    let unfilteredData = viewing === 'Expenses' ? databaseExpense : databaseIncome;
-    let filteredData = handleFilteringData(unfilteredData, selectedCategories);
+    const unfilteredData = viewing === 'Expenses' ? databaseExpense : databaseIncome;
+    const filteredData = handleFilteringData(unfilteredData, selectedCategories);
     handleProcessingData(filteredData);
   }, [viewing, databaseExpense, databaseIncome, selectedCategories]);
 
   return (
     <View style={styles.container}>
-      <CustomAreaGraph 
-        dateStringData={compressedData} 
-        dateData={processedData} 
-        viewing = {viewing}
-      />
+      <CustomAreaGraph dateStringData={compressedData} dateData={processedData} viewing={viewing} />
       <GraphFooter
         categories={viewing === 'Expenses' ? expenseCategories : incomeCategories}
         selectedCategories={selectedCategories}

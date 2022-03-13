@@ -89,7 +89,7 @@ const CustomAreaGraph = ({ dateStringData, dateData, viewing }) => {
     const data = expenseMap.get(date);
 
     if (data !== undefined) {
-      return "$" + data.toString();
+      return `$${data.toString()}`;
     }
     return 'N/A';
   };
@@ -110,7 +110,10 @@ const CustomAreaGraph = ({ dateStringData, dateData, viewing }) => {
   return (
     <View style={styles.container}>
       <View style={styles.container}>
-        <Text style={styles.priceHeader}> {viewing === "Expenses" ? "-" : ''} ${priceHeader}</Text>
+        <Text style={styles.priceHeader}>
+          {' '}
+          {viewing === 'Expenses' ? '-' : ''} ${priceHeader}
+        </Text>
         <Text style={styles.dateHeader}>{dateHeader}</Text>
         <SlideAreaChart
           scrollable

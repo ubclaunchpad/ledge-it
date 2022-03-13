@@ -12,10 +12,9 @@ const GraphFooter = ({
   allSelected,
   setAllSelected,
 }) => {
-
   useEffect(() => {
     setSelectedCategories(categories);
-  }, [viewing, categories])
+  }, [viewing, categories, setSelectedCategories]);
 
   return (
     <View style={styles.container}>
@@ -49,8 +48,8 @@ const GraphFooter = ({
           label="All"
           customStyles={allSelected ? buttonSelectedStyle : buttonUnselectedStyle}
           onTap={() => {
-            if (allSelected){
-              setSelectedCategories([])
+            if (allSelected) {
+              setSelectedCategories([]);
               setAllSelected(false);
             } else {
               setSelectedCategories(categories);
@@ -76,9 +75,11 @@ const GraphFooter = ({
                   if (categoryIsSelected) {
                     setSelectedCategories(selectedCategories.filter((c) => c !== categoryName));
                   } else {
-                    setSelectedCategories(selectedCategories.concat(categoryName),
-                      selectedCategories.length === categories.length -1 ? 
-                        setAllSelected(true) : null
+                    setSelectedCategories(
+                      selectedCategories.concat(categoryName),
+                      selectedCategories.length === categories.length - 1
+                        ? setAllSelected(true)
+                        : null,
                     );
                   }
                 }}
