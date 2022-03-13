@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import axios from '../providers/axios';
 import StyledTextInput from '../components/StyledTextInput';
 import StyledButton from '../components/StyledButton';
@@ -34,24 +34,16 @@ const AddIncome = ({ setModalVisible, setIncomeModalVisible, type, setType }) =>
 
   const submitIncome = async () => {
     axios
-      .post(
-        `${URL}/income`,
-        JSON.stringify({
-          name,
-          description,
-          date: formatDateBE(date),
-          amount,
-          currency,
-          exchange_rate: 0,
-          location,
-          category,
-        }),
-        {
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        },
-      )
+      .post(`${URL}/income`, {
+        name,
+        description,
+        date: formatDateBE(date),
+        amount,
+        currency,
+        exchange_rate: 0,
+        location,
+        category,
+      })
       .then(({ data }) => console.log(data))
       .catch((err) => console.log(err));
     setIncomeModalVisible(false);
@@ -60,7 +52,7 @@ const AddIncome = ({ setModalVisible, setIncomeModalVisible, type, setType }) =>
 
   return (
     <>
-      <AmountBox date={date} name={name} category={category} amount={amount} />
+      <AmountBox date={date} name={name} category={category} amount={amount} type="Income" />
       <ToggleButtons type={type} setType={setType} />
       <StyledTextInput
         onChange={setAmount}
