@@ -9,7 +9,7 @@ import theme from '../../../theme';
 
 let earliestExpense = new Date();
 
-const CustomAreaGraph = ({ dateStringData, dateData }) => {
+const CustomAreaGraph = ({ dateStringData, dateData, viewing }) => {
   const [dateRange, setDateRange] = useState(null);
   const [dateHeader, setDateHeader] = useState('All Time');
   const [priceHeader, setPriceHeader] = useState(0);
@@ -89,7 +89,7 @@ const CustomAreaGraph = ({ dateStringData, dateData }) => {
     const data = expenseMap.get(date);
 
     if (data !== undefined) {
-      return data.toString();
+      return "$" + data.toString();
     }
     return 'N/A';
   };
@@ -110,7 +110,7 @@ const CustomAreaGraph = ({ dateStringData, dateData }) => {
   return (
     <View style={styles.container}>
       <View style={styles.container}>
-        <Text style={styles.priceHeader}> - ${priceHeader}</Text>
+        <Text style={styles.priceHeader}> {viewing === "Expenses" ? "-" : ''} ${priceHeader}</Text>
         <Text style={styles.dateHeader}>{dateHeader}</Text>
         <SlideAreaChart
           scrollable

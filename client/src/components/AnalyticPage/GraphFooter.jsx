@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { View, StyleSheet, Dimensions } from 'react-native';
-import StyledButton from '../../StyledButton';
-import theme from '../../../../theme';
+import StyledButton from '../StyledButton';
+import theme from '../../../theme';
 
 const GraphFooter = ({
   viewing,
@@ -15,7 +15,7 @@ const GraphFooter = ({
 
   useEffect(() => {
     setSelectedCategories(categories);
-  }, [viewing])
+  }, [viewing, categories])
 
   return (
     <View style={styles.container}>
