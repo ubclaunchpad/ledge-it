@@ -47,7 +47,7 @@ const RecentTransactions = () => {
 
   // TODO: behaviour during loading for either incomes or expenses; likewise, error-handling
   const { incomeLoading, incomeErrors, incomes, getIncomes } = useIncome();
-  const { expenseLoading, expensveErrors, expenses, getExpenses } = useExpense();
+  const { expenseLoading, expenseErrors, expenses, getExpenses } = useExpense();
 
   const [displayData, setDisplayData] = useState([]);
 

@@ -1,14 +1,11 @@
 import React, { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
-import axios from '../providers/axios';
+import useExpense from '../hooks/useExpense';
 import AmountBox from '../components/AmountBox';
 import StyledTextInput from '../components/StyledTextInput';
 import StyledButton from '../components/StyledButton';
 import StyledSelect from '../components/StyledSelect';
-import { formatDateBE } from '../utils/formatters';
 import ToggleButtons from '../components/ToggleButtons';
-
-const URL = process.env.SERVER_URL;
 
 const categories = [
   { value: 'Housing', label: 'Housing' },
@@ -19,12 +16,19 @@ const categories = [
   { value: 'Other', label: 'Other' },
 ];
 
+/**
+ * Return today's date in the format of DD/MM/YYYY.
+ *
+ * NOTE: JavaScript month's are from [0 = January, 11 = December], so we add 1 to get "expected" values [1 = January, 12 = December].
+ */
 const getCurrentDate = () => {
   const date = new Date();
   return `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`;
 };
 
 const AddExpense = ({ setModalVisible, setExpenseModalVisible, type, setType }) => {
+  const { addExpense } = useExpense();
+
   const currency = 'CAD';
   const [price, setPrice] = useState(undefined);
   const [name, setName] = useState(undefined);
@@ -36,20 +40,7 @@ const AddExpense = ({ setModalVisible, setExpenseModalVisible, type, setType }) 
   const [location, setLocation] = useState(undefined);
 
   const submitExpense = async () => {
-    axios
-      .post(`${URL}/expense`, {
-        name,
-        description,
-        date: formatDateBE(date),
-        price,
-        currency,
-        exchange_rate: 0,
-        location,
-        category,
-        sub_category: tag,
-      })
-      .then(({ data }) => console.log(data))
-      .catch((err) => console.log(err));
+    addExpense({ name, description, date, price, currency, location, category, tag });
     setExpenseModalVisible(false);
     setModalVisible(false);
   };
@@ -89,7 +80,7 @@ const AddExpense = ({ setModalVisible, setExpenseModalVisible, type, setType }) 
         onChange={setDate}
         keyboardType="default"
         label="Date"
-        placeholder="MM/DD/YYYY"
+        placeholder="DD/MM/YYYY"
         defaultValue={getCurrentDate()}
         required
       />

@@ -1,14 +1,11 @@
 import React, { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
-import axios from '../providers/axios';
+import useIncomes from '../hooks/useIncome';
 import StyledTextInput from '../components/StyledTextInput';
 import StyledButton from '../components/StyledButton';
 import StyledSelect from '../components/StyledSelect';
-import { formatDateBE } from '../utils/formatters';
 import AmountBox from '../components/AmountBox';
 import ToggleButtons from '../components/ToggleButtons';
-
-const URL = process.env.SERVER_URL;
 
 const categories = [
   { label: 'Salary', value: 'Salary' },
@@ -17,12 +14,19 @@ const categories = [
   { label: 'Other', value: 'Other' },
 ];
 
+/**
+ * Return today's date in the format of DD/MM/YYYY.
+ *
+ * NOTE: JavaScript month's are from [0 = January, 11 = December], so we add 1 to get "expected" values [1 = January, 12 = December].
+ */
 const getCurrentDate = () => {
   const date = new Date();
   return `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`;
 };
 
 const AddIncome = ({ setModalVisible, setIncomeModalVisible, type, setType }) => {
+  const { addIncome } = useIncomes();
+
   const currency = 'CAD';
   const [amount, setAmount] = useState(undefined);
   const [name, setName] = useState(undefined);
@@ -33,19 +37,7 @@ const AddIncome = ({ setModalVisible, setIncomeModalVisible, type, setType }) =>
   const [location, setLocation] = useState(undefined);
 
   const submitIncome = async () => {
-    axios
-      .post(`${URL}/income`, {
-        name,
-        description,
-        date: formatDateBE(date),
-        amount,
-        currency,
-        exchange_rate: 0,
-        location,
-        category,
-      })
-      .then(({ data }) => console.log(data))
-      .catch((err) => console.log(err));
+    addIncome({ name, description, date, amount, currency, exchange_rate: 0, location, category });
     setIncomeModalVisible(false);
     setModalVisible(false);
   };

@@ -8,33 +8,44 @@ import AddData from '../modals/AddData';
 const DefaultActionButton = () => {
   const [isModalVisible, setModalVisible] = useState(false);
   const [isAddDataModalVisible, setAddDataModalVisible] = useState('');
+
   return (
-    <View style={styles.centeredView}>
-      <Modal isModalVisible={isModalVisible} setModalVisible={setModalVisible}>
-        <Modal isModalVisible={!!isAddDataModalVisible} setModalVisible={setAddDataModalVisible}>
-          <AddData
-            setModalVisible={setModalVisible}
-            setAddDataModalVisible={setAddDataModalVisible}
-            initialType={isAddDataModalVisible}
-          />
+    <>
+      <View style={styles.centeredView}>
+        <Modal isModalVisible={isModalVisible} setModalVisible={setModalVisible}>
+          <Modal isModalVisible={!!isAddDataModalVisible} setModalVisible={setAddDataModalVisible}>
+            <AddData
+              setModalVisible={setModalVisible}
+              setAddDataModalVisible={setAddDataModalVisible}
+              initialType={isAddDataModalVisible}
+            />
+          </Modal>
+          <Button
+            style={styles.button}
+            icon="currency-usd"
+            mode="contained"
+            onPress={() => setAddDataModalVisible('Income')}>
+            Add Income
+          </Button>
+          <Button
+            style={styles.button}
+            icon="currency-usd-off"
+            mode="contained"
+            onPress={() => setAddDataModalVisible('Expense')}>
+            Add Expense
+          </Button>
         </Modal>
-        <Button
-          style={styles.button}
-          icon="currency-usd"
-          mode="contained"
-          onPress={() => setAddDataModalVisible('Income')}>
-          Add Income
-        </Button>
-        <Button
-          style={styles.button}
-          icon="currency-usd-off"
-          mode="contained"
-          onPress={() => setAddDataModalVisible('Expense')}>
-          Add Expense
-        </Button>
-      </Modal>
-      <FAB style={styles.fab} medium icon="plus" onPress={() => setModalVisible(true)} />
-    </View>
+      </View>
+      {/* On Android, placing the FAB within the view makes it unpressable */}
+      <FAB
+        style={styles.fab}
+        medium
+        icon="plus"
+        onPress={() => {
+          setModalVisible(true);
+        }}
+      />
+    </>
   );
 };
 

@@ -12,6 +12,9 @@ const useExpense = () => {
 
   useEffect(() => {
     getExpenses();
+
+    // TODO: deal with memory leak?
+    return () => {};
   }, [refetch]);
 
   const getExpenses = () => {
@@ -31,7 +34,7 @@ const useExpense = () => {
     axios
       .post(
         `${URL}/expense`,
-        JSON.stringify({
+        {
           name,
           description,
           date: formatDateBE(date),
@@ -41,7 +44,7 @@ const useExpense = () => {
           location,
           category,
           sub_category: tag,
-        }),
+        },
         {
           headers: {
             'Content-Type': 'application/json',

@@ -3,12 +3,18 @@ export const formatString = (str) => str.trim().toLowerCase();
 export const formatNumber = (num, digits = 2) => Math.abs(num).toFixed(digits);
 
 /**
- * "30/12/2021" -> "2021-12-30"
+ * Convert a string from DD/MM/YYYY to YYYY-MM-DD. If initial string is not in expected format,
+ * returns string as-is.
+ *
+ * @example {formatDateBE("30/12/2021") === "2021-12-30"
  */
 export const formatDateBE = (date) => {
   const dateList = date.split('/');
 
-  if (dateList.length !== 3) return date;
+  if (dateList.length !== 3) {
+    console.warn(`Received unexpected date (${date}) in formatDateBE; returning date as-is.`);
+    return date;
+  }
 
   const day = dateList[0].length === 1 ? `0${dateList[0]}` : dateList[0];
   const month = dateList[1].length === 1 ? `0${dateList[1]}` : dateList[1];

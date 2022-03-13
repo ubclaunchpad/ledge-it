@@ -12,6 +12,10 @@ const useIncomes = () => {
 
   useEffect(() => {
     getIncomes();
+
+    return () => {
+      setRefetch(0);
+    }
   }, [refetch]);
 
   const getIncomes = () => {
@@ -40,7 +44,7 @@ const useIncomes = () => {
     axios
       .post(
         `${URL}/income`,
-        JSON.stringify({
+        {
           name,
           description,
           date: formatDateBE(date),
@@ -49,7 +53,7 @@ const useIncomes = () => {
           exchange_rate: exchange_rate || 0,
           location,
           category,
-        }),
+        },
         {
           headers: {
             'Content-Type': 'application/json',

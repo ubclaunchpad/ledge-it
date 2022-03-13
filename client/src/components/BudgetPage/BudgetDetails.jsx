@@ -14,6 +14,7 @@ const BudgetDetails = ({ currentMonth, currentYear, isVisible, setVisible }) => 
 
   useFocusEffect(
     useCallback(() => {
+      // TODO: capture by useExpense?
       axios
         .get(`${URL}/expense/${currentYear}/${currentMonth}`)
         .then(({ data }) => setDatabaseExpense(data))
