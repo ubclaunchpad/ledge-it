@@ -31,6 +31,7 @@ const AddIncome = ({ setModalVisible, setIncomeModalVisible, type, setType }) =>
   const [categoryDropdownVisible, setCategoryDropdownVisible] = useState(false);
   const [description, setDesc] = useState(undefined);
   const [location, setLocation] = useState(undefined);
+  const [b64img, setb64img] = useState('');
 
   const submitIncome = async () => {
     axios
@@ -52,7 +53,7 @@ const AddIncome = ({ setModalVisible, setIncomeModalVisible, type, setType }) =>
 
   return (
     <>
-      <AmountBox date={date} name={name} category={category} amount={amount} type="Income" />
+      <AmountBox date={date} name={name} category={category} amount={amount} type="Income" setb64={setb64img} />
       <ToggleButtons type={type} setType={setType} />
       <StyledTextInput
         onChange={setAmount}
