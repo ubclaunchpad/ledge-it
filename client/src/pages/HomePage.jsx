@@ -1,24 +1,30 @@
-import React from 'react';
-import { StyleSheet, ScrollView, SafeAreaView, View } from 'react-native';
-import DefaultActionButton from '../components/ActionButton';
+import React, { useRef } from 'react';
+import { Animated, StyleSheet, SafeAreaView, View } from 'react-native';
 import CategoryPieChart from '../components/HomePage/CategoryPieChart';
 import ToggleCard from '../components/HomePage/ToggleCard';
 import NetWorthCard from '../components/HomePage/NetWorthCard';
 import RecentTransactions from '../components/HomePage/RecentTransactions';
 
 const HomePage = () => {
+  const scrollY = useRef(new Animated.Value(0)).current;
+
   return (
     <>
       <SafeAreaView style={styles.container}>
-        <ScrollView style={styles.content}>
-          <NetWorthCard />
+        <Animated.ScrollView 
+          onScroll={Animated.event(
+            [{nativeEvent: {contentOffset: {y: scrollY}}}],
+            {useNativeDriver: true},
+          )}
+          style={styles.content}
+        >
+          <NetWorthCard scrollPosition={scrollY} />
           <ToggleCard />
           <CategoryPieChart />
           <RecentTransactions />
-          <View style={{ height: 60 }} />
-        </ScrollView>
+          <View style={{ height: 85 }} />
+        </Animated.ScrollView>
       </SafeAreaView>
-      <DefaultActionButton />
     </>
   );
 };

@@ -1,10 +1,8 @@
 export const formatString = (str) => str.trim().toLowerCase();
 
 export const formatNumber = (num, digits = 2) =>
-  Math.abs(num).toLocaleString(undefined, {
-    minimumFractionDigits: digits,
-    maximumFractionDigits: digits,
-  });
+  Math.abs(num).toFixed(2);
+
 
 /**
  * "12/1/2021" -> "2021-12-01"

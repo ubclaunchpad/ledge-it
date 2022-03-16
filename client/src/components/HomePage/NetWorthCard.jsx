@@ -10,7 +10,7 @@ const NET_WORTH_ID = '61ab71e8efaeac62430a1822';
 
 const URL = process.env.SERVER_URL;
 
-const NetWorthCard = () => {
+const NetWorthCard = ({ scrollPosition }) => {
   const [netWorth, setNetWorth] = useState(0);
   const [income, setIncome] = useState(0);
   const [expense, setExpenses] = useState(0);
@@ -24,7 +24,6 @@ const NetWorthCard = () => {
         setIncome(data.all_time_income);
         setExpenses(data.all_time_expenses);
         setNetWorth(data.current);
-        setCurrNum(netWorth);
       })
       .catch((err) => console.log(err));
   };
@@ -33,6 +32,12 @@ const NetWorthCard = () => {
     useCallback(() => {
       getNetWorthData();
     }, []),
+  );
+
+  useFocusEffect(
+    useCallback(() => {
+      setCurrNum(netWorth);
+    }, [netWorth]),
   );
 
   return (
