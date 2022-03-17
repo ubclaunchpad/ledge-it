@@ -47,9 +47,9 @@ const DeleteCategories = ({ isDeleteCategoryOpen, setIsDeleteCategoryOpen }) => 
     setRefreshToggle(!refreshToggle);
   };
 
-  const RightSwipeComponent = (category) => {
+  const RightSwipeComponent = (categoryName) => {
     return (
-      <Pressable style={styles.swipeBackground} onPress={() => handleDelete(category)}>
+      <Pressable style={styles.swipeBackground} onPress={() => handleDelete(categoryName)}>
         <Text style={styles.swipeText}>Delete</Text>
       </Pressable>
     );
@@ -129,12 +129,10 @@ const DeleteCategories = ({ isDeleteCategoryOpen, setIsDeleteCategoryOpen }) => 
             return (
               <Swipeable
                 key={category.name}
-                renderRightActions={() => RightSwipeComponent(category)}>
-                <Pressable onPress={() => handleDelete(category.name)}>
-                  <View style={styles.setSettingOptions}>
-                    <Text style={styles.optionText}>{category.name}</Text>
-                  </View>
-                </Pressable>
+                renderRightActions={() => RightSwipeComponent(category.name)}>
+                <View style={styles.setSettingOptions}>
+                  <Text style={styles.optionText}>{category.name}</Text>
+                </View>
               </Swipeable>
             );
           })}

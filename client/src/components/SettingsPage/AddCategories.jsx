@@ -23,29 +23,37 @@ const AddCategories = ({ isAddCategoryOpen, setIsAddCategoryOpen }) => {
   const URL = process.env.SERVER_URL;
 
   const addExpenseCategory = (categoryName, categoryColor) => {
-    return axios.put(
-      `${URL}/expense_categories`,
-      {},
-      {
-        params: {
-          category_name: categoryName,
-          category_color: categoryColor,
+    if (categories.length < 10) {
+      return axios.put(
+        `${URL}/expense_categories`,
+        {},
+        {
+          params: {
+            category_name: categoryName,
+            category_color: categoryColor,
+          },
         },
-      },
-    );
+      );
+    } else {
+      console.log("There is a maximum of 10 expense categories.");
+    }
   };
 
   const addIncomeCategory = (categoryName, categoryColor) => {
-    return axios.put(
-      `${URL}/income_categories`,
-      {},
-      {
-        params: {
-          category_name: categoryName,
-          category_color: categoryColor,
+    if (categories.length < 10) {
+      return axios.put(
+        `${URL}/income_categories`,
+        {},
+        {
+          params: {
+            category_name: categoryName,
+            category_color: categoryColor,
+          },
         },
-      },
-    );
+      );
+    } else {
+      console.log("There is a maximum of 10 income categories.")
+    }
   };
 
   const handleAdd = async () => {
