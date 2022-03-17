@@ -53,7 +53,14 @@ const AddIncome = ({ setModalVisible, setIncomeModalVisible, type, setType }) =>
 
   return (
     <>
-      <AmountBox date={date} name={name} category={category} amount={amount} type="Income" setb64={setb64img} />
+      <AmountBox 
+        date={date} 
+        name={name} 
+        category={category} 
+        amount={amount} 
+        type="Income" 
+        setb64={(b64) => setb64img(b64)} 
+      />
       <ToggleButtons type={type} setType={setType} />
       <StyledTextInput
         onChange={setAmount}

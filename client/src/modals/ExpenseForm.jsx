@@ -34,7 +34,7 @@ const AddExpense = ({ setModalVisible, setExpenseModalVisible, type, setType }) 
   const [tag, setTag] = useState(undefined);
   const [description, setDesc] = useState(undefined);
   const [location, setLocation] = useState(undefined);
-  const [b64img, setb64img] = useState(undefined);
+  const [b64img, setb64img] = useState('');
 
   const submitExpense = async () => {
     axios
@@ -63,7 +63,7 @@ const AddExpense = ({ setModalVisible, setExpenseModalVisible, type, setType }) 
         category={category}
         amount={Number(price || 0) * -1}
         type="Expense"
-        setb64={setb64img}
+        setb64={(b64) => setb64img(b64)}
       />
       <ToggleButtons type={type} setType={setType} />
       <StyledTextInput

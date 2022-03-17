@@ -20,6 +20,7 @@ const ItemSummary = ({ modalVisible, setModalVisible, item, userCategories, type
   const [description, setDescription] = useState(item.description);
   const [location, setLocation] = useState(item.location);
   const [categoryDropdownVisible, setCategoryDropdownVisible] = useState(false);
+  const [b64img, setb64img] = useState('');
 
   const onUpdate = () => {
     axios
@@ -46,6 +47,7 @@ const ItemSummary = ({ modalVisible, setModalVisible, item, userCategories, type
           category={category}
           amount={Number(price || 0) * -1}
           type={type === 'Expenses' ? 'Expense' : 'Income'}
+          setb64={(b64) => setb64img(b64)}
           rounded
         />
         <StyledTextInput
