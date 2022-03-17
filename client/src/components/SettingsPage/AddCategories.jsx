@@ -35,7 +35,7 @@ const AddCategories = ({ isAddCategoryOpen, setIsAddCategoryOpen }) => {
         },
       );
     } else {
-      console.log("There is a maximum of 10 expense categories.");
+      console.log('There is a maximum of 10 expense categories.');
     }
   };
 
@@ -52,7 +52,7 @@ const AddCategories = ({ isAddCategoryOpen, setIsAddCategoryOpen }) => {
         },
       );
     } else {
-      console.log("There is a maximum of 10 income categories.")
+      console.log('There is a maximum of 10 income categories.');
     }
   };
 
