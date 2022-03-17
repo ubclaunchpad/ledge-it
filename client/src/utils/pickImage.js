@@ -16,5 +16,5 @@ export const openCamera = async () => {
       return result.base64;
     }
 
-    return null;
+    return '';
   }

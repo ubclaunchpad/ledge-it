@@ -16,6 +16,7 @@ class Expense(MongoDBModel):
     location_y: Optional[float] = None
     category: str
     sub_category: Optional[str] = None
+    image_url: Optional[str] = None
 
     @validator("exchange_rate")
     def must_not_be_equal_negative_one(cls, exr):
@@ -36,6 +37,7 @@ class UpdateExpenseModel(MongoDBModel):
     location_y: Optional[float]
     category: Optional[str]
     sub_category: Optional[str]
+    base64_image: Optional[str]
 
     @validator("exchange_rate")
     def must_not_be_equal_negative_one(cls, exr):
@@ -59,3 +61,4 @@ class AddExpense(MongoDBModel):
     location_y: Optional[float] = None
     category: str
     sub_category: Optional[str] = None
+    base64_image: Optional[str] = None

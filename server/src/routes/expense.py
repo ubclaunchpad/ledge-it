@@ -102,6 +102,8 @@ def create_expense(
         current_user,
     )
 
+    # TODO: call to upload base64 image if sent to s3 and store the URL
+
     if expense.currency.lower() == "cad":
         expense.exchange_rate = 1
     else:
@@ -157,6 +159,8 @@ def update_expense(
         -price_change,
         current_user,
     )
+
+    # TODO: call to upload base64 image if sent to s3 and store the URL
 
     if expense.currency is not None:
         if expense.currency.lower() == "cad":
@@ -225,6 +229,8 @@ def delete_expense(id, current_user: User = Depends(get_current_active_user)):
         -expense_to_delete["price"],
         current_user,
     )
+
+    # TODO: delete image in bucket?
 
     delete_result = expense_collection.delete_one(
         {"_id": expense_to_delete["_id"], "email": current_user["email"]}

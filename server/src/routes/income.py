@@ -66,6 +66,8 @@ def create_income(
     else:
         income.exchange_rate = get_exchange_rate_to_cad(income.currency)
 
+    # TODO: call to upload base64 image if sent to s3 and store the URL
+
     income_dict = {k: v for k, v in income.dict().items()}
     income_dict["email"] = current_user["email"]
 
@@ -106,6 +108,8 @@ def update_income(
     update_net_worth(
         net_worth_to_update["_id"], amount_change, income.date, False, current_user
     )
+
+    # TODO: call to upload base64 image if sent to s3 and store the URL
 
     if income.currency is not None:
         if income.currency.lower() == "cad":
@@ -167,6 +171,8 @@ def delete_income_by_id(id, current_user: User = Depends(get_current_active_user
     delete_result = income_collection.delete_one(
         {"_id": id, "email": current_user["email"]}
     )
+
+    # TODO: delete image?
 
     if delete_result.deleted_count == 1:
         return JSONResponse(
