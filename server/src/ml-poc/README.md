@@ -7,10 +7,10 @@
 - value
 - category (maybe)
 
-# SPECIALIZED MODELS
-## Asprise
+# Open Source Tools
+## Tesseract
+
+## Asprise (Not Open Source)
 Pricing($399/month)
 - 5000 free receipts, $0.08 after
--accepts multiple receipts in one image
-
-# GENERIC OCR MODELS
+- accepts multiple receipts in one image
