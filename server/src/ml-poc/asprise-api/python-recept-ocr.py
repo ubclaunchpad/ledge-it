@@ -3,7 +3,7 @@ import requests
 print("=== Python Receipt OCR Demo  ===")
 
 receiptOcrEndpoint = 'https://ocr.asprise.com/api/v1/receipt' # Receipt OCR API endpoint
-imageFile = "receipt.jpg" # // Modify this to use your own file if necessary
+imageFile = "receipt2.jpg" # // Modify this to use your own file if necessary
 r = requests.post(receiptOcrEndpoint, data = { \
   'client_id': 'TEST',        # Use 'TEST' for testing purpose \
   'recognizer': 'auto',       # can be 'US', 'CA', 'JP', 'SG' or 'auto' \

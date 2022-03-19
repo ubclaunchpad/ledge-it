@@ -1,120 +1,113 @@
-#`py scan_receipt.py -i receipt4.jpg --debug 1`
-#`python3 scan_receipt.py -i receipt4.jpg --debug 1`
-
-#To add to requirements.txt: opencv-contrib-python,imutils,scipy,pytesseract
-
-# import the necessary packages
-from imutils.perspective import four_point_transform
+from cgi import print_exception
 import pytesseract
-import argparse
-import imutils
 import cv2
+import numpy as np
 import re
 
-# construct the argument parser and parse the arguments
-ap = argparse.ArgumentParser()
-ap.add_argument("-i", "--image", required=True,
-	help="path to input receipt image")
-ap.add_argument("-d", "--debug", type=int, default=-1,
-	help="whether or not we are visualizing each step of the pipeline")
-args = vars(ap.parse_args())
+img = cv2.imread('receipt4.jpg')
 
-# load the input image from disk, resize it, and compute the ratio
-# of the *new* width to the *old* width
-orig = cv2.imread(args["image"])
-image = orig.copy()
-image = imutils.resize(image, width=500)
-ratio = orig.shape[1] / float(image.shape[1])
+DEBUG = False
 
-# convert the image to grayscale, blur it slightly, and then apply
-# edge detection to reveal receipt's outline
-gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-blurred = cv2.GaussianBlur(gray, (5, 5,), 0)
-edged = cv2.Canny(blurred, 75, 200)
-# check to see if we should show the output of our edge detection
-# procedure
-if args["debug"] > 0:
-	cv2.imshow("Input", image)
-	cv2.imshow("Edged", edged)
-	cv2.waitKey(0)
+#Adding custom options for tesseract
+custom_config = r'--oem 3 --psm 6'
+pytesseract.image_to_string(img, config=custom_config)
 
-# find contours in the edge map and sort them by size in descending
-# order
-cnts = cv2.findContours(edged.copy(), cv2.RETR_EXTERNAL,
-	cv2.CHAIN_APPROX_SIMPLE)
-cnts = imutils.grab_contours(cnts)
-cnts = sorted(cnts, key=cv2.contourArea, reverse=True)
+#Preprocess image to increase accuracy
+# get grayscale image
+def get_grayscale(image):
+    return cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
 
-# initialize a contour that corresponds to the receipt outline
-receiptCnt = None
-# loop over the contours
-for c in cnts:
-	# approximate the contour
-	peri = cv2.arcLength(c, True)
-	approx = cv2.approxPolyDP(c, 0.02 * peri, True)
-	# if our approximated contour has four points, then we can
-	# assume we have found the outline of the receipt
-	if len(approx) == 4:
-		receiptCnt = approx
-		break
-# if the receipt contour is empty then our script could not find the
-# outline and we should be notified
-if receiptCnt is None:
-	raise Exception(("Could not find receipt outline. "
-		"Try debugging your edge detection and contour steps."))
+# noise removal
+def remove_noise(image):
+    return cv2.medianBlur(image,5)
+ 
+#thresholding
+def thresholding(image):
+    return cv2.threshold(image, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)[1]
 
+#dilation
+def dilate(image):
+    kernel = np.ones((5,5),np.uint8)
+    return cv2.dilate(image, kernel, iterations = 1)
+    
+#erosion
+def erode(image):
+    kernel = np.ones((5,5),np.uint8)
+    return cv2.erode(image, kernel, iterations = 1)
 
-#Apply a perspective transform, yielding a top-down, bird’s-eye view of the receipt to improve OCR accuracy
+#opening - erosion followed by dilation
+def opening(image):
+    kernel = np.ones((5,5),np.uint8)
+    return cv2.morphologyEx(image, cv2.MORPH_OPEN, kernel)
 
-# check to see if we should draw the contour of the receipt on the
-# image and then display it to our screen
-if args["debug"] > 0:
-	output = image.copy()
-	cv2.drawContours(output, [receiptCnt], -1, (0, 255, 0), 2)
-	cv2.imshow("Receipt Outline", output)
-	cv2.waitKey(0)
-# apply a four-point perspective transform to the *original* image to
-# obtain a top-down bird's-eye view of the receipt
-receipt = four_point_transform(orig, receiptCnt.reshape(4, 2) * ratio)
-# show transformed image
-if args["debug"] > 0:
-	cv2.imshow("Receipt Transform", imutils.resize(receipt, width=500))
-	cv2.waitKey(0)
+#canny edge detection
+def canny(image):
+    return cv2.Canny(image, 100, 200)
+
+#skew correction
+def deskew(image):
+    coords = np.column_stack(np.where(image > 0))
+    angle = cv2.minAreaRect(coords)[-1]
+    if angle < -45:
+        angle = -(90 + angle)
+    else:
+        angle = -angle
+    (h, w) = image.shape[:2]
+    center = (w // 2, h // 2)
+    M = cv2.getRotationMatrix2D(center, angle, 1.0)
+    rotated = cv2.warpAffine(image, M, (w, h), flags=cv2.INTER_CUBIC, borderMode=cv2.BORDER_REPLICATE)
+    return rotated
+
+#template matching
+def match_template(image, template):
+    return cv2.matchTemplate(image, template, cv2.TM_CCOEFF_NORMED) 
 
 
-# Apply the Tesseract OCR engine with --psm 4 to the top-down transform of the receipt, allowing us to OCR the receipt line-by-line
+gray = get_grayscale(img)
+if DEBUG:
+    cv2.imshow("Gray image",gray)
+    cv2.waitKey(0)
 
-# Replace this line with path to tesseract folder (tested in Windows)
-#pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files (x86)\Tesseract-OCR\tesseract.exe'
+thresh = thresholding(gray)
+if DEBUG:
+    cv2.imshow("Threshholded image",thresh)
+    cv2.waitKey(0)
 
-#For mac ignore above line and just use `brew install tesseract` before running this script
+opening = opening(gray)
+if DEBUG:
+    cv2.imshow("Eroded+dilated image",opening)
+    cv2.waitKey(0)
 
-# apply OCR to the receipt image by assuming column data, ensuring
-# the text is *concatenated across the row* (additionally, for your
-# own images you may need to apply additional processing to cleanup
-# the image, including resizing, thresholding, etc.)
-options = "--psm 4"
-text = pytesseract.image_to_string(
-	cv2.cvtColor(receipt, cv2.COLOR_BGR2RGB),
-	config=options)
-# show the raw output of the OCR process
-print("[INFO] raw output:")
-print("==================")
-print(text)
-print("\n")
+canny = canny(gray)
+if DEBUG:
+    cv2.imshow("Edge detected image",canny)
+    cv2.waitKey(0)
 
-# regular expressions to parse out the item name and price
+text_from_image = pytesseract.image_to_string(
+	cv2.cvtColor(gray, cv2.COLOR_BGR2RGB),
+	config=custom_config)
 
-# define a regular expression that will match line items that include
-# a price component
+print("===========ALL PARSED TEXT=============")
+print(text_from_image)
+
+#Arbitrary classifications  from receipt
+merchant_name = text_from_image.split("\n")[0]
+merchant_address = text_from_image.split("\n")[1:3]
+
+print("Merchant name: ",merchant_name)
+print("Merchant address: ",merchant_address)
+
+# regular expression that will match line items that include a price component
 pricePattern = r'([0-9]+\.[0-9]+)'
-# show the output of filtering out *only* the line items in the
-# receipt
-print("[INFO] price line items:")
-print("========================")
+pricePattern2 = r'([0-9]+\,[0-9]+)'
+# show the output of filtering out *only* the line items in the receipts
+print("\n===========TRYING OUT REGEX=============")
 # loop over each of the line items in the OCR'd receipt
-for row in text.split("\n"):
+for row in text_from_image.split("\n"):
 	# check to see if the price regular expression matches the current
 	# row
-	if re.search(pricePattern, row) is not None:
+	if ((re.search(pricePattern, row) is not None) or (re.search(pricePattern2, row) is not None)):
 		print(row)
+
+
+
