@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
-import { StyleSheet, View, Text } from 'react-native';
+import { StyleSheet, View, Image } from 'react-native';
 import axios from '../providers/axios';
 import AmountBox from '../components/AmountBox';
 import StyledTextInput from '../components/StyledTextInput';
 import StyledButton from '../components/StyledButton';
 import StyledSelect from '../components/StyledSelect';
 import { formatDateBE } from '../utils/formatters';
-import { theme } from '../../theme';
+import ToggleButtons from '../components/ToggleButtons';
 
 const URL = process.env.SERVER_URL;
 
@@ -21,10 +21,10 @@ const categories = [
 
 const getCurrentDate = () => {
   const date = new Date();
-  return `${date.getMonth() + 1}/${date.getDate()}/${date.getFullYear()}`;
+  return `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`;
 };
 
-const AddExpense = ({ setModalVisible, setExpenseModalVisible }) => {
+const AddExpense = ({ setModalVisible, setExpenseModalVisible, type, setType }) => {
   const currency = 'CAD';
   const [price, setPrice] = useState(undefined);
   const [name, setName] = useState(undefined);
@@ -34,28 +34,22 @@ const AddExpense = ({ setModalVisible, setExpenseModalVisible }) => {
   const [tag, setTag] = useState(undefined);
   const [description, setDesc] = useState(undefined);
   const [location, setLocation] = useState(undefined);
+  const [base64Image, setBase64Image] = useState('');
 
   const submitExpense = async () => {
     axios
-      .post(
-        `${URL}/expense`,
-        JSON.stringify({
-          name,
-          description,
-          date: formatDateBE(date),
-          price,
-          currency,
-          exchange_rate: 0,
-          location,
-          category,
-          sub_category: tag,
-        }),
-        {
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        },
-      )
+      .post(`${URL}/expense`, {
+        name,
+        description,
+        date: formatDateBE(date),
+        price,
+        currency,
+        exchange_rate: 0,
+        location,
+        category,
+        sub_category: tag,
+        ...(base64Image === '' ? {} : { base64_image: base64Image }),
+      })
       .then(({ data }) => console.log(data))
       .catch((err) => console.log(err));
     setExpenseModalVisible(false);
@@ -63,13 +57,20 @@ const AddExpense = ({ setModalVisible, setExpenseModalVisible }) => {
   };
 
   return (
-    <View style={styles.content}>
-      <Text style={styles.title}>Add Expense</Text>
-      <AmountBox fields={[price || 0.0, name, description, date, category || '', tag, location]} />
+    <>
+      <AmountBox
+        date={date}
+        name={name}
+        category={category}
+        amount={Number(price || 0) * -1}
+        type="Expense"
+        setb64={setBase64Image}
+      />
+      <ToggleButtons type={type} setType={setType} />
       <StyledTextInput
         onChange={setPrice}
         keyboardType="numeric"
-        label="Price"
+        label="Amount"
         placeholder="$$$"
         required
       />
@@ -121,8 +122,15 @@ const AddExpense = ({ setModalVisible, setExpenseModalVisible }) => {
         style={{
           flexDirection: 'row',
           justifyContent: 'center',
+          alignItems: 'center',
           marginTop: 20,
         }}>
+        {base64Image !== '' && (
+          <Image
+            style={{ width: 85, height: 85, borderRadius: 15, marginHorizontal: 20 }}
+            source={{ uri: base64Image }}
+          />
+        )}
         <View style={styles.button}>
           <StyledButton label="Cancel" onTap={() => setExpenseModalVisible(false)} />
         </View>
@@ -130,23 +138,11 @@ const AddExpense = ({ setModalVisible, setExpenseModalVisible }) => {
           <StyledButton label="Add" onTap={submitExpense} />
         </View>
       </View>
-    </View>
+    </>
   );
 };
 
 const styles = StyleSheet.create({
-  content: {
-    flexDirection: 'column',
-    justifyContent: 'flex-start',
-    marginHorizontal: 20,
-  },
-  title: {
-    textAlign: 'center',
-    fontSize: 24,
-    marginBottom: 20,
-    fontWeight: 'bold',
-    color: theme.colors.primary,
-  },
   button: {
     marginHorizontal: 20,
   },

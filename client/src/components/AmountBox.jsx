@@ -1,27 +1,45 @@
 import React from 'react';
 import { Text, StyleSheet, View } from 'react-native';
-import { theme } from '../../theme';
+import theme from '../../theme';
+import StyledButton from './StyledButton';
+import openCamera from '../utils/pickImage';
 
-export default ({ fields }) => {
-  const currentFont = 30;
-  let id = 0;
+export default ({ date, amount, category, name, type, setb64, rounded = false }) => {
+  const getImage = async () => {
+    const b64img = await openCamera();
+    setb64(b64img);
+  };
 
   return (
-    <View style={[styles.box]}>
-      <View style={styles.textbox}>
-        <Text
-          adjustsFontSizeToFit
-          style={[styles.text, { fontSize: currentFont, marginBottom: 5 }]}>
-          {`$${Number.parseFloat(fields[0]).toFixed(2)}`}
+    <View
+      style={[styles.box, rounded && { borderBottomRightRadius: 20, borderBottomLeftRadius: 20 }]}>
+      <View style={styles.header}>
+        <Text style={date ? styles.available : styles.placeholder}>{date || 'Date'}</Text>
+        <StyledButton
+          iconName="camera"
+          iconColor={theme.colors.white}
+          iconSize={32}
+          customStyles={styles}
+          onTap={getImage}
+          underlayColor={theme.colors.primary}
+        />
+      </View>
+      <View>
+        <Text adjustsFontSizeToFit style={[styles.text, { fontSize: 54 }]}>
+          {`$${Number.parseFloat(amount ?? '0').toFixed(2)}`}
         </Text>
-        {fields.slice(1, fields.length).map((val) => {
-          id++;
-          return val ? (
-            <Text style={{ fontSize: 15, color: theme.colors.primary }} key={id}>
-              {val}
-            </Text>
-          ) : null;
-        })}
+      </View>
+      <View style={styles.footer}>
+        <Text style={[category ? styles.available : styles.placeholder, { width: '50%' }]}>
+          {category || 'Category'}
+        </Text>
+        <Text
+          style={[
+            name ? styles.available : styles.placeholder,
+            { width: '50%', textAlign: 'right' },
+          ]}>
+          {name || (type === 'Expense' ? 'Name' : 'Source')}
+        </Text>
       </View>
     </View>
   );
@@ -29,24 +47,47 @@ export default ({ fields }) => {
 
 const styles = StyleSheet.create({
   box: {
-    borderColor: theme.colors.primary,
-    borderRadius: 10,
-    borderWidth: 1.5,
+    backgroundColor: theme.colors.primary,
+    borderTopRightRadius: 20,
+    borderTopLeftRadius: 20,
     width: '100%',
     flex: -1,
   },
   text: {
     fontSize: 5,
-    color: theme.colors.primary,
+    color: theme.colors.textLight,
     fontWeight: 'bold',
+    textAlign: 'center',
   },
-  textbox: {
-    margin: 10,
-    flexDirection: 'column',
-    flexWrap: 'nowrap',
+  footer: {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    margin: 15,
+    marginBottom: 10,
+  },
+
+  header: {
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
-    shadowOpacity: 0,
+    margin: 15,
+    marginBottom: 10,
+  },
+  available: {
+    fontSize: 20,
+    fontWeight: '500',
+    color: theme.colors.textLight,
+  },
+  placeholder: {
+    fontSize: 20,
+    fontWeight: '500',
+    color: theme.colors.lightgrey,
+  },
+  pressable: {
+    position: 'absolute',
+    alignSelf: 'flex-end',
+    top: -20,
   },
 });

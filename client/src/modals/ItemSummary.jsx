@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
-import { StyleSheet, View, Text } from 'react-native';
+import { StyleSheet, View, Text, Image } from 'react-native';
 import axios from '../providers/axios';
 import StyledButton from '../components/StyledButton';
 import StyledTextInput from '../components/StyledTextInput';
 import StyledSelect from '../components/StyledSelect';
 import CustomModal from '../components/CustomModal';
 import AmountBox from '../components/AmountBox';
-import { theme } from '../../theme';
+import theme from '../../theme';
 import { formatDateBE, formatDateFE } from '../utils/formatters';
 
 const URL = process.env.SERVER_URL;
@@ -20,25 +20,19 @@ const ItemSummary = ({ modalVisible, setModalVisible, item, userCategories, type
   const [description, setDescription] = useState(item.description);
   const [location, setLocation] = useState(item.location);
   const [categoryDropdownVisible, setCategoryDropdownVisible] = useState(false);
+  const [base64Image, setBase64Image] = useState('');
 
   const onUpdate = () => {
     axios
-      .put(
-        `${URL}/${type === 'Expenses' ? 'expense' : 'income'}`,
-        JSON.stringify({
-          name,
-          description,
-          date: formatDateBE(date),
-          [type === 'Expenses' ? 'price' : 'amount']: price,
-          location,
-          category,
-        }),
-        {
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        },
-      )
+      .put(`${URL}/${type === 'Expenses' ? 'expense' : 'income'}/${item._id}`, {
+        name,
+        description,
+        date: formatDateBE(date),
+        [type === 'Expenses' ? 'price' : 'amount']: price,
+        location,
+        category,
+        ...(base64Image === '' ? {} : { base64_image: base64Image }),
+      })
       .then(({ data }) => console.log(data))
       .catch((err) => console.log(err));
     setModalVisible(false);
@@ -49,15 +43,13 @@ const ItemSummary = ({ modalVisible, setModalVisible, item, userCategories, type
       <View style={styles.content}>
         <Text style={styles.title}>{type === 'Expenses' ? 'Expense' : 'Income'} Summary</Text>
         <AmountBox
-          fields={[
-            price || 0.0,
-            name,
-            description,
-            formatDateFE(date),
-            category || '',
-            tag,
-            location,
-          ]}
+          date={date}
+          name={name}
+          category={category}
+          amount={Number(price || 0) * -1}
+          type={type === 'Expenses' ? 'Expense' : 'Income'}
+          setb64={setBase64Image}
+          rounded
         />
         <StyledTextInput
           label={type === 'Expenses' ? 'Price' : 'Amount'}
@@ -119,12 +111,20 @@ const ItemSummary = ({ modalVisible, setModalVisible, item, userCategories, type
           placeholder="Optional..."
           value={location}
         />
+
         <View
           style={{
             flexDirection: 'row',
             justifyContent: 'center',
+            alignItems: 'center',
             marginTop: 20,
           }}>
+          {base64Image !== '' && (
+            <Image
+              style={{ width: 85, height: 85, borderRadius: 15, marginHorizontal: 20 }}
+              source={{ uri: base64Image }}
+            />
+          )}
           <View style={styles.button}>
             <StyledButton label="Cancel" onTap={() => setModalVisible(false)} />
           </View>

@@ -10,7 +10,7 @@ import AnalyticsPage from './src/pages/AnalyticsPage';
 import SettingsPage from './src/pages/SettingsPage';
 import AuthPage from './src/auth/AuthPage';
 import BlankPage from './src/auth/BlankPage';
-import { theme } from './theme';
+import theme from './theme';
 import { getToken } from './src/utils/auth';
 
 const App = () => {

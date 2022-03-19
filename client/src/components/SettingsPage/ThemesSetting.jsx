@@ -1,8 +1,8 @@
 import React from 'react';
-import { Dimensions, Pressable, StyleSheet, Text, View } from 'react-native';
+import { Dimensions, Pressable, SafeAreaView, StyleSheet, Text, View } from 'react-native';
 import Modal from 'react-native-modal';
 import { LinearGradient } from 'expo-linear-gradient';
-import { theme } from '../../../theme';
+import theme from '../../../theme';
 import StyledButton from '../StyledButton';
 
 const ThemesSetting = ({ state, setState }) => {
@@ -20,7 +20,7 @@ const ThemesSetting = ({ state, setState }) => {
       onRequestClose={() => {
         setState({ isThemesModalOpen: false });
       }}>
-      <View style={styles.container}>
+      <SafeAreaView style={styles.container}>
         <View style={styles.header}>
           <StyledButton
             customStyles={{
@@ -55,7 +55,7 @@ const ThemesSetting = ({ state, setState }) => {
             );
           })}
         </View>
-      </View>
+      </SafeAreaView>
     </Modal>
   );
 };

@@ -4,7 +4,7 @@ import { VictoryPie, VictoryLabel } from 'victory-native';
 import { useFocusEffect } from '@react-navigation/native';
 import axios from '../../providers/axios';
 import { MONTHS } from '../../utils/constants';
-import { theme } from '../../../theme';
+import theme from '../../../theme';
 import { formatNumber } from '../../utils/formatters';
 
 const URL = process.env.SERVER_URL;
@@ -52,6 +52,9 @@ const CategoryPieChart = () => {
     }, 0),
   };
   const ratio = `${Math.round((calculateExpense.total / calculateBudget.total) * 100) || 0}%`;
+  const width = `${
+    Math.min(Math.round((calculateExpense.total / calculateBudget.total) * 100), 100) || 0
+  }%`;
 
   const categoryData = categoryBudgetData.map((category, index) => ({
     ...category,
@@ -108,7 +111,7 @@ const CategoryPieChart = () => {
         <View
           style={[
             StyleSheet.absoluteFill,
-            { backgroundColor: theme.colors.green, borderRadius: 20, width: ratio },
+            { backgroundColor: theme.colors.green, borderRadius: 20, width },
           ]}>
           <Text style={styles.pbarTextExpense}>{ratio}</Text>
         </View>

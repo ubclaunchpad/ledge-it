@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { List } from 'react-native-paper';
 import { StyleSheet, Text, View } from 'react-native';
-import { theme } from '../../../theme';
+import theme from '../../../theme';
 import { getDay, getMonth, getYear } from '../../utils/formatters';
 import { MONTHS } from '../../utils/constants';
 

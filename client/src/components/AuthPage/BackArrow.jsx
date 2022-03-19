@@ -1,7 +1,7 @@
 import React from 'react';
 import { StyleSheet } from 'react-native';
 import StyledButton from '../StyledButton';
-import { theme } from '../../../theme';
+import theme from '../../../theme';
 
 export default ({ onPress }) => {
   return (
@@ -11,6 +11,7 @@ export default ({ onPress }) => {
       iconSize={50}
       customStyles={styles}
       onTap={onPress}
+      underlayColor={theme.colors.greyBackground}
     />
   );
 };

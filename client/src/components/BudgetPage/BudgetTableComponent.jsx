@@ -2,7 +2,7 @@ import React from 'react';
 import { List } from 'react-native-paper';
 import { StyleSheet, Text, View } from 'react-native';
 import { MONTHS } from '../../utils/constants';
-import { theme } from '../../../theme';
+import theme from '../../../theme';
 
 const BudgetTableComponent = ({ budget, isVisible, setVisible, setMonth, setYear }) => {
   return (
@@ -15,10 +15,10 @@ const BudgetTableComponent = ({ budget, isVisible, setVisible, setMonth, setYear
               <Text style={styles.month}>{MONTHS[budget.month - 1]}</Text>
             </View>
             <View style={{ width: '30%' }}>
-              <Text style={styles.value}>${budget.value}</Text>
+              <Text style={styles.value}>${Number(budget.value).toFixed(2)}</Text>
             </View>
             <View style={{ width: '30%' }}>
-              <Text style={styles.spent}>-${budget.spent}</Text>
+              <Text style={styles.spent}>-${Number(budget.spent).toFixed(2)}</Text>
             </View>
           </View>
         )}

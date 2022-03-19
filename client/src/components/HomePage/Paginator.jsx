@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Animated, StyleSheet, Dimensions } from 'react-native';
-import { theme } from '../../../theme';
+import theme from '../../../theme';
 
 const Paginator = ({ data, scrollX }) => {
   const { width } = Dimensions.get('window');

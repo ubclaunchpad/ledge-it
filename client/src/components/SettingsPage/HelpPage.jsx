@@ -1,7 +1,7 @@
 import React from 'react';
-import { Dimensions, StyleSheet, Text, View } from 'react-native';
+import { Dimensions, SafeAreaView, StyleSheet, Text, View } from 'react-native';
 import Modal from 'react-native-modal';
-import { theme } from '../../../theme';
+import theme from '../../../theme';
 import StyledButton from '../StyledButton';
 
 const HelpPage = ({ state, setState }) => {
@@ -17,7 +17,7 @@ const HelpPage = ({ state, setState }) => {
       onRequestClose={() => {
         setState({ isHelpModalOpen: false });
       }}>
-      <View style={styles.container}>
+      <SafeAreaView style={styles.container}>
         <View style={styles.header}>
           <StyledButton
             customStyles={{
@@ -40,7 +40,7 @@ const HelpPage = ({ state, setState }) => {
           <Text style={styles.titleText}>Help</Text>
         </View>
         <Text>This is help page</Text>
-      </View>
+      </SafeAreaView>
     </Modal>
   );
 };

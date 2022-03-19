@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { Dimensions, StyleSheet, Text, View, Switch } from 'react-native';
+import { Dimensions, StyleSheet, Text, View, Switch, SafeAreaView } from 'react-native';
 import Modal from 'react-native-modal';
-import { theme } from '../../../theme';
+import theme from '../../../theme';
 import StyledButton from '../StyledButton';
 
 const NotificationSetting = ({ state, setState }) => {
@@ -22,7 +22,7 @@ const NotificationSetting = ({ state, setState }) => {
       onRequestClose={() => {
         setState({ isNotificationModalOpen: false });
       }}>
-      <View style={styles.container}>
+      <SafeAreaView style={styles.container}>
         <View style={styles.header}>
           <StyledButton
             customStyles={{
@@ -83,7 +83,7 @@ const NotificationSetting = ({ state, setState }) => {
             onValueChange={() => setIsCalendarSwitchOn(!isCalendarSwitchOn)}
           />
         </View>
-      </View>
+      </SafeAreaView>
     </Modal>
   );
 };

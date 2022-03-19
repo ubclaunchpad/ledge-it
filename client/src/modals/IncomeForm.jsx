@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, View, Image } from 'react-native';
 import axios from '../providers/axios';
-import AmountBox from '../components/AmountBox';
 import StyledTextInput from '../components/StyledTextInput';
 import StyledButton from '../components/StyledButton';
 import StyledSelect from '../components/StyledSelect';
 import { formatDateBE } from '../utils/formatters';
-import { theme } from '../../theme';
+import AmountBox from '../components/AmountBox';
+import ToggleButtons from '../components/ToggleButtons';
 
 const URL = process.env.SERVER_URL;
 
@@ -22,7 +22,7 @@ const getCurrentDate = () => {
   return `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`;
 };
 
-const AddIncome = ({ setModalVisible, setIncomeModalVisible }) => {
+const AddIncome = ({ setModalVisible, setIncomeModalVisible, type, setType }) => {
   const currency = 'CAD';
   const [amount, setAmount] = useState(undefined);
   const [name, setName] = useState(undefined);
@@ -31,27 +31,21 @@ const AddIncome = ({ setModalVisible, setIncomeModalVisible }) => {
   const [categoryDropdownVisible, setCategoryDropdownVisible] = useState(false);
   const [description, setDesc] = useState(undefined);
   const [location, setLocation] = useState(undefined);
+  const [base64Image, setBase64Image] = useState('');
 
   const submitIncome = async () => {
     axios
-      .post(
-        `${URL}/income`,
-        JSON.stringify({
-          name,
-          description,
-          date: formatDateBE(date),
-          amount,
-          currency,
-          exchange_rate: 0,
-          location,
-          category,
-        }),
-        {
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        },
-      )
+      .post(`${URL}/income`, {
+        name,
+        description,
+        date: formatDateBE(date),
+        amount,
+        currency,
+        exchange_rate: 0,
+        location,
+        category,
+        ...(base64Image === '' ? {} : { base64_image: base64Image }),
+      })
       .then(({ data }) => console.log(data))
       .catch((err) => console.log(err));
     setIncomeModalVisible(false);
@@ -59,9 +53,16 @@ const AddIncome = ({ setModalVisible, setIncomeModalVisible }) => {
   };
 
   return (
-    <View style={styles.content}>
-      <Text style={styles.title}>Add Income</Text>
-      <AmountBox fields={[amount || 0.0, date, category || '', description, location]} />
+    <>
+      <AmountBox
+        date={date}
+        name={name}
+        category={category}
+        amount={amount}
+        type="Income"
+        setb64={setBase64Image}
+      />
+      <ToggleButtons type={type} setType={setType} />
       <StyledTextInput
         onChange={setAmount}
         keyboardType="numeric"
@@ -111,8 +112,15 @@ const AddIncome = ({ setModalVisible, setIncomeModalVisible }) => {
         style={{
           flexDirection: 'row',
           justifyContent: 'center',
+          alignItems: 'center',
           marginTop: 20,
         }}>
+        {base64Image !== '' && (
+          <Image
+            style={{ width: 85, height: 85, borderRadius: 15, marginHorizontal: 20 }}
+            source={{ uri: base64Image }}
+          />
+        )}
         <View style={styles.button}>
           <StyledButton label="Cancel" onTap={() => setIncomeModalVisible(false)} />
         </View>
@@ -120,23 +128,11 @@ const AddIncome = ({ setModalVisible, setIncomeModalVisible }) => {
           <StyledButton label="Add" onTap={submitIncome} />
         </View>
       </View>
-    </View>
+    </>
   );
 };
 
 const styles = StyleSheet.create({
-  content: {
-    flexDirection: 'column',
-    justifyContent: 'flex-start',
-    marginHorizontal: 20,
-  },
-  title: {
-    textAlign: 'center',
-    fontSize: 24,
-    marginBottom: 20,
-    fontWeight: 'bold',
-    color: theme.colors.primary,
-  },
   button: {
     marginHorizontal: 20,
   },
