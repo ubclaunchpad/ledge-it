@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { StyleSheet, View, Text } from 'react-native';
+import { StyleSheet, View, Text, Image } from 'react-native';
 import axios from '../providers/axios';
 import StyledButton from '../components/StyledButton';
 import StyledTextInput from '../components/StyledTextInput';
@@ -20,6 +20,7 @@ const ItemSummary = ({ modalVisible, setModalVisible, item, userCategories, type
   const [description, setDescription] = useState(item.description);
   const [location, setLocation] = useState(item.location);
   const [categoryDropdownVisible, setCategoryDropdownVisible] = useState(false);
+  const [base64Image, setBase64Image] = useState('');
 
   const onUpdate = () => {
     axios
@@ -30,6 +31,7 @@ const ItemSummary = ({ modalVisible, setModalVisible, item, userCategories, type
         [type === 'Expenses' ? 'price' : 'amount']: price,
         location,
         category,
+        ...(base64Image === '' ? {} : { base64_image: base64Image }),
       })
       .then(({ data }) => console.log(data))
       .catch((err) => console.log(err));
@@ -46,6 +48,7 @@ const ItemSummary = ({ modalVisible, setModalVisible, item, userCategories, type
           category={category}
           amount={Number(price || 0) * -1}
           type={type === 'Expenses' ? 'Expense' : 'Income'}
+          setb64={setBase64Image}
           rounded
         />
         <StyledTextInput
@@ -108,12 +111,20 @@ const ItemSummary = ({ modalVisible, setModalVisible, item, userCategories, type
           placeholder="Optional..."
           value={location}
         />
+
         <View
           style={{
             flexDirection: 'row',
             justifyContent: 'center',
+            alignItems: 'center',
             marginTop: 20,
           }}>
+          {base64Image !== '' && (
+            <Image
+              style={{ width: 85, height: 85, borderRadius: 15, marginHorizontal: 20 }}
+              source={{ uri: base64Image }}
+            />
+          )}
           <View style={styles.button}>
             <StyledButton label="Cancel" onTap={() => setModalVisible(false)} />
           </View>

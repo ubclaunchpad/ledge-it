@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, View, Image } from 'react-native';
 import axios from '../providers/axios';
 import AmountBox from '../components/AmountBox';
 import StyledTextInput from '../components/StyledTextInput';
@@ -34,6 +34,7 @@ const AddExpense = ({ setModalVisible, setExpenseModalVisible, type, setType }) 
   const [tag, setTag] = useState(undefined);
   const [description, setDesc] = useState(undefined);
   const [location, setLocation] = useState(undefined);
+  const [base64Image, setBase64Image] = useState('');
 
   const submitExpense = async () => {
     axios
@@ -47,6 +48,7 @@ const AddExpense = ({ setModalVisible, setExpenseModalVisible, type, setType }) 
         location,
         category,
         sub_category: tag,
+        ...(base64Image === '' ? {} : { base64_image: base64Image }),
       })
       .then(({ data }) => console.log(data))
       .catch((err) => console.log(err));
@@ -62,6 +64,7 @@ const AddExpense = ({ setModalVisible, setExpenseModalVisible, type, setType }) 
         category={category}
         amount={Number(price || 0) * -1}
         type="Expense"
+        setb64={setBase64Image}
       />
       <ToggleButtons type={type} setType={setType} />
       <StyledTextInput
@@ -119,8 +122,15 @@ const AddExpense = ({ setModalVisible, setExpenseModalVisible, type, setType }) 
         style={{
           flexDirection: 'row',
           justifyContent: 'center',
+          alignItems: 'center',
           marginTop: 20,
         }}>
+        {base64Image !== '' && (
+          <Image
+            style={{ width: 85, height: 85, borderRadius: 15, marginHorizontal: 20 }}
+            source={{ uri: base64Image }}
+          />
+        )}
         <View style={styles.button}>
           <StyledButton label="Cancel" onTap={() => setExpenseModalVisible(false)} />
         </View>

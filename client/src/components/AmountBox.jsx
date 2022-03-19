@@ -2,8 +2,14 @@ import React from 'react';
 import { Text, StyleSheet, View } from 'react-native';
 import theme from '../../theme';
 import StyledButton from './StyledButton';
+import openCamera from '../utils/pickImage';
 
-export default ({ date, amount, category, name, type, rounded = false }) => {
+export default ({ date, amount, category, name, type, setb64, rounded = false }) => {
+  const getImage = async () => {
+    const b64img = await openCamera();
+    setb64(b64img);
+  };
+
   return (
     <View
       style={[styles.box, rounded && { borderBottomRightRadius: 20, borderBottomLeftRadius: 20 }]}>
@@ -14,7 +20,7 @@ export default ({ date, amount, category, name, type, rounded = false }) => {
           iconColor={theme.colors.white}
           iconSize={32}
           customStyles={styles}
-          onTap={() => console.log('camera')}
+          onTap={getImage}
           underlayColor={theme.colors.primary}
         />
       </View>
