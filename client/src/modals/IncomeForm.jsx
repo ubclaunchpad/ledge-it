@@ -31,7 +31,7 @@ const AddIncome = ({ setModalVisible, setIncomeModalVisible, type, setType }) =>
   const [categoryDropdownVisible, setCategoryDropdownVisible] = useState(false);
   const [description, setDesc] = useState(undefined);
   const [location, setLocation] = useState(undefined);
-  const [b64img, setb64img] = useState('');
+  const [base64Image, setBase64Image] = useState('');
 
   const submitIncome = async () => {
     axios
@@ -44,6 +44,7 @@ const AddIncome = ({ setModalVisible, setIncomeModalVisible, type, setType }) =>
         exchange_rate: 0,
         location,
         category,
+        ...(base64Image === '' ? {} : {'base64_image': base64Image})
       })
       .then(({ data }) => console.log(data))
       .catch((err) => console.log(err));
@@ -59,7 +60,7 @@ const AddIncome = ({ setModalVisible, setIncomeModalVisible, type, setType }) =>
         category={category} 
         amount={amount} 
         type="Income" 
-        setb64={(b64) => setb64img(b64)} 
+        setb64={setBase64Image} 
       />
       <ToggleButtons type={type} setType={setType} />
       <StyledTextInput

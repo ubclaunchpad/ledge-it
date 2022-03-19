@@ -7,6 +7,7 @@ from fastapi.encoders import jsonable_encoder
 from pydantic.error_wrappers import ValidationError
 from datetime import date
 
+from ..routes.image_to_s3 import upload_image
 from ..middleware import get_current_active_user
 from ..models.user import User
 from .net_worth import update_net_worth
@@ -47,7 +48,7 @@ def get_income_by_id(id, current_user: User = Depends(get_current_active_user)):
 
 
 @router.post("/income", response_description="Add new income", response_model=Income)
-def create_income(
+async def create_income(
     income: AddIncome = Body(...), current_user: User = Depends(get_current_active_user)
 ):
     if (
@@ -66,9 +67,15 @@ def create_income(
     else:
         income.exchange_rate = get_exchange_rate_to_cad(income.currency)
 
-    # TODO: call to upload base64 image if sent to s3 and store the URL
-
     income_dict = {k: v for k, v in income.dict().items()}
+    
+    if "base64_image" in income_dict:
+        try:
+            income_dict["image_url"] = await upload_image(income_dict["base64_image"])
+            del income_dict["base64_image"]
+        except ValueError as err:
+            raise HTTPException(status_code=404, detail=f"{err}")
+
     income_dict["email"] = current_user["email"]
 
     try:
@@ -90,7 +97,7 @@ def create_income(
     response_description="Update income selected by id",
     response_model=Income,
 )
-def update_income(
+async def update_income(
     id,
     income: UpdateIncomeModel = Body(...),
     current_user: User = Depends(get_current_active_user),
@@ -109,8 +116,6 @@ def update_income(
         net_worth_to_update["_id"], amount_change, income.date, False, current_user
     )
 
-    # TODO: call to upload base64 image if sent to s3 and store the URL
-
     if income.currency is not None:
         if income.currency.lower() == "cad":
             income.exchange_rate = 1
@@ -118,6 +123,14 @@ def update_income(
             income.exchange_rate = get_exchange_rate_to_cad(income.currency)
 
     income = {k: v for k, v in income.dict().items() if v is not None}
+
+    if "base64_image" in income:
+        try:
+            income["image_url"] = await upload_image(income["base64_image"])
+            del income["base64_image"]
+        except ValueError as err:
+            raise HTTPException(status_code=404, detail=f"{err}")
+
     income["email"] = current_user["email"]
     income = jsonable_encoder(income)
 
