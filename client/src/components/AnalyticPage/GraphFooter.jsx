@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { View, StyleSheet, Dimensions } from 'react-native';
-import StyledButton from '../../StyledButton';
-import theme from '../../../../theme';
+import StyledButton from '../StyledButton';
+import theme from '../../../theme';
 
 const GraphFooter = ({
   viewing,
@@ -12,6 +12,10 @@ const GraphFooter = ({
   allSelected,
   setAllSelected,
 }) => {
+  useEffect(() => {
+    setSelectedCategories(categories);
+  }, [viewing, categories, setSelectedCategories]);
+
   return (
     <View style={styles.container}>
       <View style={styles.topRow}>
@@ -44,8 +48,13 @@ const GraphFooter = ({
           label="All"
           customStyles={allSelected ? buttonSelectedStyle : buttonUnselectedStyle}
           onTap={() => {
-            setSelectedCategories([]);
-            setAllSelected(true);
+            if (allSelected) {
+              setSelectedCategories([]);
+              setAllSelected(false);
+            } else {
+              setSelectedCategories(categories);
+              setAllSelected(true);
+            }
           }}
         />
         {Array.isArray(categories) &&
@@ -66,7 +75,12 @@ const GraphFooter = ({
                   if (categoryIsSelected) {
                     setSelectedCategories(selectedCategories.filter((c) => c !== categoryName));
                   } else {
-                    setSelectedCategories(selectedCategories.concat(categoryName));
+                    setSelectedCategories(
+                      selectedCategories.concat(categoryName),
+                      selectedCategories.length === categories.length - 1
+                        ? setAllSelected(true)
+                        : null,
+                    );
                   }
                 }}
               />
@@ -79,7 +93,7 @@ const GraphFooter = ({
 
 const styles = StyleSheet.create({
   container: {
-    marginTop: 100,
+    marginTop: 10,
     display: 'flex',
     alignSelf: 'flex-end',
     width: Dimensions.get('window').width,

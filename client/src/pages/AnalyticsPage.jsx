@@ -1,177 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
+import { useFocusEffect } from '@react-navigation/native';
 import { View, StyleSheet } from 'react-native';
+import axios from '../providers/axios';
 import CustomAreaGraph from '../components/AnalyticPage/CustomAreaGraph';
-import GraphFooter from '../components/DataPage/Graph/GraphFooter';
+import GraphFooter from '../components/AnalyticPage/GraphFooter';
 import theme from '../../theme';
 
-// TODO: fetch from BE and update according to the categories selected
-const unprocessedData = [
-  {
-    _id: '6222fb24ad4f0b119bedcaf2',
-    created_at: '2022-03-05T05:48:13.190430',
-    updated_at: '2022-03-05T05:48:13.190498',
-    email: 'ledge@gmail.com',
-    name: 'Test Expense 3',
-    description: 'Testing 3',
-    date: '2022-02-01',
-    price: 140.0,
-    currency: 'CAD',
-    exchange_rate: 1.0,
-    location: null,
-    location_x: null,
-    location_y: null,
-    category: 'Food',
-    sub_category: null,
-  },
-  {
-    _id: '6222fb24ad4f0b119bedcaf2',
-    created_at: '2022-03-05T05:48:13.190430',
-    updated_at: '2022-03-05T05:48:13.190498',
-    email: 'ledge@gmail.com',
-    name: 'Test Expense 3',
-    description: 'Testing 3',
-    date: '2022-02-03',
-    price: 67.8,
-    currency: 'CAD',
-    exchange_rate: 1.0,
-    location: null,
-    location_x: null,
-    location_y: null,
-    category: 'Food',
-    sub_category: null,
-  },
-  {
-    _id: '6222fb24ad4f0b119bedcaf2',
-    created_at: '2022-03-05T05:48:13.190430',
-    updated_at: '2022-03-05T05:48:13.190498',
-    email: 'ledge@gmail.com',
-    name: 'Test Expense 3',
-    description: 'Testing 3',
-    date: '2022-02-03',
-    price: 167.8,
-    currency: 'CAD',
-    exchange_rate: 1.0,
-    location: null,
-    location_x: null,
-    location_y: null,
-    category: 'Food',
-    sub_category: null,
-  },
-  {
-    _id: '6222fb24ad4f0b119bedcaf2',
-    created_at: '2022-03-05T05:48:13.190430',
-    updated_at: '2022-03-05T05:48:13.190498',
-    email: 'ledge@gmail.com',
-    name: 'Test Expense 3',
-    description: 'Testing 3',
-    date: '2022-02-06',
-    price: 300.0,
-    currency: 'CAD',
-    exchange_rate: 1.0,
-    location: null,
-    location_x: null,
-    location_y: null,
-    category: 'Food',
-    sub_category: null,
-  },
-  {
-    _id: '6222fb24ad4f0b119bedcaf2',
-    created_at: '2022-03-05T05:48:13.190430',
-    updated_at: '2022-03-05T05:48:13.190498',
-    email: 'ledge@gmail.com',
-    name: 'Test Expense 3',
-    description: 'Testing 3',
-    date: '2022-02-06',
-    price: 310.1,
-    currency: 'CAD',
-    exchange_rate: 1.0,
-    location: null,
-    location_x: null,
-    location_y: null,
-    category: 'Food',
-    sub_category: null,
-  },
-  {
-    _id: '6222fb24ad4f0b119bedcaf2',
-    created_at: '2022-03-05T05:48:13.190430',
-    updated_at: '2022-03-05T05:48:13.190498',
-    email: 'ledge@gmail.com',
-    name: 'Test Expense 3',
-    description: 'Testing 3',
-    date: '2022-02-10',
-    price: 200.0,
-    currency: 'CAD',
-    exchange_rate: 1.0,
-    location: null,
-    location_x: null,
-    location_y: null,
-    category: 'Food',
-    sub_category: null,
-  },
-  {
-    _id: '6222fb24ad4f0b119bedcaf2',
-    created_at: '2022-03-05T05:48:13.190430',
-    updated_at: '2022-03-05T05:48:13.190498',
-    email: 'ledge@gmail.com',
-    name: 'Test Expense 3',
-    description: 'Testing 3',
-    date: '2022-02-10',
-    price: 200.0,
-    currency: 'CAD',
-    exchange_rate: 1.0,
-    location: null,
-    location_x: null,
-    location_y: null,
-    category: 'Food',
-    sub_category: null,
-  },
-  {
-    _id: '6222fb24ad4f0b119bedcaf2',
-    created_at: '2022-03-05T05:48:13.190430',
-    updated_at: '2022-03-05T05:48:13.190498',
-    email: 'ledge@gmail.com',
-    name: 'Test Expense 3',
-    description: 'Testing 3',
-    date: '2022-03-02',
-    price: 435.46,
-    currency: 'CAD',
-    exchange_rate: 1.0,
-    location: null,
-    location_x: null,
-    location_y: null,
-    category: 'Food',
-    sub_category: null,
-  },
-  {
-    _id: '6222fb24ad4f0b119bedcaf2',
-    created_at: '2022-03-05T05:48:13.190430',
-    updated_at: '2022-03-05T05:48:13.190498',
-    email: 'ledge@gmail.com',
-    name: 'Test Expense 3',
-    description: 'Testing 3',
-    date: '2022-03-07',
-    price: 143.46,
-    currency: 'CAD',
-    exchange_rate: 1.0,
-    location: null,
-    location_x: null,
-    location_y: null,
-    category: 'Food',
-    sub_category: null,
-  },
-];
-
-const exampleExpenseCategories = [
-  'Food',
-  'Housing',
-  'Tuition',
-  'Misc',
-  'Gifts',
-  'Technology',
-  'Clothing',
-  'Transit',
-];
-const exampleIncomeCategories = ['Work', 'Transfer', 'Gifts'];
+const URL = process.env.SERVER_URL;
 
 const AnalyticsPage = () => {
   const [compressedData, setCompressedData] = useState([]);
@@ -179,14 +14,43 @@ const AnalyticsPage = () => {
   const [selectedCategories, setSelectedCategories] = useState([]);
   const [allSelected, setAllSelected] = useState(true);
   const [viewing, setViewing] = useState('Expenses');
+  const [databaseExpense, setDatabaseExpense] = useState([]);
+  const [databaseIncome, setDatabaseIncome] = useState([]);
+  const [expenseCategories, setExpenseCategories] = useState([]);
+  const [incomeCategories, setIncomeCategories] = useState([]);
+
+  const handleFilteringData = (data, categories) => {
+    return data.filter((row) => {
+      return categories.includes(row.category);
+    });
+  };
 
   const handleProcessingData = (data) => {
-    const selectedData = data.map((obj) => {
-      return {
-        x: obj.date,
-        y: obj.price,
-      };
-    });
+    if (data === undefined || data === null || data.length < 1) {
+      setCompressedData([]);
+      setProcessedData([]);
+      return;
+    }
+
+    let selectedData = [];
+
+    if (data[0].price !== undefined) {
+      // If its an expense
+      selectedData = data.map((obj) => {
+        return {
+          x: obj.date,
+          y: obj.price,
+        };
+      });
+    } else {
+      // If its an income
+      selectedData = data.map((obj) => {
+        return {
+          x: obj.date,
+          y: obj.amount,
+        };
+      });
+    }
 
     // Make sure there is only one entry for each date.
     // If there are more than one entry with the same date, compress them into one entry
@@ -224,16 +88,65 @@ const AnalyticsPage = () => {
     setProcessedData(temp);
   };
 
+  useFocusEffect(
+    useCallback(() => {
+      axios
+        .get(`${URL}/expenses`)
+        .then(({ data }) => setDatabaseExpense(data.reverse()))
+        .catch((err) => console.log(err));
+    }, []),
+  );
+
+  useFocusEffect(
+    useCallback(() => {
+      axios
+        .get(`${URL}/incomes`)
+        .then(({ data }) => setDatabaseIncome(data.reverse()))
+        .catch((err) => console.log(err));
+    }, []),
+  );
+
+  useFocusEffect(
+    useCallback(() => {
+      axios
+        .get(`${URL}/expense_categories`)
+        .then(({ data }) => {
+          const categories = data.map((cat) => {
+            return cat.name;
+          });
+          setExpenseCategories(categories);
+        })
+
+        .catch((err) => console.log(err));
+    }, []),
+  );
+
+  useFocusEffect(
+    useCallback(() => {
+      axios
+        .get(`${URL}/income_categories`)
+        .then(({ data }) => {
+          const categories = data.map((cat) => {
+            return cat.name;
+          });
+          setIncomeCategories(categories);
+        })
+
+        .catch((err) => console.log(err));
+    }, []),
+  );
+
   useEffect(() => {
-    // Make a call to the API here! Then pass it on to the functions below:
-    handleProcessingData(unprocessedData);
-  }, []);
+    const unfilteredData = viewing === 'Expenses' ? databaseExpense : databaseIncome;
+    const filteredData = handleFilteringData(unfilteredData, selectedCategories);
+    handleProcessingData(filteredData);
+  }, [viewing, databaseExpense, databaseIncome, selectedCategories]);
 
   return (
     <View style={styles.container}>
-      <CustomAreaGraph dateStringData={compressedData} dateData={processedData} />
+      <CustomAreaGraph dateStringData={compressedData} dateData={processedData} viewing={viewing} />
       <GraphFooter
-        categories={viewing === 'Expenses' ? exampleExpenseCategories : exampleIncomeCategories}
+        categories={viewing === 'Expenses' ? expenseCategories : incomeCategories}
         selectedCategories={selectedCategories}
         setSelectedCategories={setSelectedCategories}
         allSelected={allSelected}
@@ -249,7 +162,7 @@ const styles = StyleSheet.create({
   container: {
     display: 'flex',
     overflow: 'scroll',
-    flexGrow: 1,
+    // flexGrow: 1,
   },
   priceHeader: {
     backgroundColor: theme.colors.primary,
