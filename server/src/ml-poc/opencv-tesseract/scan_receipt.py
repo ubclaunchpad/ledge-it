@@ -1,4 +1,5 @@
-#`py scan_receipt.py -i receipt.jpg --debug 1`
+#`py scan_receipt.py -i receipt4.jpg --debug 1`
+#`python3 scan_receipt.py -i receipt4.jpg --debug 1`
 
 #To add to requirements.txt: opencv-contrib-python,imutils,scipy,pytesseract
 
@@ -76,14 +77,17 @@ if args["debug"] > 0:
 # obtain a top-down bird's-eye view of the receipt
 receipt = four_point_transform(orig, receiptCnt.reshape(4, 2) * ratio)
 # show transformed image
-cv2.imshow("Receipt Transform", imutils.resize(receipt, width=500))
-cv2.waitKey(0)
+if args["debug"] > 0:
+	cv2.imshow("Receipt Transform", imutils.resize(receipt, width=500))
+	cv2.waitKey(0)
 
 
 # Apply the Tesseract OCR engine with --psm 4 to the top-down transform of the receipt, allowing us to OCR the receipt line-by-line
 
 # Replace this line with path to tesseract folder (tested in Windows)
-pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files (x86)\Tesseract-OCR\tesseract.exe'
+#pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files (x86)\Tesseract-OCR\tesseract.exe'
+
+#For mac ignore above line and just use `brew install tesseract` before running this script
 
 # apply OCR to the receipt image by assuming column data, ensuring
 # the text is *concatenated across the row* (additionally, for your
