@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
-import { Text, View } from 'react-native';
+import { View } from 'react-native';
 import CalenderPageHeader from '../components/DataPage/Calendar/CalendarPageHeader';
 
 const AnalyticsPage = () => {
   const [month, setMonth] = useState(new Date().getMonth());
-  const [year, setYear] = useState(new Date().getFullYear());
+  const year = new Date().getFullYear();
 
   return (
     <View>
