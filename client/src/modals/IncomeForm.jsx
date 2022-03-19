@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, View, Image } from 'react-native';
 import axios from '../providers/axios';
 import StyledTextInput from '../components/StyledTextInput';
 import StyledButton from '../components/StyledButton';
@@ -112,8 +112,12 @@ const AddIncome = ({ setModalVisible, setIncomeModalVisible, type, setType }) =>
         style={{
           flexDirection: 'row',
           justifyContent: 'center',
+          alignItems: 'center',
           marginTop: 20,
         }}>
+        {base64Image !== '' && (
+          <Image style={{width: 85, height: 85, borderRadius: 15, marginHorizontal: 20}} source={{uri: base64Image}}/>
+        )} 
         <View style={styles.button}>
           <StyledButton label="Cancel" onTap={() => setIncomeModalVisible(false)} />
         </View>

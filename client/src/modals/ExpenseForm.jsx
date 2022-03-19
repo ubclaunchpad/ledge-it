@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, View, Image } from 'react-native';
 import axios from '../providers/axios';
 import AmountBox from '../components/AmountBox';
 import StyledTextInput from '../components/StyledTextInput';
@@ -122,8 +122,12 @@ const AddExpense = ({ setModalVisible, setExpenseModalVisible, type, setType }) 
         style={{
           flexDirection: 'row',
           justifyContent: 'center',
+          alignItems: 'center',
           marginTop: 20,
         }}>
+        {base64Image !== '' && (
+          <Image style={{width: 85, height: 85, borderRadius: 15, marginHorizontal: 20}} source={{uri: base64Image}}/>
+        )} 
         <View style={styles.button}>
           <StyledButton label="Cancel" onTap={() => setExpenseModalVisible(false)} />
         </View>
