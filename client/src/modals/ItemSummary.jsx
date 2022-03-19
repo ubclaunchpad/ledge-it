@@ -112,16 +112,16 @@ const ItemSummary = ({ modalVisible, setModalVisible, item, userCategories, type
           value={location}
         />
 
-        {base64Image !== '' && (
-          <Image style={{width: 100, height: 100, borderWidth: 1, borderColor: 'red'}} source={{uri: base64Image}}/>
-        )} 
-
         <View
           style={{
             flexDirection: 'row',
             justifyContent: 'center',
+            alignItems: 'center',
             marginTop: 20,
           }}>
+          {base64Image !== '' && (
+            <Image style={{width: 85, height: 85, borderRadius: 15, marginHorizontal: 20}} source={{uri: base64Image}}/>
+          )} 
           <View style={styles.button}>
             <StyledButton label="Cancel" onTap={() => setModalVisible(false)} />
           </View>
