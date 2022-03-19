@@ -7,7 +7,7 @@ import openCamera from '../utils/pickImage';
 export default ({ date, amount, category, name, type, setb64, rounded = false }) => {
   const getImage = async () => {
     const b64img = await openCamera();
-    setb64(`data:image/jpeg;base64,${b64img}`);
+    setb64(b64img);
   };
 
   return (

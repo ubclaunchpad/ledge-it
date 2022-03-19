@@ -13,7 +13,7 @@ const openCamera = async () => {
   });
 
   if (!result.cancelled) {
-    return result.base64;
+    return `data:image/jpeg;base64,${result.base64}`;
   }
 
   return '';
