@@ -180,7 +180,7 @@ async def update_expense(
             expense["image_url"] = await upload_image(expense["base64_image"])
             del expense["base64_image"]
         except ValueError as err:
-            raise HTTPException(status_code=404, detail=f"{err}")        
+            raise HTTPException(status_code=404, detail=f"{err}")
 
     expense["email"] = current_user["email"]
     expense = jsonable_encoder(expense)
@@ -244,11 +244,11 @@ async def delete_expense(id, current_user: User = Depends(get_current_active_use
     )
 
     if expense_to_delete.image_url is not None:
-        file_name = expense_to_delete.image_url.split('/')[-1]
+        file_name = expense_to_delete.image_url.split("/")[-1]
         try:
             await delete_image(file_name)
         except ValueError as err:
-            raise HTTPException(status_code=404, detail=f"{err}") 
+            raise HTTPException(status_code=404, detail=f"{err}")
 
     delete_result = expense_collection.delete_one(
         {"_id": expense_to_delete["_id"], "email": current_user["email"]}

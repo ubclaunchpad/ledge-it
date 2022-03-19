@@ -11,7 +11,7 @@ import uuid
 
 # TODO: download the "google-keys.json" file from the Google Drive folder and put it in the root of the ./server folder
 #  Then uncomment this line
-os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "./google-keys.json"
+# os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "./google-keys.json"
 
 storage_client = storage.Client()
 my_bucket = storage_client.get_bucket("images-ledgeit")
@@ -21,7 +21,9 @@ class Image_Data(BaseModel):
     name: str
     b64Img: str
 
+
 router = APIRouter()
+
 
 @router.post("/upload", response_description="Returns the URL of uploaded image")
 async def upload(data: Image_Data):
@@ -55,14 +57,14 @@ async def upload_image(b64Image: string):
     try:
         file.upload_from_file(file_to_upload)
     except:
-        raise ValueError('An error occurred while uploading')
+        raise ValueError("An error occurred while uploading")
 
     return f"https://storage.googleapis.com/images-ledgeit/{file_name}"
 
 
 async def delete_image(file_name: string):
     blob = my_bucket.blob(file_name)
-    try: 
+    try:
         blob.delete()
     except:
         raise ValueError("An error occurred while deleting image")

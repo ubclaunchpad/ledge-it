@@ -68,7 +68,7 @@ async def create_income(
         income.exchange_rate = get_exchange_rate_to_cad(income.currency)
 
     income_dict = {k: v for k, v in income.dict().items()}
-    
+
     if "base64_image" in income_dict:
         try:
             income_dict["image_url"] = await upload_image(income_dict["base64_image"])
@@ -160,7 +160,9 @@ async def update_income(
 @router.delete(
     "/income/{id}", response_description="Delete income by id", response_model=Income
 )
-async def delete_income_by_id(id, current_user: User = Depends(get_current_active_user)):
+async def delete_income_by_id(
+    id, current_user: User = Depends(get_current_active_user)
+):
     income_to_delete: Income = income_collection.find_one(
         {"_id": id, "email": current_user["email"]}
     )
@@ -186,11 +188,11 @@ async def delete_income_by_id(id, current_user: User = Depends(get_current_activ
     )
 
     if income_to_delete.image_url is not None:
-        file_name = income_to_delete.image_url.split('/')[-1]
+        file_name = income_to_delete.image_url.split("/")[-1]
         try:
             await delete_image(file_name)
         except ValueError as err:
-            raise HTTPException(status_code=404, detail=f"{err}") 
+            raise HTTPException(status_code=404, detail=f"{err}")
 
     if delete_result.deleted_count == 1:
         return JSONResponse(

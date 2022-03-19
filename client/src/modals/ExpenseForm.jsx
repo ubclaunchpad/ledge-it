@@ -48,7 +48,7 @@ const AddExpense = ({ setModalVisible, setExpenseModalVisible, type, setType }) 
         location,
         category,
         sub_category: tag,
-        ...(base64Image === '' ? {} : {'base64_image': base64Image})
+        ...(base64Image === '' ? {} : { base64_image: base64Image }),
       })
       .then(({ data }) => console.log(data))
       .catch((err) => console.log(err));
@@ -126,8 +126,11 @@ const AddExpense = ({ setModalVisible, setExpenseModalVisible, type, setType }) 
           marginTop: 20,
         }}>
         {base64Image !== '' && (
-          <Image style={{width: 85, height: 85, borderRadius: 15, marginHorizontal: 20}} source={{uri: base64Image}}/>
-        )} 
+          <Image
+            style={{ width: 85, height: 85, borderRadius: 15, marginHorizontal: 20 }}
+            source={{ uri: base64Image }}
+          />
+        )}
         <View style={styles.button}>
           <StyledButton label="Cancel" onTap={() => setExpenseModalVisible(false)} />
         </View>

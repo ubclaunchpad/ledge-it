@@ -2,15 +2,13 @@ import React from 'react';
 import { Text, StyleSheet, View } from 'react-native';
 import theme from '../../theme';
 import StyledButton from './StyledButton';
-import { openCamera } from '../utils/pickImage.js';
+import openCamera from '../utils/pickImage';
 
 export default ({ date, amount, category, name, type, setb64, rounded = false }) => {
-
   const getImage = async () => {
-    let b64img = await openCamera();
-    setb64('data:image/jpeg;base64,' + b64img);
-    // console.log('data:image/jpeg;base64,' + b64img);
-  }
+    const b64img = await openCamera();
+    setb64(`data:image/jpeg;base64,${b64img}`);
+  };
 
   return (
     <View
