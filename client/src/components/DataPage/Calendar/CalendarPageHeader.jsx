@@ -1,8 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import { Text, View, StyleSheet, Pressable } from 'react-native';
 import DropDownPicker from 'react-native-dropdown-picker';
+import { useFocusEffect } from '@react-navigation/native';
 import axios from 'axios';
 import { theme } from '../../../../theme';
+import { formatNumber, formatDateBE } from '../../../utils/formatters';
 
 const URL = process.env.SERVER_URL;
 
@@ -22,34 +24,37 @@ const months = [
 ];
 
 const CalenderPageHeader = ({ month, setMonth, year }) => {
-  // const [monthOverviewData, setMonthOverviewData] = useState([]);
+  const [incomeOverview, setIncomeOverview] = useState([]);
+  const [expenseOverview, setExpenseOverview] = useState([]);
   const [monthDropdownVisible, setMonthDropdownVisible] = useState(false);
   const [expenseScreenVisible, setExpenseScreenVisible] = useState(true); // use this to show correct calendar
   const dropdownTextStyle = monthDropdownVisible ? styles.placeholder : styles.text;
 
-  const getMonthOverview = () => {
-    const start_time = new Date(year, month, 1);
-    const end_time = new Date(year, month + 1, 0);
-    let income, expense;
+  useFocusEffect(() => {
+    getMonthOverview();
+  });
+
+  const getMonthOverview = useCallback(() => {
+    const options = { year: '4-digit', month: '2-digit', day: '2-digit' };
+    const start_time = formatDateBE(new Date(year, month, 1).toLocaleDateString(options));
+    const end_time = formatDateBE(new Date(year, month + 1, 0).toLocaleDateString(options));
+
     axios
       .get(`${URL}/income/ranged/${start_time}/${end_time}`, {})
       .then((res) => {
-        income = res.reduce((acc, item) => {
-          return acc + item.amount;
-        }, 0);
+        const income = res.data.reduce((acc, item) => acc + item.amount, 0);
+        setIncomeOverview(income);
       })
-      .catch((e) => console.log(e));
+      .catch((e) => setIncomeOverview(0));
     axios
       .get(`${URL}/expense/ranged/${start_time}/${end_time}`, {})
       .then((res) => {
-        expense = res.reduce((acc, item) => {
-          return acc + item.amount;
-        }, 0);
+        const expense = res.data.reduce((acc, item) => acc + item.price, 0);
+        setExpenseOverview(expense);
       })
-      .catch((e) => console.log(e));
-
-    return income + expense;
-  };
+      .catch((e) => setExpenseOverview(0));
+    return formatNumber(incomeOverview + expenseOverview);
+  }, [expenseOverview, incomeOverview, month, year]);
 
   return (
     <View style={styles.headerBackground}>
@@ -57,7 +62,7 @@ const CalenderPageHeader = ({ month, setMonth, year }) => {
         <DropDownPicker
           style={[styles.choiceSelect, { border: 'none' }]}
           open={monthDropdownVisible}
-          value={month}
+          value={month + 1}
           items={months}
           setOpen={setMonthDropdownVisible}
           setValue={setMonth}
