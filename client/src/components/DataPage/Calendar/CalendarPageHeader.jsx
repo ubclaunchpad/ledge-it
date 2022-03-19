@@ -3,7 +3,7 @@ import { Text, View, StyleSheet, Pressable } from 'react-native';
 import DropDownPicker from 'react-native-dropdown-picker';
 import { useFocusEffect } from '@react-navigation/native';
 import axios from 'axios';
-import { theme } from '../../../../theme';
+import theme from '../../../../theme';
 import { formatNumber, formatDateBE } from '../../../utils/formatters';
 
 const URL = process.env.SERVER_URL;

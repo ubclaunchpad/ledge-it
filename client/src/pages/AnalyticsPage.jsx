@@ -2,7 +2,6 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { useFocusEffect } from '@react-navigation/native';
 import { View, StyleSheet } from 'react-native';
 import axios from '../providers/axios';
-import CalenderPageHeader from '../components/DataPage/Calendar/CalendarPageHeader';
 import CustomAreaGraph from '../components/AnalyticPage/CustomAreaGraph';
 import GraphFooter from '../components/AnalyticPage/GraphFooter';
 import theme from '../../theme';
@@ -19,8 +18,6 @@ const AnalyticsPage = () => {
   const [databaseIncome, setDatabaseIncome] = useState([]);
   const [expenseCategories, setExpenseCategories] = useState([]);
   const [incomeCategories, setIncomeCategories] = useState([]);
-  const [month, setMonth] = useState(new Date().getMonth());
-  const year = new Date().getFullYear();
 
   const handleFilteringData = (data, categories) => {
     return data.filter((row) => {
@@ -147,7 +144,6 @@ const AnalyticsPage = () => {
 
   return (
     <View style={styles.container}>
-      <CalenderPageHeader month={month} setMonth={setMonth} year={year} />
       <CustomAreaGraph dateStringData={compressedData} dateData={processedData} viewing={viewing} />
       <GraphFooter
         categories={viewing === 'Expenses' ? expenseCategories : incomeCategories}
