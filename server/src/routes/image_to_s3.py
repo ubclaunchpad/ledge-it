@@ -21,7 +21,6 @@ class Image_Data(BaseModel):
     name: str
     b64Img: str
 
-
 router = APIRouter()
 
 @router.post("/upload", response_description="Returns the URL of uploaded image")
@@ -60,4 +59,10 @@ async def upload_image(b64Image: string):
 
     return f"https://storage.googleapis.com/images-ledgeit/{file_name}"
 
-# TODO: Delete file
+
+async def delete_image(file_name: string):
+    blob = my_bucket.blob(file_name)
+    try: 
+        blob.delete()
+    except:
+        raise ValueError("An error occurred while deleting image")

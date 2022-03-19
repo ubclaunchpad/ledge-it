@@ -7,7 +7,7 @@ from typing import List, Optional
 from re import compile
 from datetime import date
 
-from ..routes.image_to_s3 import upload_image
+from ..routes.image_to_s3 import upload_image, delete_image
 from ..middleware import get_current_active_user
 from ..models.user import User
 from .net_worth import update_net_worth
@@ -209,7 +209,7 @@ async def update_expense(
 
 
 @router.delete("/expense/{id}", response_description="Delete an expense")
-def delete_expense(id, current_user: User = Depends(get_current_active_user)):
+async def delete_expense(id, current_user: User = Depends(get_current_active_user)):
     expense_to_delete: Expense = expense_collection.find_one(
         {"_id": id, "email": current_user["email"]}
     )
@@ -243,7 +243,12 @@ def delete_expense(id, current_user: User = Depends(get_current_active_user)):
         current_user,
     )
 
-    # TODO: delete image in bucket?
+    if expense_to_delete.image_url is not None:
+        file_name = expense_to_delete.image_url.split('/')[-1]
+        try:
+            await delete_image(file_name)
+        except ValueError as err:
+            raise HTTPException(status_code=404, detail=f"{err}") 
 
     delete_result = expense_collection.delete_one(
         {"_id": expense_to_delete["_id"], "email": current_user["email"]}

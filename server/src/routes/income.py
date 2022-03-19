@@ -7,7 +7,7 @@ from fastapi.encoders import jsonable_encoder
 from pydantic.error_wrappers import ValidationError
 from datetime import date
 
-from ..routes.image_to_s3 import upload_image
+from ..routes.image_to_s3 import delete_image, upload_image
 from ..middleware import get_current_active_user
 from ..models.user import User
 from .net_worth import update_net_worth
@@ -160,7 +160,7 @@ async def update_income(
 @router.delete(
     "/income/{id}", response_description="Delete income by id", response_model=Income
 )
-def delete_income_by_id(id, current_user: User = Depends(get_current_active_user)):
+async def delete_income_by_id(id, current_user: User = Depends(get_current_active_user)):
     income_to_delete: Income = income_collection.find_one(
         {"_id": id, "email": current_user["email"]}
     )
@@ -185,7 +185,12 @@ def delete_income_by_id(id, current_user: User = Depends(get_current_active_user
         {"_id": id, "email": current_user["email"]}
     )
 
-    # TODO: delete image?
+    if income_to_delete.image_url is not None:
+        file_name = income_to_delete.image_url.split('/')[-1]
+        try:
+            await delete_image(file_name)
+        except ValueError as err:
+            raise HTTPException(status_code=404, detail=f"{err}") 
 
     if delete_result.deleted_count == 1:
         return JSONResponse(
