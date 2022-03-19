@@ -37,11 +37,10 @@ const LoginPage = ({ setPage, setLoggedIn }) => {
         <SvgXml
           xml={Gradient}
           alt="gradient"
-          width={Dimensions.get('window').width}
-          transform={[{ scaleX: 1.2 }]}
           style={{
             marginTop: -50,
             alignSelf: 'center',
+            scaleX: Dimensions.get('window').width / 380,
           }}
         />
         <View style={styles.body}>
