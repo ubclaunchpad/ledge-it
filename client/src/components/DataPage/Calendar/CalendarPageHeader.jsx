@@ -9,18 +9,18 @@ import { formatNumber, formatDateBE } from '../../../utils/formatters';
 const URL = process.env.SERVER_URL;
 
 const months = [
-  { label: 'January', value: 1 },
-  { label: 'Febuary', value: 2 },
-  { label: 'March', value: 3 },
-  { label: 'April', value: 4 },
-  { label: 'May', value: 5 },
-  { label: 'June', value: 6 },
-  { label: 'July', value: 7 },
-  { label: 'August', value: 8 },
-  { label: 'September', value: 9 },
-  { label: 'October', value: 10 },
-  { label: 'November', value: 11 },
-  { label: 'December', value: 12 },
+  { label: 'January', value: 0 },
+  { label: 'Febuary', value: 1 },
+  { label: 'March', value: 2 },
+  { label: 'April', value: 3 },
+  { label: 'May', value: 4 },
+  { label: 'June', value: 5 },
+  { label: 'July', value: 6 },
+  { label: 'August', value: 7 },
+  { label: 'September', value: 8 },
+  { label: 'October', value: 9 },
+  { label: 'November', value: 10 },
+  { label: 'December', value: 11 },
 ];
 
 const CalenderPageHeader = ({ month, setMonth, year }) => {
@@ -62,7 +62,7 @@ const CalenderPageHeader = ({ month, setMonth, year }) => {
         <DropDownPicker
           style={[styles.choiceSelect, { border: 'none' }]}
           open={monthDropdownVisible}
-          value={month + 1}
+          value={month}
           items={months}
           setOpen={setMonthDropdownVisible}
           setValue={setMonth}
