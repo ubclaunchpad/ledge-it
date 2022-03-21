@@ -33,19 +33,13 @@ const ToggleCard = () => {
     return (
       <View style={styles.container}>
         <View style={styles.content}>
-          {item.title === "Visualization" ? 
-          <>
-            <StyledButton
-                key="all"
-                label="Last 7 Days"
-                customStyles={buttonSelectedStyle}
-                />
-            <StaticAreaGraph scrollX = {scrollX}/>
-          </>
-          : null}
-          {item.title === "Calendar" ?
-          <Text style={styles.text}>{item.description}</Text>
-          : null}
+          {item.title === 'Visualization' ? (
+            <>
+              <StyledButton key="all" label="Last 7 Days" customStyles={buttonSelectedStyle} />
+              <StaticAreaGraph scrollX={scrollX} />
+            </>
+          ) : null}
+          {item.title === 'Calendar' ? <Text style={styles.text}>{item.description}</Text> : null}
         </View>
       </View>
     );
@@ -72,9 +66,7 @@ const ToggleCard = () => {
       <Paginator data={data} scrollX={scrollX} />
     </View>
   );
-  
 };
-
 
 const styles = StyleSheet.create({
   container: {
@@ -103,7 +95,7 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     backgroundColor: 'white',
     borderColor: theme.colors.primaryDark,
-    // paddingTop: 10 
+    // paddingTop: 10
   },
 
   text: {
@@ -135,6 +127,6 @@ const buttonSelectedStyle = StyleSheet.create({
     fontWeight: 'bold',
   },
   highlightStyle: {},
-}); 
+});
 
 export default ToggleCard;

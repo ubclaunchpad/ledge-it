@@ -1,20 +1,20 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { View, StyleSheet, Dimensions } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
-import axios from "../../providers/axios";
-import theme from '../../../theme';
 import { VictoryChart, VictoryArea, VictoryAxis } from 'victory-native';
-import {Defs, LinearGradient, Stop} from "react-native-svg";
+import { Defs, LinearGradient, Stop } from 'react-native-svg';
+import axios from '../../providers/axios';
+import theme from '../../../theme';
 
 const URL = process.env.SERVER_URL;
 
-const StaticAreaGraph = ({ }) => {
+const StaticAreaGraph = () => {
   const today = new Date();
   const todayString = today.toISOString().split('T')[0];
   const lowerBound = new Date(today.getFullYear(), today.getMonth(), today.getDate() - 7);
   const lowerBoundString = lowerBound.toISOString().split('T')[0];
   const [databaseExpense, setDatabaseExpense] = useState([]);
-  const [compressedData, setCompressedData] = useState([]); 
+  const [compressedData, setCompressedData] = useState([]);
 
   const handleProcessingData = (data) => {
     if (data === undefined || data === null || data.length < 1) {
@@ -22,11 +22,11 @@ const StaticAreaGraph = ({ }) => {
       return;
     }
 
-    let selectedData = data.map((obj) => {
-        return {
-          x: obj.date,
-          y: obj.price,
-        };
+    const selectedData = data.map((obj) => {
+      return {
+        x: obj.date,
+        y: obj.price,
+      };
     });
 
     // Make sure there is only one entry for each date.
@@ -46,16 +46,16 @@ const StaticAreaGraph = ({ }) => {
         }
       }
     });
-    
+
     temp = temp.map((obj) => {
-        return {
-            x: new Date(obj.x).getTime(),
-            y: obj.y.toFixed(2),
-        };
+      return {
+        x: new Date(obj.x).getTime(),
+        y: obj.y.toFixed(2),
+      };
     });
 
     setCompressedData(temp);
-    console.log(temp)
+    console.log(temp);
   };
 
   useFocusEffect(
@@ -64,19 +64,19 @@ const StaticAreaGraph = ({ }) => {
         .get(`${URL}/expense/ranged/${lowerBoundString}/${todayString}`)
         .then(({ data }) => setDatabaseExpense(data.reverse()))
         .catch((err) => console.log(err));
-    }, []),
+    }, [lowerBoundString, todayString]),
   );
 
-useEffect(() => {
+  useEffect(() => {
     handleProcessingData(databaseExpense);
-}, [databaseExpense])
+  }, [databaseExpense]);
 
   return (
-    <View style={styles.container} >
+    <View style={styles.container}>
       <View>
-       <VictoryChart
-          width= {Dimensions.get('window').width /0.93}
-          height = { Dimensions.get('window').height / 3}
+        <VictoryChart
+          width={Dimensions.get('window').width / 0.93}
+          height={Dimensions.get('window').height / 3}
           style={{
             parent: {
               width: '100%',
@@ -89,15 +89,12 @@ useEffect(() => {
             },
             data: {
               overflow: 'visible',
-            }
-          }}
-        >
+            },
+          }}>
           <Defs>
-            <LinearGradient id='gradientFill'
-              x1="0%" y1="0%" x2="0%" y2="100%"
-            >
+            <LinearGradient id="gradientFill" x1="0%" y1="0%" x2="0%" y2="100%">
               <Stop stopColor="white" offset="20%" stopOpacity="0.9" />
-              <Stop stopColor= {theme.colors.primary} offset="100%" stopOpacity="1" />
+              <Stop stopColor={theme.colors.primary} offset="100%" stopOpacity="1" />
             </LinearGradient>
           </Defs>
           <VictoryArea
@@ -108,15 +105,16 @@ useEffect(() => {
                 strokeWidth: 3,
               },
             }}
-            interpolation='catmullRom'
-
+            interpolation="catmullRom"
             data={compressedData}
           />
-          <VictoryAxis style={{ 
-              axis: {stroke: "transparent"}, 
-              ticks: {stroke: "transparent"},
-              tickLabels: { fill:"transparent"} 
-          }} />
+          <VictoryAxis
+            style={{
+              axis: { stroke: 'transparent' },
+              ticks: { stroke: 'transparent' },
+              tickLabels: { fill: 'transparent' },
+            }}
+          />
         </VictoryChart>
       </View>
     </View>
@@ -129,9 +127,7 @@ const styles = StyleSheet.create({
   container: {
     display: 'flex',
     overflow: 'scroll',
-    paddingHorizontal: 5
+    paddingHorizontal: 5,
     // flexGrow: 1,
-  }
+  },
 });
-
-
