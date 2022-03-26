@@ -5,3 +5,4 @@ from .category_budget import *
 from .auth import *
 from .net_worth import *
 from .category import *
+from .scan_receipt import *
