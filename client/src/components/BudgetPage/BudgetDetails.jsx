@@ -17,16 +17,19 @@ const BudgetDetails = ({ currentMonth, currentYear, isVisible, setVisible }) => 
   const [databaseExpense, setDatabaseExpense] = useState([]);
   const [categoryBudgetData, setCategoryBudgetData] = useState([]);
   const [sortModalVisible, setSortModalVisible] = useState(false);
-  const [sortMethod, setSortMethod] = useState('shigh->slow');
+  const [sortMethod, setSortMethod] = useState('vlow->vhigh');
 
   useFocusEffect(
     useCallback(() => {
-      axios
+      async function getExpenses() { 
+        await axios
         .get(`${URL}/expense/${currentYear}/${currentMonth}`)
         .then(({ data }) => setDatabaseExpense(data))
         .catch((err) => console.log(err));
+      }
 
-        axios
+      async function getBudgets() { 
+        await axios
         .get(`${URL}/budget/category/all`, {
           params: {
             month: currentMonth,
@@ -37,6 +40,10 @@ const BudgetDetails = ({ currentMonth, currentYear, isVisible, setVisible }) => 
           setCategoryBudgetData(res.data);
         })
         .catch((e) => console.log(e));
+      }
+      
+      getExpenses();
+      getBudgets();
 
     }, [currentYear, currentMonth]),
   );
@@ -66,7 +73,6 @@ const BudgetDetails = ({ currentMonth, currentYear, isVisible, setVisible }) => 
       </View>
       {databaseExpense.length > 0 ? (         
         <View>
-          {/* refactor to single BudgetDetailHeader component */}
           <CategoryPieChart 
             currentMonth={currentMonth} 
             categoryBudgetData={categoryBudgetData}
@@ -90,6 +96,7 @@ const BudgetDetails = ({ currentMonth, currentYear, isVisible, setVisible }) => 
           </View>
           <BudgetDetailsTable 
             renderList={databaseExpense} 
+            categoryBudget={categoryBudgetData}
             sortMethod={sortMethod}
           /> 
         </View>

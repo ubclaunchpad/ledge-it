@@ -1,45 +1,18 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
 import { StyleSheet, ScrollView, SafeAreaView, Text, View, Dimensions } from 'react-native';
-import axios from '../../providers/axios';
-import { useFocusEffect } from '@react-navigation/native';
 import BudgetDetailsTableComponent from './BudgetDetailsTableComponent';
 import theme from '../../../theme';
 
-const URL = process.env.SERVER_URL;
 
-const BudgetDetailsTable = ({ renderList, sortMethod }) => {
+const BudgetDetailsTable = ({ renderList, sortMethod, categoryBudget }) => {
   const [splitList, setSplitList] = useState([]);
   const [stickyList, setStickyList] = useState([]);
-  const [categoryBudget, setCategoryBudget] = useState([]);  
-
-  const getCategoryBudgets = () => {
-    const d = new Date();
-    axios
-      .get(`${URL}/budget/category/all`, {
-        params: {
-          month: d.getMonth() + 1,
-          year: d.getFullYear(),
-        },
-      })
-      .then((res) => {
-        setCategoryBudget(res.data);
-      })
-      .catch((e) => console.log(e));
-  }
-
-  useFocusEffect(
-    useCallback(() => {
-      getCategoryBudgets();
-    }, []),
-  );
 
   useEffect(() => {
     const tempList = [];
     let currentIndex = 0;
     const stickyIndex = [];
     const categoryIndex = new Map();
-
-    getCategoryBudgets();
 
     renderList.forEach((expense) => {
       const { category } = expense;
@@ -65,53 +38,60 @@ const BudgetDetailsTable = ({ renderList, sortMethod }) => {
       tempList[categoryIndex.get(category)].spentTotal += expense.price;
     });
 
-    setSplitList(tempList);
-    setStickyList(stickyIndex);
-    
-
     switch(sortMethod) {
       
       case "vhigh->vlow":
-        splitList.sort((a,b) => {
-          b.value - a.value
-        });
+        setSplitList(tempList.sort((a,b) => {
+          return b.valueTotal - a.valueTotal
+        }));
         break;
       
       case "vlow->vhigh": {
-        splitList.sort((a,b) => {
-          a.value - b.value
-        });
+        setSplitList(tempList.sort((a,b) => {
+          return a.valueTotal - b.valueTotal
+        }));
         break;
       }
 
       case "shigh->slow": {
-        splitList.sort((a,b) => {
-          b.spent - a.spent
-        });
+        setSplitList(tempList.sort((a,b) => {
+          return b.spentTotal - a.spentTotal
+        }));
         break;
       }
 
       case "slow->shigh": {
-        splitList.sort((a,b) => {
-          a.spent - b.spent
-        });
+        setSplitList(tempList.sort((a,b) => {
+          return a.spentTotal - b.spentTotal
+        }));
         break;
       }  
     }
-  }, [renderList]);
+
+    setSplitList(tempList);
+    setStickyList(stickyIndex);
+
+  }, [renderList, categoryBudget, sortMethod]);
 
 
   return (
     <SafeAreaView style={styles.container}>
-      <View style={{borderRadius: 10, overflow: 'hidden'}}>
+      <View style={{ borderRadius: 10, overflow: 'hidden' }}>
         <ScrollView style={styles.scrollView} stickyHeaderIndices={stickyList}>
           {splitList.map((budget) => [
             <View style={styles.header}>  
-              <Text style={styles.text}>
-                {budget.category}     ${budget.spentTotal} / ${budget.valueTotal}
-              </Text>
+              <View style={{ flex: 1 }}>
+                <Text style={styles.text}>
+                  {budget.category}
+                </Text>
+              </View>
+              <View style={{ flex: 1 }}>
+                <Text style={styles.text}>
+                  ${budget.spentTotal} / ${budget.valueTotal}
+                </Text>
+              </View>
             </View>,
-            <View style>
+            <View>
               <BudgetDetailsTableComponent expenses={budget.splitCategories} />
             </View>,
           ])}
@@ -134,14 +114,14 @@ const styles = StyleSheet.create({
   header: {
     display: 'flex',
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: theme.gradient[0], //add js to css??
+    backgroundColor: theme.gradient[0], 
   },
   text: {
     fontSize: 20,
     fontWeight: 'bold',
-    margin: 8,
     color: theme.colors.white,
+    margin: 8,
   },
 });
