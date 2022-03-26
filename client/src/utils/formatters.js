@@ -14,7 +14,8 @@ export const formatDateBE = (date) => {
   const month = dateList[1].length === 1 ? `0${dateList[1]}` : dateList[1];
   const year = dateList[2];
 
-  return `20${year}-${month}-${day}`;
+  const res = `${year}-${month}-${day}`;
+  return res.length === 10 ? res : `20${res}`;
 };
 
 /**

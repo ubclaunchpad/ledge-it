@@ -10,7 +10,9 @@ const URL = process.env.SERVER_URL;
 
 const StaticAreaGraph = () => {
   const today = new Date();
-  const todayString = today.toISOString().split('T')[0];
+  const todayString = new Date(today.getFullYear(), today.getMonth(), today.getDate() + 1)
+    .toISOString()
+    .split('T')[0];
   const lowerBound = new Date(today.getFullYear(), today.getMonth(), today.getDate() - 7);
   const lowerBoundString = lowerBound.toISOString().split('T')[0];
   const [databaseExpense, setDatabaseExpense] = useState([]);
@@ -55,7 +57,6 @@ const StaticAreaGraph = () => {
     });
 
     setCompressedData(temp);
-    console.log(temp);
   };
 
   useFocusEffect(
@@ -109,6 +110,7 @@ const StaticAreaGraph = () => {
             data={compressedData}
           />
           <VictoryAxis
+            labels={(d) => d.y}
             style={{
               axis: { stroke: 'transparent' },
               ticks: { stroke: 'transparent' },
