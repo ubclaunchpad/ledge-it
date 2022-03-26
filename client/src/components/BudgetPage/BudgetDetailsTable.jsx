@@ -3,7 +3,6 @@ import { StyleSheet, ScrollView, SafeAreaView, Text, View, Dimensions } from 're
 import BudgetDetailsTableComponent from './BudgetDetailsTableComponent';
 import theme from '../../../theme';
 
-
 const BudgetDetailsTable = ({ renderList, sortMethod, categoryBudget }) => {
   const [splitList, setSplitList] = useState([]);
   const [stickyList, setStickyList] = useState([]);
@@ -29,63 +28,64 @@ const BudgetDetailsTable = ({ renderList, sortMethod, categoryBudget }) => {
           if (category == budgetCategory) {
             valueTotal = budget.value;
           }
-        })
+        });
 
-        tempList.push({ category, valueTotal: valueTotal, spentTotal: 0, splitCategories: [] });
+        tempList.push({ category, valueTotal, spentTotal: 0, splitCategories: [] });
       }
-    
+
       tempList[categoryIndex.get(category)].splitCategories.push(expense);
       tempList[categoryIndex.get(category)].spentTotal += expense.price;
     });
 
-    switch(sortMethod) {
-      
-      case "vhigh->vlow":
-        setSplitList(tempList.sort((a,b) => {
-          return b.valueTotal - a.valueTotal
-        }));
+    switch (sortMethod) {
+      case 'vhigh->vlow':
+        setSplitList(
+          tempList.sort((a, b) => {
+            return b.valueTotal - a.valueTotal;
+          }),
+        );
         break;
-      
-      case "vlow->vhigh": {
-        setSplitList(tempList.sort((a,b) => {
-          return a.valueTotal - b.valueTotal
-        }));
+
+      case 'vlow->vhigh': {
+        setSplitList(
+          tempList.sort((a, b) => {
+            return a.valueTotal - b.valueTotal;
+          }),
+        );
         break;
       }
 
-      case "shigh->slow": {
-        setSplitList(tempList.sort((a,b) => {
-          return b.spentTotal - a.spentTotal
-        }));
+      case 'shigh->slow': {
+        setSplitList(
+          tempList.sort((a, b) => {
+            return b.spentTotal - a.spentTotal;
+          }),
+        );
         break;
       }
 
-      case "slow->shigh": {
-        setSplitList(tempList.sort((a,b) => {
-          return a.spentTotal - b.spentTotal
-        }));
+      case 'slow->shigh': {
+        setSplitList(
+          tempList.sort((a, b) => {
+            return a.spentTotal - b.spentTotal;
+          }),
+        );
         break;
-      }  
+      }
     }
 
     setSplitList(tempList);
     setStickyList(stickyIndex);
-
   }, [renderList, categoryBudget, sortMethod]);
-
 
   return (
     <SafeAreaView style={styles.container}>
       <View style={{ borderRadius: 10, overflow: 'hidden' }}>
         <ScrollView style={styles.scrollView} stickyHeaderIndices={stickyList}>
           {splitList.map((budget) => [
-            <View style={styles.header}>  
-              <View style={{ flex: 1 }}>
-                <Text style={styles.text}>
-                  {budget.category}
-                </Text>
-              </View>
-              <View style={{ flex: 1 }}>
+            <View>
+              <View style={styles.header}>
+                <Text style={styles.text}>{budget.category}</Text>
                 <Text style={styles.text}>
                   ${budget.spentTotal} / ${budget.valueTotal}
                 </Text>
@@ -109,19 +109,19 @@ const styles = StyleSheet.create({
     height: Dimensions.get('window').height - 100,
     backgroundColor: theme.colors.primary,
   },
-  scrollView: {
-  },
+  scrollView: {},
   header: {
     display: 'flex',
     flexDirection: 'row',
-    justifyContent: 'center',
+    justifyContent: 'space-between',
     alignItems: 'center',
-    backgroundColor: theme.gradient[0], 
+    backgroundColor: theme.gradient[0],
   },
   text: {
     fontSize: 20,
     fontWeight: 'bold',
     color: theme.colors.white,
-    margin: 8,
+    marginVertical: 7,
+    marginHorizontal: 10,
   },
 });

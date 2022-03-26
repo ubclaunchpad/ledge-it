@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import axios from '../providers/axios';
 import StyledTextInput from '../components/StyledTextInput';
 import StyledButton from '../components/StyledButton';

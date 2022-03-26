@@ -1,13 +1,18 @@
 import React from 'react';
 import { StyleSheet, Text, SafeAreaView, View, Dimensions } from 'react-native';
-import { VictoryPie, VictoryLabel, Background } from 'victory-native';
+import { VictoryPie, VictoryLabel } from 'victory-native';
+import { Svg, Circle } from 'react-native-svg';
 import { MONTHS } from '../../utils/constants';
 import theme from '../../../theme';
 import { formatNumber } from '../../utils/formatters';
-import {Svg, Circle} from 'react-native-svg';
 
-
-const CategoryPieChart = ({ currentMonth, categoryBudgetData, calculateBudget, calculateExpense, ratio }) => {
+const CategoryPieChart = ({
+  currentMonth,
+  categoryBudgetData,
+  calculateBudget,
+  calculateExpense,
+  ratio,
+}) => {
   const windowWidth = Dimensions.get('window').width;
   const pieRadius = windowWidth / 4;
 
@@ -29,7 +34,12 @@ const CategoryPieChart = ({ currentMonth, categoryBudgetData, calculateBudget, c
       {calculateExpense ? (
         <View>
           <Svg height={windowWidth / 2 + pieRadius / 2}>
-            <Circle cx={190} cy={120} r={pieRadius - pieRadius / 3  + 10} fill={theme.colors.textLight} />
+            <Circle
+              cx={190}
+              cy={120}
+              r={pieRadius - pieRadius / 3 + 10}
+              fill={theme.colors.textLight}
+            />
             <VictoryPie
               standalone={false}
               height={windowWidth / 2 + pieRadius / 2}
@@ -38,7 +48,9 @@ const CategoryPieChart = ({ currentMonth, categoryBudgetData, calculateBudget, c
               data={categoryData}
               x="category"
               y={(data) => data.spent}
-              colorScale={theme.gradient.slice(0, categoryData.length - 1).concat([theme.colors.white])}
+              colorScale={theme.gradient
+                .slice(0, categoryData.length - 1)
+                .concat([theme.colors.white])}
               labels={() => null}
               style={{
                 parent: {
@@ -57,7 +69,10 @@ const CategoryPieChart = ({ currentMonth, categoryBudgetData, calculateBudget, c
                   x={windowWidth / 2}
                   y={windowWidth / 4 + pieRadius / 3}
                   style={[styles.labelMaj, styles.labelMin]}
-                  text={[`$${formatNumber(calculateExpense, 0)}`, `${ratio} of ${MONTHS[currentMonth - 1]} Spending`]}
+                  text={[
+                    `$${formatNumber(calculateExpense, 0)}`,
+                    `${ratio} of ${MONTHS[currentMonth - 1]} Spending`,
+                  ]}
                 />
               }
             />

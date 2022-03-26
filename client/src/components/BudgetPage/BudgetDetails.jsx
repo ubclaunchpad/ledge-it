@@ -1,12 +1,12 @@
 import React, { useCallback, useState } from 'react';
-import { Text, View, Pressable, StyleSheet, SafeAreaView, ScrollView } from 'react-native';
+import { Text, View, Pressable, StyleSheet, SafeAreaView } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useFocusEffect } from '@react-navigation/native';
 import axios from '../../providers/axios';
 import BudgetDetailsTable from './BudgetDetailsTable';
 import theme from '../../../theme';
 import { MONTHS } from '../../utils/constants';
-import CategoryPieChart from './BudgetPieChart'
+import CategoryPieChart from './BudgetPieChart';
 import BudgetProgressBar from './BudgetProgressBar';
 import StyledButton from '../StyledButton';
 import Modal from '../CustomModal';
@@ -21,30 +21,29 @@ const BudgetDetails = ({ currentMonth, currentYear, isVisible, setVisible }) => 
 
   useFocusEffect(
     useCallback(() => {
-      async function getExpenses() { 
+      async function getExpenses() {
         await axios
-        .get(`${URL}/expense/${currentYear}/${currentMonth}`)
-        .then(({ data }) => setDatabaseExpense(data))
-        .catch((err) => console.log(err));
+          .get(`${URL}/expense/${currentYear}/${currentMonth}`)
+          .then(({ data }) => setDatabaseExpense(data))
+          .catch((err) => console.log(err));
       }
 
-      async function getBudgets() { 
+      async function getBudgets() {
         await axios
-        .get(`${URL}/budget/category/all`, {
-          params: {
-            month: currentMonth,
-            year: currentYear,
-          },
-        })
-        .then((res) => {
-          setCategoryBudgetData(res.data);
-        })
-        .catch((e) => console.log(e));
+          .get(`${URL}/budget/category/all`, {
+            params: {
+              month: currentMonth,
+              year: currentYear,
+            },
+          })
+          .then((res) => {
+            setCategoryBudgetData(res.data);
+          })
+          .catch((e) => console.log(e));
       }
-      
+
       getExpenses();
       getBudgets();
-
     }, [currentYear, currentMonth]),
   );
 
@@ -59,7 +58,7 @@ const BudgetDetails = ({ currentMonth, currentYear, isVisible, setVisible }) => 
     }, 0),
   };
 
-  const ratio = `${Math.round((calculateExpense.total / calculateBudget.total) * 100) || 0 }%`;
+  const ratio = `${Math.round((calculateExpense.total / calculateBudget.total) * 100) || 0}%`;
 
   return (
     <SafeAreaView style={styles.listContainer}>
@@ -71,20 +70,17 @@ const BudgetDetails = ({ currentMonth, currentYear, isVisible, setVisible }) => 
           <Text style={styles.title}>{MONTHS[currentMonth - 1]}</Text>
         </View>
       </View>
-      {databaseExpense.length > 0 ? (         
+      {databaseExpense.length > 0 ? (
         <View>
-          <CategoryPieChart 
-            currentMonth={currentMonth} 
+          <CategoryPieChart
+            currentMonth={currentMonth}
             categoryBudgetData={categoryBudgetData}
             calculateBudget={calculateBudget.total}
             calculateExpense={calculateExpense.total}
             ratio={ratio}
           />
           <View style={styles.row}>
-            <BudgetProgressBar
-              calculateBudget={calculateBudget.total}
-              ratio={ratio}
-            />
+            <BudgetProgressBar calculateBudget={calculateBudget.total} ratio={ratio} />
             <StyledButton
               customStyles={dropDownStyles}
               label="Sort"
@@ -94,11 +90,11 @@ const BudgetDetails = ({ currentMonth, currentYear, isVisible, setVisible }) => 
               activeOpacity={1}
             />
           </View>
-          <BudgetDetailsTable 
-            renderList={databaseExpense} 
+          <BudgetDetailsTable
+            renderList={databaseExpense}
             categoryBudget={categoryBudgetData}
             sortMethod={sortMethod}
-          /> 
+          />
         </View>
       ) : (
         <View>
@@ -106,41 +102,41 @@ const BudgetDetails = ({ currentMonth, currentYear, isVisible, setVisible }) => 
         </View>
       )}
       <Modal isModalVisible={sortModalVisible} setModalVisible={setSortModalVisible}>
-            <View>
-              <StyledButton
-                onTap={() => {
-                  setSortMethod('vhigh->vlow')
-                  setSortModalVisible(false);
-                }}
-                customStyles={btnCustomStyles}
-                label="Budget Value (high to low)"
-              />
-              <StyledButton
-                onTap={() => {
-                  setSortMethod('vlow->vhigh')
-                  setSortModalVisible(false);
-                }}
-                customStyles={btnCustomStyles}
-                label="Budget Value (low to high)"
-              />
-              <StyledButton
-                onTap={() => {
-                  setSortMethod('shigh->slow')
-                  setSortModalVisible(false);
-                }}
-                customStyles={btnCustomStyles}
-                label="Budget Spent (high to low)"
-              />
-              <StyledButton
-                onTap={() => {
-                  setSortMethod('slow->shigh')
-                  setSortModalVisible(false);
-                }}
-                customStyles={btnCustomStyles}
-                label="Budget Spent (low to high)"
-              />
-            </View>
-          </Modal>
+        <View>
+          <StyledButton
+            onTap={() => {
+              setSortMethod('vhigh->vlow');
+              setSortModalVisible(false);
+            }}
+            customStyles={btnCustomStyles}
+            label="Budget Value (high to low)"
+          />
+          <StyledButton
+            onTap={() => {
+              setSortMethod('vlow->vhigh');
+              setSortModalVisible(false);
+            }}
+            customStyles={btnCustomStyles}
+            label="Budget Value (low to high)"
+          />
+          <StyledButton
+            onTap={() => {
+              setSortMethod('shigh->slow');
+              setSortModalVisible(false);
+            }}
+            customStyles={btnCustomStyles}
+            label="Budget Spent (high to low)"
+          />
+          <StyledButton
+            onTap={() => {
+              setSortMethod('slow->shigh');
+              setSortModalVisible(false);
+            }}
+            customStyles={btnCustomStyles}
+            label="Budget Spent (low to high)"
+          />
+        </View>
+      </Modal>
     </SafeAreaView>
   );
 };
@@ -184,7 +180,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginHorizontal: 10,
     marginBottom: 15,
-  }
+  },
 });
 
 const dropDownStyles = StyleSheet.create({
