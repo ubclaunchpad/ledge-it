@@ -1,11 +1,13 @@
 import requests
 import os
 
-from google.cloud import storage
 from fastapi import APIRouter,status
 from fastapi.responses import JSONResponse
 
-os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "./google-keys.json"
+#TODO: get base 64 image string from frontend
+# TODO:  return expense or income string
+#TODO:remove gcp stuff
+#TODO: decide if it is income or backend
 
 router = APIRouter()
 
@@ -13,19 +15,14 @@ router = APIRouter()
     "/scan_receipt", response_description="Returns the Receipt content encoded in JSON"
 )
 async def scan_receipt(data:str):
-    storage_client = storage.Client()
-    bucket_name = storage_client.get_bucket("images-ledgeit")  # GCS bucket
     receiptOcrEndpoint = (
         "https://ocr.asprise.com/api/v1/receipt"  # Receipt OCR API endpoint
     )
 
-    # TODO: replace with url received (data) after upload function called from image_to_s3.py
+    # TODO: Convert base64 to jpg here
     file_name = "receipt.jpg"
-
     destination_file_name = "receipt.jpg"  # downloaded imageFile
-    blob = bucket_name.blob(file_name)
-    # blob.download_to_filename(destination_file_name)
-
+    
     r = requests.post(
         receiptOcrEndpoint,
         data={
@@ -34,6 +31,8 @@ async def scan_receipt(data:str):
             "ref_no": "ocr_python_123",  # optional caller provided ref code \
         },
         files={"file": open(destination_file_name, "rb")},
+
+    
     )
 
     # print(r.text)  
