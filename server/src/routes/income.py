@@ -7,6 +7,7 @@ from fastapi.encoders import jsonable_encoder
 from pydantic.error_wrappers import ValidationError
 from datetime import date
 
+from ..routes.image_to_s3 import delete_image, upload_image
 from ..middleware import get_current_active_user
 from ..models.user import User
 from .net_worth import update_net_worth
@@ -19,7 +20,7 @@ router = APIRouter()
 
 
 @router.get(
-    "/incomes", response_description="Get all expenses", response_model=List[Income]
+    "/incomes", response_description="Get all incomes", response_model=List[Income]
 )
 def get_incomes(current_user: User = Depends(get_current_active_user)):
     if (
@@ -47,7 +48,7 @@ def get_income_by_id(id, current_user: User = Depends(get_current_active_user)):
 
 
 @router.post("/income", response_description="Add new income", response_model=Income)
-def create_income(
+async def create_income(
     income: AddIncome = Body(...), current_user: User = Depends(get_current_active_user)
 ):
     if (
@@ -67,6 +68,14 @@ def create_income(
         income.exchange_rate = get_exchange_rate_to_cad(income.currency)
 
     income_dict = {k: v for k, v in income.dict().items()}
+
+    if "base64_image" in income_dict:
+        try:
+            income_dict["image_url"] = await upload_image(income_dict["base64_image"])
+            del income_dict["base64_image"]
+        except ValueError as err:
+            raise HTTPException(status_code=404, detail=f"{err}")
+
     income_dict["email"] = current_user["email"]
 
     try:
@@ -88,7 +97,7 @@ def create_income(
     response_description="Update income selected by id",
     response_model=Income,
 )
-def update_income(
+async def update_income(
     id,
     income: UpdateIncomeModel = Body(...),
     current_user: User = Depends(get_current_active_user),
@@ -114,6 +123,14 @@ def update_income(
             income.exchange_rate = get_exchange_rate_to_cad(income.currency)
 
     income = {k: v for k, v in income.dict().items() if v is not None}
+
+    if "base64_image" in income:
+        try:
+            income["image_url"] = await upload_image(income["base64_image"])
+            del income["base64_image"]
+        except ValueError as err:
+            raise HTTPException(status_code=404, detail=f"{err}")
+
     income["email"] = current_user["email"]
     income = jsonable_encoder(income)
 
@@ -143,7 +160,9 @@ def update_income(
 @router.delete(
     "/income/{id}", response_description="Delete income by id", response_model=Income
 )
-def delete_income_by_id(id, current_user: User = Depends(get_current_active_user)):
+async def delete_income_by_id(
+    id, current_user: User = Depends(get_current_active_user)
+):
     income_to_delete: Income = income_collection.find_one(
         {"_id": id, "email": current_user["email"]}
     )
@@ -167,6 +186,13 @@ def delete_income_by_id(id, current_user: User = Depends(get_current_active_user
     delete_result = income_collection.delete_one(
         {"_id": id, "email": current_user["email"]}
     )
+
+    if income_to_delete.image_url is not None:
+        file_name = income_to_delete.image_url.split("/")[-1]
+        try:
+            await delete_image(file_name)
+        except ValueError as err:
+            raise HTTPException(status_code=404, detail=f"{err}")
 
     if delete_result.deleted_count == 1:
         return JSONResponse(
