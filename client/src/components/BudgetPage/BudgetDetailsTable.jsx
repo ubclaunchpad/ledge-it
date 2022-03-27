@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { StyleSheet, ScrollView, SafeAreaView, Text, View, Dimensions } from 'react-native';
 import BudgetDetailsTableComponent from './BudgetDetailsTableComponent';
 import theme from '../../../theme';
+import { formatNumber } from '../../utils/formatters';
 
 const BudgetDetailsTable = ({ renderList, sortMethod, categoryBudget }) => {
   const [splitList, setSplitList] = useState([]);
@@ -25,7 +26,7 @@ const BudgetDetailsTable = ({ renderList, sortMethod, categoryBudget }) => {
 
         categoryBudget.forEach((budget) => {
           const budgetCategory = budget.category;
-          if (category == budgetCategory) {
+          if (category === budgetCategory) {
             valueTotal = budget.value;
           }
         });
@@ -87,7 +88,7 @@ const BudgetDetailsTable = ({ renderList, sortMethod, categoryBudget }) => {
               <View style={styles.header}>
                 <Text style={styles.text}>{budget.category}</Text>
                 <Text style={styles.text}>
-                  ${budget.spentTotal} / ${budget.valueTotal}
+                  ${formatNumber(budget.spentTotal)} / ${formatNumber(budget.valueTotal)}
                 </Text>
               </View>
             </View>,

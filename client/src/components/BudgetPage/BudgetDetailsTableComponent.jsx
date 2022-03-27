@@ -3,7 +3,7 @@ import { List } from 'react-native-paper';
 import { StyleSheet, Text, View, Pressable } from 'react-native';
 import { Swipeable } from 'react-native-gesture-handler';
 import theme from '../../../theme';
-import { getDay, getMonth, getYear } from '../../utils/formatters';
+import { formatNumber, getDay, getMonth, getYear } from '../../utils/formatters';
 import { MONTHS } from '../../utils/constants';
 import axios from '../../providers/axios';
 
@@ -48,7 +48,7 @@ const BudgetDetailsTableComponent = ({ expenses }) => {
               <View>
                 <Text />
                 <Text style={styles.price}>
-                  -${expense.price || expense.amount} {expense.currency.toUpperCase()}
+                  -${formatNumber(expense.price || expense.amount)} {expense.currency.toUpperCase()}
                 </Text>
               </View>
             )}

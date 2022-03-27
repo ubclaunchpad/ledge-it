@@ -35,9 +35,9 @@ const CategoryPieChart = ({
         <View>
           <Svg height={windowWidth / 2 + pieRadius / 2}>
             <Circle
-              cx={190}
-              cy={120}
-              r={pieRadius - pieRadius / 3 + 10}
+              cx={windowWidth / 2}
+              cy={windowWidth / 4 + pieRadius / 4}
+              r={pieRadius}
               fill={theme.colors.textLight}
             />
             <VictoryPie
