@@ -4,7 +4,7 @@ import { StyleSheet, Text, View } from 'react-native';
 import { MONTHS } from '../../utils/constants';
 import theme from '../../../theme';
 
-const BudgetTableComponent = ({ budget, isVisible, setVisible, setMonth, setYear }) => {
+const BudgetTableComponent = ({ budget, setMonth, setYear, setShowTable, setShowDetails }) => {
   return (
     <>
       <List.Item
@@ -23,7 +23,8 @@ const BudgetTableComponent = ({ budget, isVisible, setVisible, setMonth, setYear
           </View>
         )}
         onPress={() => {
-          setVisible(!isVisible);
+          setShowTable(false);
+          setShowDetails(true);
           setMonth(budget.month);
           setYear(budget.year);
         }}
