@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet, Text } from 'react-native';
 import { Button, Menu, Provider } from 'react-native-paper';
+import { FontAwesome } from '@expo/vector-icons';
 import theme from '../../../theme';
 
 const RNPMenu = () => {
@@ -17,9 +18,12 @@ const RNPMenu = () => {
           visible={visible}
           onDismiss={closeMenu}
           anchor={
-            <Button onPress={openMenu} color="white">
-              Sort
-            </Button>
+            <>
+              <Button onPress={openMenu} color="white" style={styles.button}>
+                <Text>Sort </Text>
+                <FontAwesome name="chevron-down" size={15} color="white" />
+              </Button>
+            </>
           }>
           <Menu.Item onPress={() => {}} title="Sort by: Price" />
           <Menu.Item onPress={() => {}} title="Sort by: Category" />
@@ -35,10 +39,16 @@ const styles = StyleSheet.create({
   sortMenu: {
     backgroundColor: theme.colors.primary,
     borderRadius: 20,
-    marginTop: 3,
-    marginRight: 10,
-    marginLeft: 10,
-    width: 80,
+    marginHorizontal: 10,
+    marginBottom: 10,
+    width: 110,
+  },
+  button: {
+    display: 'flex',
+    flexDirection: 'row',
+    borderRadius: 20,
+    borderWidth: 2,
+    borderColor: theme.colors.white,
   },
 });
 
