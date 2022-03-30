@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, ScrollView, StyleSheet, Text, TouchableOpacity, Dimensions } from 'react-native';
+import { View, ScrollView, StyleSheet, Text, Dimensions } from 'react-native';
 import SwitchSelector from 'react-native-switch-selector';
 import { Searchbar, Chip } from 'react-native-paper';
 import { FontAwesome5 } from '@expo/vector-icons';
