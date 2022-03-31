@@ -1,12 +1,69 @@
 import React, { useState } from 'react';
-import { List } from 'react-native-paper';
+import { List, Button } from 'react-native-paper';
 import { StyleSheet, ScrollView, SafeAreaView, Text, View, Dimensions } from 'react-native';
 import theme from '../../../theme';
 import BudgetTableComponent from './BudgetTableComponent';
 import BudgetHeader from './BudgetPageHeader';
+import axios from '../../providers/axios';
 
-const BudgetTable = ({ renderList, isVisible, setVisible, setMonth, year, setYear }) => {
+const BudgetTable = ({
+  renderList,
+  month,
+  year,
+  setMonth,
+  setYear,
+  setShowTable,
+  setShowDetails,
+  setShowEdit,
+}) => {
   const [sortMethod, setSortMethod] = useState('new->old');
+
+  const URL = process.env.SERVER_URL;
+
+  const createIfBudgetDNE = async () => {
+    try {
+      await axios.get(`${URL}/budget`, { params: { month, year } });
+    } catch (error) {
+      await initializeBudget();
+    }
+  };
+
+  const initializeBudget = () => {
+    return Promise.all([initializeBudgetAmount(), initializeBudgetCategories()]);
+  };
+
+  const initializeBudgetAmount = () => {
+    return axios.post(`${URL}/budget`, {
+      month,
+      year,
+      value: 0,
+      spent: 0,
+    });
+  };
+
+  const initializeBudgetCategories = async () => {
+    try {
+      const response = await axios.get(`${URL}/expense_categories`);
+      const userCategories = response.data;
+      const promises = [];
+      userCategories.forEach(async (categoryInfo) => {
+        promises.push(initializeBudgetCategory(categoryInfo.name));
+      });
+      return Promise.all(promises);
+    } catch (error) {
+      console.log(`initializeBudgetCategories error: ${error}`);
+    }
+  };
+
+  const initializeBudgetCategory = async (categoryName) => {
+    return axios.post(`${URL}/budget/category`, {
+      month,
+      year,
+      value: 0,
+      spent: 0,
+      category: categoryName,
+    });
+  };
 
   const sortBudgets = () => {
     if (sortMethod === 'old->new') {
@@ -56,16 +113,31 @@ const BudgetTable = ({ renderList, isVisible, setVisible, setMonth, year, setYea
                 <BudgetTableComponent
                   key={`${budget.month}-${budget.year}`}
                   budget={budget}
-                  isVisible={isVisible}
-                  setVisible={setVisible}
                   setMonth={setMonth}
                   setYear={setYear}
+                  setShowDetails={setShowDetails}
+                  setShowTable={setShowTable}
                 />
               ))}
           </List.Section>
           <View style={{ height: 300 }} />
         </ScrollView>
       </SafeAreaView>
+      <View style={styles.centeredView}>
+        <Button
+          mode="contained"
+          color={theme.colors.primary}
+          labelStyle={{ fontSize: 20 }}
+          uppercase={false}
+          style={styles.fab}
+          onPress={async () => {
+            await createIfBudgetDNE();
+            setShowTable(false);
+            setShowEdit(true);
+          }}>
+          Edit Budget
+        </Button>
+      </View>
     </>
   );
 };
@@ -76,6 +148,15 @@ const styles = StyleSheet.create({
   container: {
     display: 'flex',
     overflow: 'scroll',
+  },
+  fab: {
+    position: 'absolute',
+    margin: 25,
+    height: 44,
+    right: 0,
+    bottom: 10,
+    borderRadius: 15,
+    backgroundColor: theme.colors.primary,
   },
   header: {
     fontSize: 42,
@@ -90,7 +171,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   scrollView: {
-    minHeight: Dimensions.get('window').height - 200,
+    minHeight: Dimensions.get('window').height - 360,
   },
   month: {
     color: theme.colors.textDark,

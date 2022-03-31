@@ -13,7 +13,7 @@ import Modal from '../CustomModal';
 
 const URL = process.env.SERVER_URL;
 
-const BudgetDetails = ({ currentMonth, currentYear, isVisible, setVisible }) => {
+const BudgetDetails = ({ currentMonth, currentYear, setShowDetails, setShowTable }) => {
   const [databaseExpense, setDatabaseExpense] = useState([]);
   const [categoryBudgetData, setCategoryBudgetData] = useState([]);
   const [sortModalVisible, setSortModalVisible] = useState(false);
@@ -63,7 +63,12 @@ const BudgetDetails = ({ currentMonth, currentYear, isVisible, setVisible }) => 
   return (
     <SafeAreaView style={styles.listContainer}>
       <View style={styles.header}>
-        <Pressable style={styles.closeButton} onPress={() => setVisible(!isVisible)}>
+        <Pressable
+          style={styles.closeButton}
+          onPress={() => {
+            setShowDetails(false);
+            setShowTable(true);
+          }}>
           <Ionicons name="arrow-back-outline" color={theme.colors.textLight} size={35} />
         </Pressable>
         <View style={{ alignItems: 'center', marginBottom: 10 }}>
