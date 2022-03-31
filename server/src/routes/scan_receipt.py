@@ -5,7 +5,7 @@ from fastapi import APIRouter,status
 from fastapi.responses import JSONResponse
 
 #TODO: get base 64 image string from frontend
-# TODO:  return expense or income string
+# TODO:  return expense or income object
 #TODO:remove gcp stuff
 #TODO: decide if it is income or backend
 
@@ -22,7 +22,7 @@ async def scan_receipt(data:str):
     # TODO: Convert base64 to jpg here
     file_name = "receipt.jpg"
     destination_file_name = "receipt.jpg"  # downloaded imageFile
-    
+
     r = requests.post(
         receiptOcrEndpoint,
         data={
