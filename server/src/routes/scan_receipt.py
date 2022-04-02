@@ -1,5 +1,6 @@
 import requests
 from PIL import Image
+from io import BytesIO
 import base64
 
 from fastapi import APIRouter, status
