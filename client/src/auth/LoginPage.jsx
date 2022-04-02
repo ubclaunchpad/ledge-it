@@ -7,21 +7,26 @@ import { login, saveToken } from '../utils/auth';
 import Logo from '../../assets/logo';
 import theme from '../../theme';
 import Gradient from '../../assets/loginPageGradient';
-import FilledButton from '../components/AuthPage/FilledButton';
+import SpinnerButton from 'react-native-spinner-button';
 
 const LoginPage = ({ setPage, setLoggedIn }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
   const submitLogin = () => {
     login(email, password)
       .then(async ({ data }) => {
         await saveToken(data.access_token, data.expires);
         setLoggedIn(true);
+        setIsLoading(false);
       })
-      .catch((err) => console.log(err));
+      .catch((err) => {
+        console.log(err);
+        setIsLoading(false);
+      });
   };
-
+  
   return (
     <>
       <KeyboardAvoidingView
@@ -52,8 +57,16 @@ const LoginPage = ({ setPage, setLoggedIn }) => {
             secureTextEntry
             isLight
           />
-          <View style={styles.btnContainer}>
-            <FilledButton label="Login" onPress={submitLogin} />
+          <View style = {styles.btnContainer}>
+            <SpinnerButton
+              buttonStyle={{backgroundColor: "white", borderRadius: Dimensions.get('window').width, width: Dimensions.get('window').width/1.2}}
+              isLoading={isLoading}
+              onPress={() => setIsLoading(true, submitLogin())}
+              indicatorCount={10}
+              spinnerColor = {theme.colors.primary}
+            >
+              <Text style = {{fontSize: 18, color: theme.colors.primary }} >Login</Text>
+            </SpinnerButton>
           </View>
         </View>
       </KeyboardAvoidingView>
@@ -93,7 +106,6 @@ const styles = StyleSheet.create({
   btnContainer: {
     paddingTop: 50,
     display: 'flex',
-    alignSelf: 'center',
   },
 });
 

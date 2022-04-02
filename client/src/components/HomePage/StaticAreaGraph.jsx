@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { View, StyleSheet, Dimensions } from 'react-native';
+import { View, StyleSheet, Dimensions, Text } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
 import { VictoryChart, VictoryArea, VictoryAxis } from 'victory-native';
 import { Defs, LinearGradient, Stop } from 'react-native-svg';
@@ -8,7 +8,7 @@ import theme from '../../../theme';
 
 const URL = process.env.SERVER_URL;
 
-const StaticAreaGraph = () => {
+const StaticAreaGraph = ({setButton}) => {
   const today = new Date();
   const todayString = new Date(today.getFullYear(), today.getMonth(), today.getDate() + 1)
     .toISOString()
@@ -72,26 +72,35 @@ const StaticAreaGraph = () => {
     handleProcessingData(databaseExpense);
   }, [databaseExpense]);
 
+  useEffect(() => {
+    if (compressedData.length >= 2) {
+      setButton(true);
+    } else {
+      setButton(false);
+    }
+  })
+
   return (
     <View style={styles.container}>
       <View>
+        {compressedData.length >= 2 ?
         <VictoryChart
-          width={Dimensions.get('window').width / 0.93}
-          height={Dimensions.get('window').height / 3}
-          style={{
-            parent: {
-              width: '100%',
-              height: 'auto',
-              marginTop: -30,
-              marginLeft: -40,
-              marginBottom: -70,
-              paddingRight: 30,
-              overflow: 'visible',
-            },
-            data: {
-              overflow: 'visible',
-            },
-          }}>
+        width={Dimensions.get('window').width / 0.93}
+        height={Dimensions.get('window').height / 3}
+        style={{
+          parent: {
+            width: '100%',
+            height: 'auto',
+            marginTop: -30,
+            marginLeft: -40,
+            marginBottom: -70,
+            paddingRight: 30,
+            overflow: 'visible',
+          },
+          data: {
+            overflow: 'visible',
+          },
+        }}>
           <Defs>
             <LinearGradient id="gradientFill" x1="0%" y1="0%" x2="0%" y2="100%">
               <Stop stopColor="white" offset="20%" stopOpacity="0.9" />
@@ -108,7 +117,7 @@ const StaticAreaGraph = () => {
             }}
             interpolation="catmullRom"
             data={compressedData}
-          />
+            />
           <VictoryAxis
             labels={(d) => d.y}
             style={{
@@ -116,18 +125,19 @@ const StaticAreaGraph = () => {
               ticks: { stroke: 'transparent' },
               tickLabels: { fill: 'transparent' },
             }}
-          />
+            />
         </VictoryChart>
+        :  <Text style={{fontSize: 25, textAlign: "center", color: theme.colors.primary}}>Insufficient data to display spending chart</Text>}
       </View>
-    </View>
-  );
-};
+      </View>
+      );
+    };
 
 export default StaticAreaGraph;
 
 const styles = StyleSheet.create({
   container: {
-    display: 'flex',
+    display: 'flex', 
     overflow: 'scroll',
     paddingHorizontal: 5,
     // flexGrow: 1,
