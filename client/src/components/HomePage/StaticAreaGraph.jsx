@@ -8,7 +8,7 @@ import theme from '../../../theme';
 
 const URL = process.env.SERVER_URL;
 
-const StaticAreaGraph = ({setButton}) => {
+const StaticAreaGraph = ({ setButton }) => {
   const today = new Date();
   const todayString = new Date(today.getFullYear(), today.getMonth(), today.getDate() + 1)
     .toISOString()
@@ -78,66 +78,70 @@ const StaticAreaGraph = ({setButton}) => {
     } else {
       setButton(false);
     }
-  })
+  });
 
   return (
     <View style={styles.container}>
       <View>
-        {compressedData.length >= 2 ?
-        <VictoryChart
-        width={Dimensions.get('window').width / 0.93}
-        height={Dimensions.get('window').height / 3}
-        style={{
-          parent: {
-            width: '100%',
-            height: 'auto',
-            marginTop: -30,
-            marginLeft: -40,
-            marginBottom: -70,
-            paddingRight: 30,
-            overflow: 'visible',
-          },
-          data: {
-            overflow: 'visible',
-          },
-        }}>
-          <Defs>
-            <LinearGradient id="gradientFill" x1="0%" y1="0%" x2="0%" y2="100%">
-              <Stop stopColor="white" offset="20%" stopOpacity="0.9" />
-              <Stop stopColor={theme.colors.primary} offset="100%" stopOpacity="1" />
-            </LinearGradient>
-          </Defs>
-          <VictoryArea
+        {compressedData.length >= 2 ? (
+          <VictoryChart
+            width={Dimensions.get('window').width / 0.93}
+            height={Dimensions.get('window').height / 3}
             style={{
-              data: {
-                fill: 'url(#gradientFill)',
-                stroke: theme.colors.primaryDark,
-                strokeWidth: 3,
+              parent: {
+                width: '100%',
+                height: 'auto',
+                marginTop: -30,
+                marginLeft: -40,
+                marginBottom: -70,
+                paddingRight: 30,
+                overflow: 'visible',
               },
-            }}
-            interpolation="catmullRom"
-            data={compressedData}
+              data: {
+                overflow: 'visible',
+              },
+            }}>
+            <Defs>
+              <LinearGradient id="gradientFill" x1="0%" y1="0%" x2="0%" y2="100%">
+                <Stop stopColor="white" offset="20%" stopOpacity="0.9" />
+                <Stop stopColor={theme.colors.primary} offset="100%" stopOpacity="1" />
+              </LinearGradient>
+            </Defs>
+            <VictoryArea
+              style={{
+                data: {
+                  fill: 'url(#gradientFill)',
+                  stroke: theme.colors.primaryDark,
+                  strokeWidth: 3,
+                },
+              }}
+              interpolation="catmullRom"
+              data={compressedData}
             />
-          <VictoryAxis
-            labels={(d) => d.y}
-            style={{
-              axis: { stroke: 'transparent' },
-              ticks: { stroke: 'transparent' },
-              tickLabels: { fill: 'transparent' },
-            }}
+            <VictoryAxis
+              labels={(d) => d.y}
+              style={{
+                axis: { stroke: 'transparent' },
+                ticks: { stroke: 'transparent' },
+                tickLabels: { fill: 'transparent' },
+              }}
             />
-        </VictoryChart>
-        :  <Text style={{fontSize: 25, textAlign: "center", color: theme.colors.primary}}>Insufficient data to display spending chart</Text>}
+          </VictoryChart>
+        ) : (
+          <Text style={{ fontSize: 25, textAlign: 'center', color: theme.colors.primary }}>
+            Insufficient data to display spending chart
+          </Text>
+        )}
       </View>
-      </View>
-      );
-    };
+    </View>
+  );
+};
 
 export default StaticAreaGraph;
 
 const styles = StyleSheet.create({
   container: {
-    display: 'flex', 
+    display: 'flex',
     overflow: 'scroll',
     paddingHorizontal: 5,
     // flexGrow: 1,

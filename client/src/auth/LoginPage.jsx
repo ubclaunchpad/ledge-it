@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import { View, StyleSheet, Dimensions, Text, KeyboardAvoidingView, Platform } from 'react-native';
 import { SvgXml } from 'react-native-svg';
+import SpinnerButton from 'react-native-spinner-button';
 import StyledTextInput from '../components/StyledTextInput';
 import BackArrow from '../components/AuthPage/BackArrow';
 import { login, saveToken } from '../utils/auth';
 import Logo from '../../assets/logo';
 import theme from '../../theme';
 import Gradient from '../../assets/loginPageGradient';
-import SpinnerButton from 'react-native-spinner-button';
 
 const LoginPage = ({ setPage, setLoggedIn }) => {
   const [email, setEmail] = useState('');
@@ -26,7 +26,7 @@ const LoginPage = ({ setPage, setLoggedIn }) => {
         setIsLoading(false);
       });
   };
-  
+
   return (
     <>
       <KeyboardAvoidingView
@@ -57,15 +57,18 @@ const LoginPage = ({ setPage, setLoggedIn }) => {
             secureTextEntry
             isLight
           />
-          <View style = {styles.btnContainer}>
+          <View style={styles.btnContainer}>
             <SpinnerButton
-              buttonStyle={{backgroundColor: "white", borderRadius: Dimensions.get('window').width, width: Dimensions.get('window').width/1.2}}
+              buttonStyle={{
+                backgroundColor: 'white',
+                borderRadius: Dimensions.get('window').width,
+                width: Dimensions.get('window').width / 1.2,
+              }}
               isLoading={isLoading}
               onPress={() => setIsLoading(true, submitLogin())}
               indicatorCount={10}
-              spinnerColor = {theme.colors.primary}
-            >
-              <Text style = {{fontSize: 18, color: theme.colors.primary }} >Login</Text>
+              spinnerColor={theme.colors.primary}>
+              <Text style={{ fontSize: 18, color: theme.colors.primary }}>Login</Text>
             </SpinnerButton>
           </View>
         </View>

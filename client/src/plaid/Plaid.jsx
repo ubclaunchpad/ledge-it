@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, Text, View, Dimensions } from 'react-native';
 import axios from 'axios';
+import SpinnerButton from 'react-native-spinner-button';
 import TheLink from './TheLink';
 import StyledButton from '../components/StyledButton';
-import SpinnerButton from 'react-native-spinner-button';
 import theme from '../../theme';
 
 export default function Plaid() {
@@ -55,15 +55,18 @@ export default function Plaid() {
               clicking the button below.
             </Text>
           </View>
-          <View style = {styles.button}>
+          <View style={styles.button}>
             <SpinnerButton
-              buttonStyle={{backgroundColor: theme.colors.primary, borderRadius: Dimensions.get('window').width, width: Dimensions.get('window').width/1.2}}
+              buttonStyle={{
+                backgroundColor: theme.colors.primary,
+                borderRadius: Dimensions.get('window').width,
+                width: Dimensions.get('window').width / 1.2,
+              }}
               isLoading={loading}
               onPress={() => setLoading(true, fetchTransactions())}
               indicatorCount={10}
-              spinnerColor = {"white"}
-            >
-              <Text style = {{fontSize: 18, color: "white" }} >Fetch Transactions</Text>
+              spinnerColor="white">
+              <Text style={{ fontSize: 18, color: 'white' }}>Fetch Transactions</Text>
             </SpinnerButton>
           </View>
           <View style={styles.textViewSmall}>

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { View, StyleSheet, Dimensions, Text, Platform, KeyboardAvoidingView } from 'react-native';
 import { SvgXml } from 'react-native-svg';
+import SpinnerButton from 'react-native-spinner-button';
 import axios from '../providers/axios';
 import StyledTextInput from '../components/StyledTextInput';
 import BackArrow from '../components/AuthPage/BackArrow';
@@ -10,7 +11,6 @@ import Logo from '../../assets/logo';
 import Gradient from '../../assets/loginPageGradient';
 import FilledButton from '../components/AuthPage/FilledButton';
 import OutlinedButton from '../components/AuthPage/OutlinedButton';
-import SpinnerButton from 'react-native-spinner-button';
 
 const URL = process.env.SERVER_URL;
 
@@ -52,7 +52,7 @@ const SignUpPage = ({ setPage, setLoggedIn }) => {
       setPwdWarn("Passwords don't match");
       setTimeout(() => {
         setIsLoading(false);
-      }, 1000)
+      }, 1000);
       setTimeout(() => {
         setPwdWarn(undefined);
       }, 10000);
@@ -110,10 +110,10 @@ const SignUpPage = ({ setPage, setLoggedIn }) => {
           {form === 0 ? (
             <>
               <View style={styles.btnContainer}>
-              <OutlinedButton
-                label="Next"
-                onPress={() => setForm(1)}
-                disabled={!isFormOneFilled()}
+                <OutlinedButton
+                  label="Next"
+                  onPress={() => setForm(1)}
+                  disabled={!isFormOneFilled()}
                 />
               </View>
             </>
@@ -123,15 +123,23 @@ const SignUpPage = ({ setPage, setLoggedIn }) => {
                 <OutlinedButton label="Back" onPress={() => setForm(0)} />
                 {/* <FilledButton label="Create an account" onPress={signUpHandler} /> */}
               </View>
-              <View style = {{display: 'flex', width: Dimensions.get('window').width, alignSelf: "center"}}>
+              <View
+                style={{
+                  display: 'flex',
+                  width: Dimensions.get('window').width,
+                  alignSelf: 'center',
+                }}>
                 <SpinnerButton
-                  buttonStyle={{backgroundColor: "white", borderRadius: Dimensions.get('window').width, width: Dimensions.get('window').width/1.2}}
+                  buttonStyle={{
+                    backgroundColor: 'white',
+                    borderRadius: Dimensions.get('window').width,
+                    width: Dimensions.get('window').width / 1.2,
+                  }}
                   isLoading={isLoading}
                   onPress={() => setIsLoading(true, signUpHandler())}
                   indicatorCount={10}
-                  spinnerColor = {theme.colors.primary}
-                  >
-                  <Text style = {{fontSize: 18, color: theme.colors.primary }} >Login</Text>
+                  spinnerColor={theme.colors.primary}>
+                  <Text style={{ fontSize: 18, color: theme.colors.primary }}>Login</Text>
                 </SpinnerButton>
               </View>
             </>

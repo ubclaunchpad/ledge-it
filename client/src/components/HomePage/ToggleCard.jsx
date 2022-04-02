@@ -36,11 +36,10 @@ const ToggleCard = () => {
         <View style={styles.content}>
           {item.title === 'Visualization' ? (
             <>
-              {displayDurationButton ?
-              <StyledButton key="all" label="Last 7 Days" customStyles={buttonSelectedStyle}/>
-              : null
-              }
-              <StaticAreaGraph scrollX={scrollX} setButton = {setDisplayDurationButton}/>
+              {displayDurationButton ? (
+                <StyledButton key="all" label="Last 7 Days" customStyles={buttonSelectedStyle} />
+              ) : null}
+              <StaticAreaGraph scrollX={scrollX} setButton={setDisplayDurationButton} />
             </>
           ) : null}
           {item.title === 'Calendar' ? <Text style={styles.text}>{item.description}</Text> : null}
