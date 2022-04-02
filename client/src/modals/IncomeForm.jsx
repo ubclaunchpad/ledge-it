@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { StyleSheet, View, Image } from 'react-native';
+import { FontAwesome5 } from '@expo/vector-icons';
 import axios from '../providers/axios';
 import StyledTextInput from '../components/StyledTextInput';
 import StyledButton from '../components/StyledButton';
@@ -69,20 +70,7 @@ const AddIncome = ({ setModalVisible, setIncomeModalVisible, type, setType }) =>
         label="Amount"
         placeholder="$$$"
         required
-      />
-      <StyledTextInput
-        onChange={setName}
-        keyboardType="default"
-        label="Income Source"
-        placeholder="Salary"
-        required
-      />
-      <StyledTextInput
-        onChange={setDesc}
-        keyboardType="default"
-        label="Description"
-        placeholder="Optional..."
-        multiline
+        icon={<FontAwesome5 name="coins" size={32} color="white" />}
       />
       <StyledTextInput
         onChange={setDate}
@@ -91,6 +79,15 @@ const AddIncome = ({ setModalVisible, setIncomeModalVisible, type, setType }) =>
         placeholder="DD/MM/YYYY"
         defaultValue={getCurrentDate()}
         required
+        icon={<FontAwesome5 name="calendar-alt" size={32} color="white" />}
+      />
+      <StyledTextInput
+        onChange={setName}
+        keyboardType="default"
+        label="Source"
+        placeholder="Ex. Salary"
+        required
+        icon={<FontAwesome5 name="shopping-basket" size={32} color="white" />}
       />
       <StyledSelect
         label="Category"
@@ -99,14 +96,9 @@ const AddIncome = ({ setModalVisible, setIncomeModalVisible, type, setType }) =>
         setSelected={setCategory}
         dropdownVisible={categoryDropdownVisible}
         setDropdownVisible={setCategoryDropdownVisible}
-        placeholder="Select a category"
+        placeholder="Select"
         required
-      />
-      <StyledTextInput
-        onChange={setLocation}
-        keyboardType="default"
-        label="Location"
-        placeholder="Optional..."
+        icon={<FontAwesome5 name="tag" size={32} color="white" />}
       />
       <View
         style={{

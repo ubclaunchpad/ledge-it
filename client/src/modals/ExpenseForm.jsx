@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { StyleSheet, View, Image } from 'react-native';
+import { FontAwesome5 } from '@expo/vector-icons';
 import axios from '../providers/axios';
 import AmountBox from '../components/AmountBox';
 import StyledTextInput from '../components/StyledTextInput';
@@ -73,20 +74,7 @@ const AddExpense = ({ setModalVisible, setExpenseModalVisible, type, setType }) 
         label="Amount"
         placeholder="$$$"
         required
-      />
-      <StyledTextInput
-        onChange={setName}
-        keyboardType="default"
-        label="Name"
-        placeholder="Amazon"
-        required
-      />
-      <StyledTextInput
-        onChange={setDesc}
-        keyboardType="default"
-        label="Description"
-        placeholder="Optional..."
-        multiline
+        icon={<FontAwesome5 name="coins" size={32} color="white" />}
       />
       <StyledTextInput
         onChange={setDate}
@@ -95,6 +83,15 @@ const AddExpense = ({ setModalVisible, setExpenseModalVisible, type, setType }) 
         placeholder="MM/DD/YYYY"
         defaultValue={getCurrentDate()}
         required
+        icon={<FontAwesome5 name="calendar-alt" size={32} color="white" />}
+      />
+      <StyledTextInput
+        onChange={setName}
+        keyboardType="default"
+        label="Name"
+        placeholder="Ex.Amazon"
+        required
+        icon={<FontAwesome5 name="shopping-basket" size={32} color="white" />}
       />
       <StyledSelect
         label="Category"
@@ -103,20 +100,9 @@ const AddExpense = ({ setModalVisible, setExpenseModalVisible, type, setType }) 
         setSelected={setCategory}
         dropdownVisible={categoryDropdownVisible}
         setDropdownVisible={setCategoryDropdownVisible}
-        placeholder="Select a category"
+        placeholder="Select"
         required
-      />
-      <StyledTextInput
-        onChange={setTag}
-        keyboardType="default"
-        label="Tag"
-        placeholder="Optional..."
-      />
-      <StyledTextInput
-        onChange={setLocation}
-        keyboardType="default"
-        label="Location"
-        placeholder="Optional..."
+        icon={<FontAwesome5 name="tag" size={32} color="white" />}
       />
       <View
         style={{
