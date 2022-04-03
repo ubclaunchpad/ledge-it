@@ -9,25 +9,20 @@ from fastapi.responses import JSONResponse
 
 from ..models import Expense
 
-# TODO: get base 64 image string from frontend: DONE
-# TODO:  return expense or income object
-# TODO:remove gcp stuff
-# TODO: decide if it is income or backend
-
 router = APIRouter()
 
 
 @router.get(
-    "/scan_receipt", response_description="Returns the Receipt content encoded in JSON"
+    "/scan_expense_receipt", response_description="Returns the Receipt content encoded in JSON"
 )
-async def scan_receipt(data: str):
+async def scan_expense_receipt(data: str):
 
     receiptOcrEndpoint = (
         "https://ocr.asprise.com/api/v1/receipt"  # Receipt OCR API endpoint
     )
 
     # For testing, convert the receipt.jpg into base64
-    with open("receipt.jpg", "rb") as f:
+    with open("./src/routes/receipt.jpg", "rb") as f:
         im_b64_test = base64.b64encode(f.read())
 
     # base64 string to PIL image
@@ -39,9 +34,9 @@ async def scan_receipt(data: str):
 
     # Convert PIL image to jpg
     rgb_img = img.convert("RGB")
-    rgb_img.save("temp_scanned_imgs/temp.jpg")
+    rgb_img.save("./src/routes/temp_scanned_imgs/temp.jpg")
 
-    destination_file_name = "temp_scanned_imgs/temp.jpg"
+    destination_file_name = "./src/routes/temp_scanned_imgs/temp.jpg"
 
     r = requests.post(
         receiptOcrEndpoint,
@@ -64,12 +59,12 @@ async def scan_receipt(data: str):
             "price": api_response["receipts"][0]["total"],
             "description": api_response["receipts"][0]["items"][0]["description"],
             "currency": "CAD",
+            "exchange_rate":1.00,
             "category": None,
         }
+        model_to_return = Expense(**expense_dict)
     else:
-        expense_dict = None
-
-    model_to_return = Expense(**expense_dict)
+        model_to_return = api_response
 
     return JSONResponse(
         status_code=status.HTTP_200_OK,
