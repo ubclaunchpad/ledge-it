@@ -13,7 +13,8 @@ router = APIRouter()
 
 
 @router.get(
-    "/scan_expense_receipt", response_description="Returns the Receipt content encoded in JSON"
+    "/scan_expense_receipt",
+    response_description="Returns the Receipt content encoded in JSON",
 )
 async def scan_expense_receipt(data: str):
 
@@ -59,8 +60,8 @@ async def scan_expense_receipt(data: str):
             "price": api_response["receipts"][0]["total"],
             "description": api_response["receipts"][0]["items"][0]["description"],
             "currency": "CAD",
-            "exchange_rate":1.00,
-            "category": None,
+            "exchange_rate": 1.00,
+            "category": "Other",
         }
         model_to_return = Expense(**expense_dict)
     else:
