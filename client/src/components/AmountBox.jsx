@@ -9,6 +9,7 @@ export default ({ date, amount, category, name, type, currb64img, setb64, setImg
     
     if (currb64img == '') {
       const b64img = await openCamera();
+      if (b64img == '') return; 
       setb64(b64img);
     }
 
