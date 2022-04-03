@@ -153,12 +153,12 @@ const styles = StyleSheet.create({
     backgroundColor: theme.colors.textLight,
     paddingBottom: 50,
 
-    //shadow - make a common style
+    // shadow - make a common style
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.7,
-    shadowRadius: 2,  
-    elevation: 5
+    shadowRadius: 2,
+    elevation: 5,
   },
   title: {
     alignSelf: 'center',

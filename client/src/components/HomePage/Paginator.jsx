@@ -21,9 +21,7 @@ const Paginator = ({ data, scrollX }) => {
           extrapolate: 'clamp',
         });
 
-        return (
-          <Animated.View style={[styles.dot, { width: 5, opacity }]} key={i.toString()} />
-        );
+        return <Animated.View style={[styles.dot, { width: 5, opacity }]} key={i.toString()} />;
       })}
     </View>
   );

@@ -1,5 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import { ScrollView, StatusBar, StyleSheet, Animated, TouchableOpacity, View, Text } from 'react-native';
+import {
+  ScrollView,
+  StatusBar,
+  StyleSheet,
+  Animated,
+  TouchableOpacity,
+  View,
+  Text,
+} from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { CurvedBottomBar } from 'react-native-curved-bottom-bar';
@@ -69,7 +77,7 @@ const App = () => {
 //   );
 // };
 
-const screenOptions = (routeName, selectedTab) => { 
+const screenOptions = (routeName, selectedTab) => {
   let iconName;
 
   switch (routeName) {
@@ -90,12 +98,16 @@ const screenOptions = (routeName, selectedTab) => {
       break;
   }
 
-  return <Ionicons name={iconName} color={routeName === selectedTab ? '#15b7cd' : theme.colors.textLight} size={26} />;
+  return (
+    <Ionicons
+      name={iconName}
+      color={routeName === selectedTab ? '#15b7cd' : theme.colors.textLight}
+      size={26}
+    />
+  );
 };
 
-
 const CurvedNavBar = ({ setLoggedIn }) => {
-
   const renderTabBar = ({ routeName, selectedTab, navigate }) => {
     return (
       <TouchableOpacity
@@ -111,58 +123,43 @@ const CurvedNavBar = ({ setLoggedIn }) => {
   };
 
   return (
-    <View style={{ flex: 1}}>
+    <View style={{ flex: 1 }}>
       <CurvedBottomBar.Navigator
-            style={styles.bottomBar}
-            height={75}
-            circleWidth={60}
-            bgColor={theme.colors.primary}
-            initialRouteName="Home"
-            swipeEnabled
-            renderCircle={({ selectedTab, navigate }) => (
-              <Animated.View style={styles.btnCircle}>
-                <View
-                  style={{
-                    flex: 1,
-                    justifyContent: 'center',
-                  }}
-                >
-                  <DefaultActionButton />
-                </View>
-              </Animated.View>
-            )}
-            tabBar={renderTabBar}>
-            <CurvedBottomBar.Screen
-              name="Home"
-              component={HomePage}
-              position="left"
-            />
-            <CurvedBottomBar.Screen
-              name="Table"
-              component={TablePage}
-              position="left"
-            />
-            <CurvedBottomBar.Screen
-              name="Budget"
-              component={BudgetPage}
-              position="right"
-            />
-            <CurvedBottomBar.Screen
-              name="Analytics"
-              component={AnalyticsPage}
-              position="right"
-            />
-          </CurvedBottomBar.Navigator>
-        </View>
-  )
-}
+        style={styles.bottomBar}
+        height={75}
+        circleWidth={60}
+        bgColor={theme.colors.primary}
+        initialRouteName="Home"
+        swipeEnabled
+        renderCircle={({ selectedTab, navigate }) => (
+          <Animated.View style={styles.btnCircle}>
+            <View
+              style={{
+                flex: 1,
+                justifyContent: 'center',
+              }}>
+              <DefaultActionButton />
+            </View>
+          </Animated.View>
+        )}
+        tabBar={renderTabBar}>
+        <CurvedBottomBar.Screen name="Home" component={HomePage} position="left" />
+        <CurvedBottomBar.Screen name="Table" component={TablePage} position="left" />
+        <CurvedBottomBar.Screen name="Budget" component={BudgetPage} position="right" />
+        <CurvedBottomBar.Screen name="Analytics" component={AnalyticsPage} position="right" />
+        {/* dont show settings on tab bar */}
+        <CurvedBottomBar.Screen name="Settings" component={SettingsPage} />
+      </CurvedBottomBar.Navigator>
+    </View>
+  );
+};
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
   },
-  
+
   btnCircle: {
     width: 65,
     height: 65,
@@ -178,7 +175,7 @@ const styles = StyleSheet.create({
     height: 30,
     tintColor: 'gray',
   },
-  
+
   img: {
     width: 30,
     height: 30,
