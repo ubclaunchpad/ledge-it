@@ -4,17 +4,25 @@ import theme from '../../theme';
 import StyledButton from './StyledButton';
 import openCamera from '../utils/pickImage';
 
-export default ({ date, amount, category, name, type, currb64img, setb64, setImgModal, rounded = false }) => {
+export default ({
+  date,
+  amount,
+  category,
+  name,
+  type,
+  currb64img,
+  setb64,
+  setImgModal,
+  rounded = false,
+}) => {
   const getImage = async () => {
-    
     if (currb64img == '') {
       const b64img = await openCamera();
-      if (b64img == '') return; 
+      if (b64img == '') return;
       setb64(b64img);
     }
 
     setImgModal(true);
-
   };
 
   return (

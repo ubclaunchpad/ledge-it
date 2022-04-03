@@ -123,26 +123,21 @@ const ItemSummary = ({ modalVisible, setModalVisible, item, userCategories, type
             alignItems: 'center',
             marginTop: 20,
           }}>
-
           <View style={styles.button}>
             <StyledButton label="Cancel" onTap={() => setModalVisible(false)} />
           </View>
-          
+
           <View style={styles.button}>
             <StyledButton label="Save" onTap={() => onUpdate()} />
           </View>
-
         </View>
 
-        
-        <ImagePreview 
-          isModalVisible={imagePreviewVisible} 
-          setModalVisible={setImagePreviewVisible} 
+        <ImagePreview
+          isModalVisible={imagePreviewVisible}
+          setModalVisible={setImagePreviewVisible}
           b64Img={base64Image}
           setb64img={setBase64Image}
         />
-        
-
       </View>
     </CustomModal>
   );

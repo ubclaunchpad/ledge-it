@@ -129,20 +129,18 @@ const AddExpense = ({ setModalVisible, setExpenseModalVisible, type, setType }) 
           alignItems: 'center',
           marginTop: 20,
         }}>
-    
         <View style={styles.button}>
           <StyledButton label="Cancel" onTap={() => setExpenseModalVisible(false)} />
         </View>
-    
+
         <View style={styles.button}>
           <StyledButton label="Add" onTap={submitExpense} />
         </View>
-    
       </View>
 
-      <ImagePreview 
-        isModalVisible={imagePreviewVisible} 
-        setModalVisible={setImagePreviewVisible} 
+      <ImagePreview
+        isModalVisible={imagePreviewVisible}
+        setModalVisible={setImagePreviewVisible}
         b64Img={base64Image}
         setb64img={setBase64Image}
       />

@@ -119,7 +119,6 @@ const AddIncome = ({ setModalVisible, setIncomeModalVisible, type, setType }) =>
           alignItems: 'center',
           marginTop: 20,
         }}>
-
         <View style={styles.button}>
           <StyledButton label="Cancel" onTap={() => setIncomeModalVisible(false)} />
         </View>
@@ -127,16 +126,14 @@ const AddIncome = ({ setModalVisible, setIncomeModalVisible, type, setType }) =>
         <View style={styles.button}>
           <StyledButton label="Add" onTap={submitIncome} />
         </View>
-
       </View>
 
-      <ImagePreview 
-        isModalVisible={imagePreviewVisible} 
-        setModalVisible={setImagePreviewVisible} 
+      <ImagePreview
+        isModalVisible={imagePreviewVisible}
+        setModalVisible={setImagePreviewVisible}
         b64Img={base64Image}
         setb64img={setBase64Image}
       />
-      
     </>
   );
 };
