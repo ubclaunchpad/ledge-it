@@ -1,3 +1,4 @@
+from pyexpat import model
 import requests
 from PIL import Image
 from io import BytesIO
@@ -67,7 +68,4 @@ async def scan_expense_receipt(data: str):
     else:
         model_to_return = api_response
 
-    return JSONResponse(
-        status_code=status.HTTP_200_OK,
-        content=model_to_return,
-    )
+    return model_to_return
