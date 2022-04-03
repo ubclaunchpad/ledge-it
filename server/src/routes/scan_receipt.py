@@ -60,7 +60,8 @@ async def scan_receipt(data: str):
         expense_dict = {
             "name": api_response["receipts"][0]["merchant_name"],
             "date": api_response["receipts"][0]["date"],
-            "price": api_response["receipts"][0]["items"][0]["amount"],
+            # "price": api_response["receipts"][0]["items"][0]["amount"],
+            "price": api_response["receipts"][0]["total"],
             "description": api_response["receipts"][0]["items"][0]["description"],
             "currency": "CAD",
             "category": None,

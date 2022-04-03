@@ -48,7 +48,8 @@ if api_response["success"]:
     expense_dict = {
         "name": api_response["receipts"][0]["merchant_name"],
         "date": api_response["receipts"][0]["date"],
-        "price": api_response["receipts"][0]["items"][0]["amount"],
+        # "price": api_response["receipts"][0]["items"][0]["amount"],
+        "price": api_response["receipts"][0]["total"],
         "description": api_response["receipts"][0]["items"][0]["description"],
         "currency": "CAD",
         "category": None,
@@ -56,5 +57,5 @@ if api_response["success"]:
 else:
     expense_dict = None
 
-print(api_response)
+# print(api_response)
 print(expense_dict)
