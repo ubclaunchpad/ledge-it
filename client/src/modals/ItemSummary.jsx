@@ -6,6 +6,7 @@ import StyledTextInput from '../components/StyledTextInput';
 import StyledSelect from '../components/StyledSelect';
 import CustomModal from '../components/CustomModal';
 import AmountBox from '../components/AmountBox';
+import ImagePreview from './ImagePreview';
 import theme from '../../theme';
 import { formatDateBE, formatDateFE } from '../utils/formatters';
 
@@ -20,6 +21,7 @@ const ItemSummary = ({ modalVisible, setModalVisible, item, userCategories, type
   const [description, setDescription] = useState(item.description);
   const [location, setLocation] = useState(item.location);
   const [categoryDropdownVisible, setCategoryDropdownVisible] = useState(false);
+  const [imagePreviewVisible, setImagePreviewVisible] = useState(false);
   const [base64Image, setBase64Image] = useState('');
 
   const onUpdate = () => {
@@ -48,7 +50,9 @@ const ItemSummary = ({ modalVisible, setModalVisible, item, userCategories, type
           category={category}
           amount={Number(price || 0) * -1}
           type={type === 'Expenses' ? 'Expense' : 'Income'}
+          currb64img={base64Image}
           setb64={setBase64Image}
+          setImgModal={setImagePreviewVisible}
           rounded
         />
         <StyledTextInput
@@ -119,19 +123,26 @@ const ItemSummary = ({ modalVisible, setModalVisible, item, userCategories, type
             alignItems: 'center',
             marginTop: 20,
           }}>
-          {base64Image !== '' && (
-            <Image
-              style={{ width: 85, height: 85, borderRadius: 15, marginHorizontal: 20 }}
-              source={{ uri: base64Image }}
-            />
-          )}
+
           <View style={styles.button}>
             <StyledButton label="Cancel" onTap={() => setModalVisible(false)} />
           </View>
+          
           <View style={styles.button}>
             <StyledButton label="Save" onTap={() => onUpdate()} />
           </View>
+
         </View>
+
+        
+        <ImagePreview 
+          isModalVisible={imagePreviewVisible} 
+          setModalVisible={setImagePreviewVisible} 
+          b64Img={base64Image}
+          setb64img={setBase64Image}
+        />
+        
+
       </View>
     </CustomModal>
   );

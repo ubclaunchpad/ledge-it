@@ -6,6 +6,7 @@ import StyledTextInput from '../components/StyledTextInput';
 import StyledButton from '../components/StyledButton';
 import StyledSelect from '../components/StyledSelect';
 import { formatDateBE } from '../utils/formatters';
+import ImagePreview from './ImagePreview';
 import ToggleButtons from '../components/ToggleButtons';
 
 const URL = process.env.SERVER_URL;
@@ -34,6 +35,7 @@ const AddExpense = ({ setModalVisible, setExpenseModalVisible, type, setType }) 
   const [tag, setTag] = useState(undefined);
   const [description, setDesc] = useState(undefined);
   const [location, setLocation] = useState(undefined);
+  const [imagePreviewVisible, setImagePreviewVisible] = useState(false);
   const [base64Image, setBase64Image] = useState('');
 
   const submitExpense = async () => {
@@ -64,7 +66,9 @@ const AddExpense = ({ setModalVisible, setExpenseModalVisible, type, setType }) 
         category={category}
         amount={Number(price || 0) * -1}
         type="Expense"
+        currb64img={base64Image}
         setb64={setBase64Image}
+        setImgModal={setImagePreviewVisible}
       />
       <ToggleButtons type={type} setType={setType} />
       <StyledTextInput
@@ -125,19 +129,23 @@ const AddExpense = ({ setModalVisible, setExpenseModalVisible, type, setType }) 
           alignItems: 'center',
           marginTop: 20,
         }}>
-        {base64Image !== '' && (
-          <Image
-            style={{ width: 85, height: 85, borderRadius: 15, marginHorizontal: 20 }}
-            source={{ uri: base64Image }}
-          />
-        )}
+    
         <View style={styles.button}>
           <StyledButton label="Cancel" onTap={() => setExpenseModalVisible(false)} />
         </View>
+    
         <View style={styles.button}>
           <StyledButton label="Add" onTap={submitExpense} />
         </View>
+    
       </View>
+
+      <ImagePreview 
+        isModalVisible={imagePreviewVisible} 
+        setModalVisible={setImagePreviewVisible} 
+        b64Img={base64Image}
+        setb64img={setBase64Image}
+      />
     </>
   );
 };
