@@ -18,7 +18,7 @@ const HomePage = () => {
           )}
           style={styles.content}
         >
-          <NetWorthCard scrollPosition={scrollY} />
+          <NetWorthCard />
           <ToggleCard />
           <CategoryPieChart />
           <RecentTransactions />

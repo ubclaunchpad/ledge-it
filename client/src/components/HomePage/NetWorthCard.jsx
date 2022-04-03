@@ -10,7 +10,7 @@ const NET_WORTH_ID = '61ab71e8efaeac62430a1822';
 
 const URL = process.env.SERVER_URL;
 
-const NetWorthCard = ({ scrollPosition }) => {
+const NetWorthCard = () => {
   const [netWorth, setNetWorth] = useState(0);
   const [income, setIncome] = useState(0);
   const [expense, setExpenses] = useState(0);
