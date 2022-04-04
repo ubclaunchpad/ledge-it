@@ -130,7 +130,6 @@ const CurvedNavBar = ({ setLoggedIn }) => {
         circleWidth={60}
         bgColor={theme.colors.primary}
         initialRouteName="Home"
-        swipeEnabled
         renderCircle={({ selectedTab, navigate }) => (
           <Animated.View style={styles.btnCircle}>
             <View
