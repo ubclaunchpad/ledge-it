@@ -1,24 +1,33 @@
-import React from 'react';
-import { StyleSheet, ScrollView, SafeAreaView, View } from 'react-native';
-import DefaultActionButton from '../components/ActionButton';
+import React, { useRef } from 'react';
+import { StyleSheet, SafeAreaView, View } from 'react-native';
+import Animated, { useSharedValue, useAnimatedScrollHandler } from 'react-native-reanimated';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 import CategoryPieChart from '../components/HomePage/CategoryPieChart';
 import ToggleCard from '../components/HomePage/ToggleCard';
 import NetWorthCard from '../components/HomePage/NetWorthCard';
 import RecentTransactions from '../components/HomePage/RecentTransactions';
 
-const HomePage = () => {
+const HomePage = ({ navigate }) => {
+  const scrollY = useSharedValue(0);
+
+  const scrollHandler = useAnimatedScrollHandler({
+    onScroll: (event) => {
+      const { y } = event.contentOffset;
+      scrollY.value = y;
+    },
+  });
+
   return (
     <>
       <SafeAreaView style={styles.container}>
-        <ScrollView style={styles.content}>
-          <NetWorthCard />
+        <NetWorthCard scrollValue={scrollY} navigate={navigate} />
+        <Animated.ScrollView onScroll={scrollHandler} style={styles.content}>
           <ToggleCard />
           <CategoryPieChart />
           <RecentTransactions />
-          <View style={{ height: 60 }} />
-        </ScrollView>
+          <View style={{ height: 85 }} />
+        </Animated.ScrollView>
       </SafeAreaView>
-      <DefaultActionButton />
     </>
   );
 };
@@ -30,6 +39,7 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     justifyContent: 'center',
     alignContent: 'center',
+    backgroundColor: '#ebebeb',
   },
   content: {
     display: 'flex',

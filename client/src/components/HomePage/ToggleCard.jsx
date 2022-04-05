@@ -94,16 +94,21 @@ const styles = StyleSheet.create({
     width: Dimensions.get('window').width - 30,
     justifyContent: 'center',
     alignItems: 'center',
-    borderWidth: 4,
+    borderWidth: 0,
     borderRadius: 20,
-    backgroundColor: 'white',
+    backgroundColor: theme.colors.textLight,
     borderColor: theme.colors.primaryDark,
-    // paddingTop: 10
+
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.7,
+    shadowRadius: 2,
+    elevation: 5,
   },
 
   text: {
     fontWeight: 'bold',
-    color: theme.colors.black,
+    color: theme.colors.textDark,
     fontSize: 20,
   },
 });

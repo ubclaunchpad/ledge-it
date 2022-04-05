@@ -1,8 +1,9 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useState, forwardRef } from 'react';
 import { StyleSheet, View, Text, Dimensions, TouchableOpacity } from 'react-native';
-import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
-import { faChevronDown, faChevronUp } from '@fortawesome/free-solid-svg-icons';
+import Animated, { useAnimatedStyle, interpolate, Extrapolate } from 'react-native-reanimated';
 import { useFocusEffect } from '@react-navigation/native';
+import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
+import { faDotCircle, faCog } from '@fortawesome/free-solid-svg-icons';
 import axios from '../../providers/axios';
 import theme from '../../../theme';
 import { formatNumber } from '../../utils/formatters';
@@ -12,11 +13,46 @@ const NET_WORTH_ID = '61ab71e8efaeac62430a1822';
 
 const URL = process.env.SERVER_URL;
 
-const NetWorthCard = () => {
+const { height, width } = Dimensions.get('window');
+
+// use shared value?
+const NetWorthCard = ({ scrollValue, navigate }) => {
   const [netWorth, setNetWorth] = useState(0);
   const [income, setIncome] = useState(0);
-  const [expenses, setExpenses] = useState(0);
-  const [isExpanded, setExpand] = useState(false);
+  const [expense, setExpenses] = useState(0);
+  const [selected, setSelected] = useState('net');
+  const [currNum, setCurrNum] = useState(0);
+
+  const rHeight = useAnimatedStyle(() => {
+    const nHeight = interpolate(scrollValue.value, [0, height / 3], [150, 110], Extrapolate.CLAMP);
+
+    return {
+      height: nHeight,
+    };
+  });
+
+  const rScale = useAnimatedStyle(() => {
+    const scale = interpolate(scrollValue.value, [0, height / 3], [1, 0.8], Extrapolate.CLAMP);
+
+    const shift = interpolate(scrollValue.value, [0, height / 3], [0, -55], Extrapolate.CLAMP);
+
+    return {
+      transform: [
+        { scale },
+        {
+          translateX: shift,
+        },
+      ],
+    };
+  });
+
+  const rOpacity = useAnimatedStyle(() => {
+    const nOpacity = interpolate(scrollValue.value, [0, height / 3], [0, 1], Extrapolate.CLAMP);
+
+    return {
+      opacity: nOpacity,
+    };
+  });
 
   const getNetWorthData = () => {
     axios
@@ -35,137 +71,148 @@ const NetWorthCard = () => {
     }, []),
   );
 
+  useFocusEffect(
+    useCallback(() => {
+      setCurrNum(netWorth);
+    }, [netWorth]),
+  );
+
   return (
-    <View style={styles.container}>
-      <View style={styles.content}>
-        <TouchableOpacity
-          style={styles.chevron}
-          onPress={() => {
-            setExpand(!isExpanded);
-          }}>
-          <View style={styles.text}>
-            <Text style={[styles.mainText, styles.net]}>NET</Text>
-            <Text style={[styles.mainText, styles.amount]}>
-              {netWorth < 0 && '-'}${formatNumber(netWorth)}
-            </Text>
-          </View>
-          {isExpanded ? (
-            <FontAwesomeIcon icon={faChevronUp} color={theme.colors.primary} size={32} />
-          ) : (
-            <FontAwesomeIcon icon={faChevronDown} color={theme.colors.primary} size={32} />
-          )}
-        </TouchableOpacity>
-      </View>
-
-      {isExpanded && (
-        <View style={styles.subContent}>
-          <View style={[styles.content, styles.sub]}>
-            <Text style={[styles.mainText, styles.subText, styles.label]}>All Time Income</Text>
-            <Text style={[styles.mainText, styles.subText, styles.income]}>
-              ${formatNumber(income)}
-            </Text>
-          </View>
-
-          <View style={[styles.content, styles.contentContainer, styles.sub]}>
-            <Text style={[styles.mainText, styles.subText, styles.label]}>All Time Expenses</Text>
-            <Text style={[styles.mainText, styles.subText, styles.expense]}>
-              ${formatNumber(expenses)}
-            </Text>
-          </View>
+    <Animated.View style={[styles.container, rHeight]}>
+      <Animated.View style={[styles.container2, rScale]}>
+        <View style={[styles.text]}>
+          <Text style={[styles.mainText, styles.amount]}>
+            ${currNum < 0 && '-'}
+            {formatNumber(currNum)}
+          </Text>
         </View>
-      )}
-    </View>
+        <View style={[styles.buttons]}>
+          <TouchableOpacity
+            onPress={() => {
+              setSelected('net');
+              setCurrNum(netWorth);
+            }}
+            style={[styles.btn, selected == 'net' ? styles.selBtn : styles.notSelbtn]}>
+            <Text style={selected == 'net' ? styles.selBtnText : styles.notSelBtnText}>
+              All Time Net
+            </Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            onPress={() => {
+              setSelected('income');
+              setCurrNum(income);
+            }}
+            style={[styles.btn, selected == 'income' ? styles.selBtn : styles.notSelBtn]}>
+            <Text style={selected == 'income' ? styles.selBtnText : styles.notSelBtnText}>
+              Total Income
+            </Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            onPress={() => {
+              setSelected('expense');
+              setCurrNum(expense);
+            }}
+            style={[styles.btn, selected == 'expense' ? styles.selBtn : styles.notSelBtn]}>
+            <Text style={selected == 'expense' ? styles.selBtnText : styles.notSelBtnText}>
+              Total Expense
+            </Text>
+          </TouchableOpacity>
+        </View>
+      </Animated.View>
+
+      <Animated.View style={[styles.setting, rOpacity]}>
+        <FontAwesomeIcon
+          icon={faCog}
+          size={25}
+          color="white"
+          style={styles.settingBtn}
+          onPress={() => navigate('Settings')}
+        />
+      </Animated.View>
+    </Animated.View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
+    position: 'relative',
     display: 'flex',
-    width: Dimensions.get('window').width,
+    width,
     justifyContent: 'center',
     alignItems: 'center',
+    backgroundColor: theme.colors.primary,
+    borderBottomRightRadius: 20,
+    borderBottomLeftRadius: 20,
   },
 
-  contentContainer: {
-    zIndex: 2,
-  },
-
-  content: {
-    width: Dimensions.get('window').width - 30,
-    marginTop: 20,
-    marginBottom: 2,
-    paddingHorizontal: 3,
-    paddingVertical: 5,
-    borderWidth: 4,
-    borderRadius: 20,
-    borderColor: theme.colors.primaryDark,
-  },
-
-  subContent: {
-    borderWidth: 3,
-    borderRadius: 20,
-    borderColor: theme.colors.primaryDark,
-    borderTopWidth: 0,
-    borderTopRightRadius: 0,
-    borderTopLeftRadius: 0,
-    marginTop: -20,
-    paddingVertical: 25,
-    paddingBottom: 5,
-    width: Dimensions.get('window').width - 30,
-  },
-
-  sub: {
-    borderWidth: 0,
-    paddingLeft: 10,
-    paddingRight: 15,
-    marginTop: 0,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+  container2: {
+    display: 'flex',
+    width,
+    justifyContent: 'center',
     alignItems: 'center',
   },
 
   text: {
     display: 'flex',
     justifyContent: 'center',
-    paddingLeft: 10,
-    paddingVertical: 5,
   },
 
   mainText: {
-    color: theme.colors.primary,
+    color: theme.colors.textLight,
     fontWeight: 'bold',
   },
 
-  subText: {
-    fontSize: 27,
-    fontWeight: '600',
-  },
-
-  label: {
-    fontSize: 20,
-  },
-
-  net: {
-    fontSize: 18,
-  },
   amount: {
-    fontSize: 38,
-    marginTop: -7,
+    fontSize: 42,
   },
 
-  income: {
-    color: theme.colors.green,
-  },
-
-  expense: {
-    color: theme.colors.red,
-  },
-
-  chevron: {
-    paddingRight: 15,
+  buttons: {
+    display: 'flex',
     flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    marginTop: 10,
+  },
+
+  btn: {
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+    borderRadius: 20,
+    borderWidth: 4,
+    borderColor: theme.colors.primaryDark,
+    marginHorizontal: 3,
+    backgroundColor: theme.colors.textLight,
+
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.7,
+    shadowRadius: 2,
+    elevation: 5,
+  },
+
+  notSelBtn: {
+    backgroundColor: theme.colors.textLight,
+  },
+
+  selBtn: {
+    backgroundColor: theme.colors.primaryDark,
+  },
+
+  notSelBtnText: {
+    color: theme.colors.primaryDark,
+  },
+
+  selBtnText: {
+    color: theme.colors.textLight,
+  },
+
+  setting: {
+    position: 'absolute',
+    right: 0,
+  },
+
+  settingBtn: {
+    marginRight: 25,
   },
 });
 
