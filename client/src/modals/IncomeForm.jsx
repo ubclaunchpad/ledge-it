@@ -6,6 +6,7 @@ import StyledButton from '../components/StyledButton';
 import StyledSelect from '../components/StyledSelect';
 import { formatDateBE } from '../utils/formatters';
 import AmountBox from '../components/AmountBox';
+import ImagePreview from './ImagePreview';
 import ToggleButtons from '../components/ToggleButtons';
 
 const URL = process.env.SERVER_URL;
@@ -31,6 +32,7 @@ const AddIncome = ({ setModalVisible, setIncomeModalVisible, type, setType }) =>
   const [categoryDropdownVisible, setCategoryDropdownVisible] = useState(false);
   const [description, setDesc] = useState(undefined);
   const [location, setLocation] = useState(undefined);
+  const [imagePreviewVisible, setImagePreviewVisible] = useState(false);
   const [base64Image, setBase64Image] = useState('');
 
   const submitIncome = async () => {
@@ -60,7 +62,9 @@ const AddIncome = ({ setModalVisible, setIncomeModalVisible, type, setType }) =>
         category={category}
         amount={amount}
         type="Income"
+        currb64img={base64Image}
         setb64={setBase64Image}
+        setImgModal={setImagePreviewVisible}
       />
       <ToggleButtons type={type} setType={setType} />
       <StyledTextInput
@@ -115,19 +119,21 @@ const AddIncome = ({ setModalVisible, setIncomeModalVisible, type, setType }) =>
           alignItems: 'center',
           marginTop: 20,
         }}>
-        {base64Image !== '' && (
-          <Image
-            style={{ width: 85, height: 85, borderRadius: 15, marginHorizontal: 20 }}
-            source={{ uri: base64Image }}
-          />
-        )}
         <View style={styles.button}>
           <StyledButton label="Cancel" onTap={() => setIncomeModalVisible(false)} />
         </View>
+
         <View style={styles.button}>
           <StyledButton label="Add" onTap={submitIncome} />
         </View>
       </View>
+
+      <ImagePreview
+        isModalVisible={imagePreviewVisible}
+        setModalVisible={setImagePreviewVisible}
+        b64Img={base64Image}
+        setb64img={setBase64Image}
+      />
     </>
   );
 };
