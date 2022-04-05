@@ -20,6 +20,7 @@ const data = [
 
 const ToggleCard = () => {
   const [, setCurrentIndex] = useState(0);
+  const [displayDurationButton, setDisplayDurationButton] = useState(false);
   const scrollX = useRef(new Animated.Value(0)).current;
   const slidesRef = useRef(null);
 
@@ -35,8 +36,10 @@ const ToggleCard = () => {
         <View style={styles.content}>
           {item.title === 'Visualization' ? (
             <>
-              <StyledButton key="all" label="Last 7 Days" customStyles={buttonSelectedStyle} />
-              <StaticAreaGraph scrollX={scrollX} />
+              {displayDurationButton ? (
+                <StyledButton key="all" label="Last 7 Days" customStyles={buttonSelectedStyle} />
+              ) : null}
+              <StaticAreaGraph scrollX={scrollX} setButton={setDisplayDurationButton} />
             </>
           ) : null}
           {item.title === 'Calendar' ? <Text style={styles.text}>{item.description}</Text> : null}
