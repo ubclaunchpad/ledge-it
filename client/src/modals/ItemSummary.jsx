@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { StyleSheet, View, Text, Image } from 'react-native';
+import { FontAwesome5 } from '@expo/vector-icons';
 import axios from '../providers/axios';
 import StyledButton from '../components/StyledButton';
 import StyledTextInput from '../components/StyledTextInput';
@@ -54,6 +55,7 @@ const ItemSummary = ({ modalVisible, setModalVisible, item, userCategories, type
           setb64={setBase64Image}
           setImgModal={setImagePreviewVisible}
           rounded
+          icon={<FontAwesome5 name="coins" size={32} color="white" />}
         />
         <StyledTextInput
           label={type === 'Expenses' ? 'Price' : 'Amount'}
@@ -61,21 +63,7 @@ const ItemSummary = ({ modalVisible, setModalVisible, item, userCategories, type
           keyboardType="numeric"
           value={String(price)}
           required
-        />
-        <StyledTextInput
-          label="Name"
-          onChange={(newVal) => setName(newVal)}
-          keyboardType="default"
-          value={name}
-          required
-        />
-        <StyledTextInput
-          onChange={(newVal) => setDescription(newVal)}
-          keyboardType="default"
-          label="Description"
-          placeholder="Optional..."
-          value={description}
-          multiline
+          icon={<FontAwesome5 name="coins" size={32} color="white" />}
         />
         <StyledTextInput
           label="Date"
@@ -83,6 +71,15 @@ const ItemSummary = ({ modalVisible, setModalVisible, item, userCategories, type
           keyboardType="default"
           value={formatDateFE(date)}
           required
+          icon={<FontAwesome5 name="calendar-alt" size={32} color="white" />}
+        />
+        <StyledTextInput
+          label="Name"
+          onChange={(newVal) => setName(newVal)}
+          keyboardType="default"
+          value={name}
+          required
+          icon={<FontAwesome5 name="shopping-basket" size={32} color="white" />}
         />
         <StyledSelect
           label="Category"
@@ -99,21 +96,7 @@ const ItemSummary = ({ modalVisible, setModalVisible, item, userCategories, type
           setDropdownVisible={setCategoryDropdownVisible}
           placeholder={item.category}
           required
-        />
-        {type === 'Expenses' && (
-          <StyledTextInput
-            onChange={setTag}
-            keyboardType="default"
-            label="Tag"
-            placeholder="Optional..."
-          />
-        )}
-        <StyledTextInput
-          onChange={(newVal) => setLocation(newVal)}
-          keyboardType="default"
-          label="Location"
-          placeholder="Optional..."
-          value={location}
+          icon={<FontAwesome5 name="tag" size={32} color="white" />}
         />
 
         <View
