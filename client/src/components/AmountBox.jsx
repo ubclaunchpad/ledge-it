@@ -2,10 +2,32 @@ import React from 'react';
 import { Text, StyleSheet, View } from 'react-native';
 import theme from '../../theme';
 import StyledButton from './StyledButton';
+import openCamera from '../utils/pickImage';
 
-export default ({ date, amount, category, name }) => {
+export default ({
+  date,
+  amount,
+  category,
+  name,
+  type,
+  currb64img,
+  setb64,
+  setImgModal,
+  rounded = false,
+}) => {
+  const getImage = async () => {
+    if (currb64img == '') {
+      const b64img = await openCamera();
+      if (b64img == '') return;
+      setb64(b64img);
+    }
+
+    setImgModal(true);
+  };
+
   return (
-    <View style={styles.box}>
+    <View
+      style={[styles.box, rounded && { borderBottomRightRadius: 20, borderBottomLeftRadius: 20 }]}>
       <View style={styles.header}>
         <Text style={date ? styles.available : styles.placeholder}>{date || 'Date'}</Text>
         <StyledButton
@@ -13,7 +35,7 @@ export default ({ date, amount, category, name }) => {
           iconColor={theme.colors.white}
           iconSize={32}
           customStyles={styles}
-          onTap={() => console.log('camera')}
+          onTap={getImage}
           underlayColor={theme.colors.primary}
         />
       </View>
@@ -23,10 +45,16 @@ export default ({ date, amount, category, name }) => {
         </Text>
       </View>
       <View style={styles.footer}>
-        <Text style={category ? styles.available : styles.placeholder}>
+        <Text style={[category ? styles.available : styles.placeholder, { width: '50%' }]}>
           {category || 'Category'}
         </Text>
-        <Text style={name ? styles.available : styles.placeholder}>{name || 'Name'}</Text>
+        <Text
+          style={[
+            name ? styles.available : styles.placeholder,
+            { width: '50%', textAlign: 'right' },
+          ]}>
+          {name || (type === 'Expense' ? 'Name' : 'Source')}
+        </Text>
       </View>
     </View>
   );

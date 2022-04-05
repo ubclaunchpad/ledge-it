@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { View, ScrollView, StyleSheet, Text, TouchableOpacity, Dimensions } from 'react-native';
+import { View, ScrollView, StyleSheet, Text, Dimensions } from 'react-native';
+import SwitchSelector from 'react-native-switch-selector';
 import { Searchbar, Chip } from 'react-native-paper';
-import { faChevronRight } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { FontAwesome5 } from '@expo/vector-icons';
 import SortMenu from './SortMenu';
 import theme from '../../../theme';
@@ -21,7 +20,16 @@ const TablePageHeader = ({
   const [searchBarVisible, setSearchBarVisible] = useState(false);
 
   const onChangeSearch = (query) => setSearchQuery(query);
-  const onToggleSwitch = () => setType(type === 'Expenses' ? 'Income' : 'Expenses');
+  const onToggleSwitch = () => {
+    /*
+    if (type === 'Expenses') {
+      slideRight();
+    } else {
+      slideLeft();
+    }
+    */
+    setType(type === 'Expenses' ? 'Income' : 'Expenses');
+  };
 
   useEffect(() => {
     setAllButton(true);
@@ -69,14 +77,21 @@ const TablePageHeader = ({
 
   return (
     <View style={styles.headerContainer}>
-      <View style={styles.container}>
-        <TouchableOpacity
-          style={styles.toggleButton}
+      <View style={styles.typeContainer}>
+        <SwitchSelector
+          initial={0}
           onPress={() => onToggleSwitch()}
-          activeOpacity={0.8}>
-          <Text style={styles.toggleButtonText}>{type}</Text>
-          <FontAwesomeIcon icon={faChevronRight} color={theme.colors.white} size={24} />
-        </TouchableOpacity>
+          textColor={theme.colors.primary}
+          selectedColor={theme.colors.white}
+          buttonColor={theme.colors.primary}
+          borderColor={theme.colors.primary}
+          fontSize={30}
+          height={50}
+          options={[
+            { label: 'Expense', value: 'expenses' },
+            { label: 'Income', value: 'income' },
+          ]}
+        />
       </View>
       <View style={styles.container}>
         <SortMenu />
@@ -100,28 +115,44 @@ const TablePageHeader = ({
           <Chip
             style={[
               styles.chip,
-              { backgroundColor: allButton ? theme.colors.primary : theme.colors.primaryLight },
+              {
+                backgroundColor: allButton ? theme.colors.primary : theme.colors.white,
+                borderColor: theme.colors.white,
+              },
             ]}
             icon={emptyIcon}
             selected={allButton}
             onPress={allButtonPressLogic}>
-            <Text style={styles.text}>All</Text>
+            <Text
+              style={[
+                styles.text,
+                { color: allButton ? theme.colors.white : theme.colors.primary },
+              ]}>
+              All
+            </Text>
           </Chip>
-          {categories.map((category) => (
+          {categories.map((category, index) => (
             <Chip
               style={[
                 styles.chip,
                 {
                   backgroundColor: selectedCategories[category]
-                    ? theme.colors.primary
-                    : theme.colors.primaryLight,
+                    ? theme.categories[index]
+                    : theme.colors.white,
                 },
               ]}
               icon={emptyIcon}
               key={category}
               selected={selectedCategories[category]}
               onPress={() => categoryButtonPressLogic(category)}>
-              <Text style={styles.text}>{category}</Text>
+              <Text
+                style={[
+                  {
+                    color: selectedCategories[category] ? theme.colors.white : theme.colors.primary,
+                  },
+                ]}>
+                {category}
+              </Text>
             </Chip>
           ))}
         </ScrollView>
@@ -132,8 +163,13 @@ const TablePageHeader = ({
 
 const styles = StyleSheet.create({
   headerContainer: {
-    borderBottomWidth: 4,
-    borderBottomColor: theme.colors.primaryDark,
+    backgroundColor: theme.colors.primary,
+  },
+  typeContainer: {
+    marginTop: 40,
+    marginVertical: 10,
+    width: '80%',
+    alignSelf: 'center',
   },
   toggleButton: {
     backgroundColor: theme.colors.primary,
@@ -141,10 +177,10 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    marginHorizontal: 5,
-    marginTop: 5,
+    marginTop: 15,
     paddingHorizontal: 20,
     borderRadius: 25,
+    borderColor: theme.colors.white,
     shadowRadius: 5,
     shadowOpacity: 0.2,
     shadowOffset: { width: 0, height: 0 },
@@ -157,12 +193,9 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: 'bold',
   },
-  m10: {
-    margin: 10,
-  },
   container: {
     marginTop: 10,
-    marginBottom: 15,
+    marginVertical: 5,
     flexDirection: 'row',
     justifyContent: 'center',
   },
@@ -171,12 +204,7 @@ const styles = StyleSheet.create({
     paddingRight: 5,
   },
   chipContainer: {
-    paddingTop: 5,
     paddingBottom: 15,
-  },
-  text: {
-    fontWeight: 'bold',
-    color: theme.colors.white,
   },
   searchBar: {
     shadowOpacity: 0.1,

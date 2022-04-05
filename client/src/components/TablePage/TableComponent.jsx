@@ -24,6 +24,13 @@ const ListInputComponent = ({ item, type }) => {
   ];
   const userCategoriesIncomes = ['Salary', 'Investments', 'Business', 'Other'];
 
+  const findCategoriesIndex = (itemCategory) => {
+    if (type === 'Expenses') {
+      return userCategoriesExpenses.indexOf(itemCategory);
+    }
+    return userCategoriesIncomes.indexOf(itemCategory);
+  };
+
   return (
     <>
       <List.Item
@@ -33,12 +40,21 @@ const ListInputComponent = ({ item, type }) => {
         }}
         description={
           <View>
-            <Text style={styles.text}>{item.category}</Text>
             <Text style={styles.text}>
               {MONTHS[getMonth(item.date) - 1]} {getDay(item.date)}, {getYear(item.date)}
             </Text>
           </View>
         }
+        left={() => (
+          <View
+            style={[
+              styles.circle,
+              {
+                backgroundColor: theme.gradient[findCategoriesIndex(item.category)],
+              },
+            ]}
+          />
+        )}
         right={() => (
           <View>
             <Text />
@@ -100,28 +116,28 @@ const styles = StyleSheet.create({
     paddingBottom: 12,
     borderBottomWidth: 1,
     borderBottomColor: theme.colors.grey,
+    width: '100%',
   },
   header: {
     fontSize: 20,
-    fontWeight: 'bold',
     color: theme.colors.textLight,
-    marginTop: -5,
-    marginBottom: -10,
+    marginTop: -15,
+    backgroundColor: theme.colors.primary,
   },
   subheader: {
-    fontSize: 16,
+    fontSize: 18,
     fontWeight: 'bold',
-    color: theme.colors.textLight,
+    color: theme.colors.black,
   },
   text: {
     fontSize: 12,
-    color: theme.colors.textLight,
+    color: theme.colors.black,
   },
   price: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    color: theme.colors.textLight,
+    fontSize: 18,
+    color: theme.colors.black,
     justifyContent: 'space-evenly',
+    marginTop: -10,
   },
   swipeBackground: {
     backgroundColor: 'red',
@@ -137,9 +153,16 @@ const styles = StyleSheet.create({
     padding: 20,
   },
   listItem: {
-    backgroundColor: theme.colors.primary,
     marginHorizontal: 15,
     marginVertical: 5,
     borderRadius: 10,
+    borderColor: theme.colors.primary,
+    borderBottomWidth: 1,
+  },
+  circle: {
+    width: 20,
+    height: 20,
+    borderRadius: 10,
+    marginTop: 15,
   },
 });

@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
-import { StyleSheet, View, Text } from 'react-native';
+import { StyleSheet, View, Text, Image } from 'react-native';
+import { FontAwesome5 } from '@expo/vector-icons';
 import axios from '../providers/axios';
 import StyledButton from '../components/StyledButton';
 import StyledTextInput from '../components/StyledTextInput';
 import StyledSelect from '../components/StyledSelect';
 import CustomModal from '../components/CustomModal';
 import AmountBox from '../components/AmountBox';
+import ImagePreview from './ImagePreview';
 import theme from '../../theme';
 import { formatDateBE, formatDateFE } from '../utils/formatters';
 
@@ -16,29 +18,24 @@ const ItemSummary = ({ modalVisible, setModalVisible, item, userCategories, type
   const [name, setName] = useState(item.name);
   const [date, setDate] = useState(item.date);
   const [category, setCategory] = useState(item.category);
-  const [tag, setTag] = useState(item.sub_category);
+  const [, setTag] = useState(item.sub_category);
   const [description, setDescription] = useState(item.description);
   const [location, setLocation] = useState(item.location);
   const [categoryDropdownVisible, setCategoryDropdownVisible] = useState(false);
+  const [imagePreviewVisible, setImagePreviewVisible] = useState(false);
+  const [base64Image, setBase64Image] = useState('');
 
   const onUpdate = () => {
     axios
-      .put(
-        `${URL}/${type === 'Expenses' ? 'expense' : 'income'}`,
-        JSON.stringify({
-          name,
-          description,
-          date: formatDateBE(date),
-          [type === 'Expenses' ? 'price' : 'amount']: price,
-          location,
-          category,
-        }),
-        {
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        },
-      )
+      .put(`${URL}/${type === 'Expenses' ? 'expense' : 'income'}/${item._id}`, {
+        name,
+        description,
+        date: formatDateBE(date),
+        [type === 'Expenses' ? 'price' : 'amount']: price,
+        location,
+        category,
+        ...(base64Image === '' ? {} : { base64_image: base64Image }),
+      })
       .then(({ data }) => console.log(data))
       .catch((err) => console.log(err));
     setModalVisible(false);
@@ -49,15 +46,16 @@ const ItemSummary = ({ modalVisible, setModalVisible, item, userCategories, type
       <View style={styles.content}>
         <Text style={styles.title}>{type === 'Expenses' ? 'Expense' : 'Income'} Summary</Text>
         <AmountBox
-          fields={[
-            price || 0.0,
-            name,
-            description,
-            formatDateFE(date),
-            category || '',
-            tag,
-            location,
-          ]}
+          date={date}
+          name={name}
+          category={category}
+          amount={Number(price || 0) * -1}
+          type={type === 'Expenses' ? 'Expense' : 'Income'}
+          currb64img={base64Image}
+          setb64={setBase64Image}
+          setImgModal={setImagePreviewVisible}
+          rounded
+          icon={<FontAwesome5 name="coins" size={32} color="white" />}
         />
         <StyledTextInput
           label={type === 'Expenses' ? 'Price' : 'Amount'}
@@ -65,21 +63,7 @@ const ItemSummary = ({ modalVisible, setModalVisible, item, userCategories, type
           keyboardType="numeric"
           value={String(price)}
           required
-        />
-        <StyledTextInput
-          label="Name"
-          onChange={(newVal) => setName(newVal)}
-          keyboardType="default"
-          value={name}
-          required
-        />
-        <StyledTextInput
-          onChange={(newVal) => setDescription(newVal)}
-          keyboardType="default"
-          label="Description"
-          placeholder="Optional..."
-          value={description}
-          multiline
+          icon={<FontAwesome5 name="coins" size={32} color="white" />}
         />
         <StyledTextInput
           label="Date"
@@ -87,6 +71,15 @@ const ItemSummary = ({ modalVisible, setModalVisible, item, userCategories, type
           keyboardType="default"
           value={formatDateFE(date)}
           required
+          icon={<FontAwesome5 name="calendar-alt" size={32} color="white" />}
+        />
+        <StyledTextInput
+          label="Name"
+          onChange={(newVal) => setName(newVal)}
+          keyboardType="default"
+          value={name}
+          required
+          icon={<FontAwesome5 name="shopping-basket" size={32} color="white" />}
         />
         <StyledSelect
           label="Category"
@@ -103,35 +96,31 @@ const ItemSummary = ({ modalVisible, setModalVisible, item, userCategories, type
           setDropdownVisible={setCategoryDropdownVisible}
           placeholder={item.category}
           required
+          icon={<FontAwesome5 name="tag" size={32} color="white" />}
         />
-        {type === 'Expenses' && (
-          <StyledTextInput
-            onChange={setTag}
-            keyboardType="default"
-            label="Tag"
-            placeholder="Optional..."
-          />
-        )}
-        <StyledTextInput
-          onChange={(newVal) => setLocation(newVal)}
-          keyboardType="default"
-          label="Location"
-          placeholder="Optional..."
-          value={location}
-        />
+
         <View
           style={{
             flexDirection: 'row',
             justifyContent: 'center',
+            alignItems: 'center',
             marginTop: 20,
           }}>
           <View style={styles.button}>
             <StyledButton label="Cancel" onTap={() => setModalVisible(false)} />
           </View>
+
           <View style={styles.button}>
             <StyledButton label="Save" onTap={() => onUpdate()} />
           </View>
         </View>
+
+        <ImagePreview
+          isModalVisible={imagePreviewVisible}
+          setModalVisible={setImagePreviewVisible}
+          b64Img={base64Image}
+          setb64img={setBase64Image}
+        />
       </View>
     </CustomModal>
   );

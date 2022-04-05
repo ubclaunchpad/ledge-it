@@ -1,7 +1,9 @@
 import React, { useState, useRef } from 'react';
 import { StyleSheet, View, Text, FlatList, Dimensions, Animated } from 'react-native';
+import StaticAreaGraph from './StaticAreaGraph';
 import Paginator from './Paginator';
 import theme from '../../../theme';
+import StyledButton from '../StyledButton';
 
 const data = [
   {
@@ -12,12 +14,13 @@ const data = [
   {
     id: '2',
     title: 'Calendar',
-    description: 'This is a calendar',
+    description: 'Here lies the calendar',
   },
 ];
 
 const ToggleCard = () => {
   const [, setCurrentIndex] = useState(0);
+  const [displayDurationButton, setDisplayDurationButton] = useState(false);
   const scrollX = useRef(new Animated.Value(0)).current;
   const slidesRef = useRef(null);
 
@@ -26,6 +29,24 @@ const ToggleCard = () => {
   }).current;
 
   const viewConfig = useRef({ viewAreaCoveragePercentThreshold: 50 }).current;
+
+  const renderItemCard = (item) => {
+    return (
+      <View style={styles.container}>
+        <View style={styles.content}>
+          {item.title === 'Visualization' ? (
+            <>
+              {displayDurationButton ? (
+                <StyledButton key="all" label="Last 7 Days" customStyles={buttonSelectedStyle} />
+              ) : null}
+              <StaticAreaGraph scrollX={scrollX} setButton={setDisplayDurationButton} />
+            </>
+          ) : null}
+          {item.title === 'Calendar' ? <Text style={styles.text}>{item.description}</Text> : null}
+        </View>
+      </View>
+    );
+  };
 
   return (
     <View style={styles.container}>
@@ -50,20 +71,10 @@ const ToggleCard = () => {
   );
 };
 
-const renderItemCard = (item) => {
-  return (
-    <View style={styles.container}>
-      <View style={styles.content}>
-        <Text style={styles.text}>{item.description}</Text>
-      </View>
-    </View>
-  );
-};
-
 const styles = StyleSheet.create({
   container: {
     display: 'flex',
-    height: 320,
+    height: 360,
     justifyContent: 'center',
     alignItems: 'center',
     width: Dimensions.get('window').width,
@@ -79,7 +90,7 @@ const styles = StyleSheet.create({
 
   content: {
     display: 'flex',
-    height: 230,
+    height: 270,
     width: Dimensions.get('window').width - 30,
     justifyContent: 'center',
     alignItems: 'center',
@@ -100,6 +111,30 @@ const styles = StyleSheet.create({
     color: theme.colors.textDark,
     fontSize: 20,
   },
+});
+
+const buttonSelectedStyle = StyleSheet.create({
+  background: {
+    backgroundColor: theme.colors.primary,
+    padding: 6,
+    display: 'flex',
+    // margin: 5,
+    marginTop: 5,
+    paddingHorizontal: 10,
+    // width: 100,
+    alignItems: 'center',
+    borderRadius: 20,
+    shadowRadius: 5,
+    shadowOpacity: 0.2,
+    shadowOffset: { width: 0, height: 0 },
+    borderColor: theme.colors.primary,
+    borderWidth: 3,
+  },
+  text: {
+    color: theme.colors.textLight,
+    fontWeight: 'bold',
+  },
+  highlightStyle: {},
 });
 
 export default ToggleCard;

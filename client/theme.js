@@ -4,6 +4,7 @@ const theme = {
     primaryDark: '#195D66',
     primaryLight: '#92C1C7',
     primaryBackground: '#EBF9FA',
+    primaryLightBackground: '#24838F26',
     accentDark: '#193666',
     white: '#FFF',
     black: '#000',
@@ -16,7 +17,7 @@ const theme = {
     textLight: '#FFFFFF',
   },
   gradient: [
-    '#4F9798',
+    '#92CEEF',
     '#71A79F',
     '#93B7A6',
     '#B5C7AD',
@@ -27,6 +28,7 @@ const theme = {
     '#799A9F',
     '#4E8096',
   ],
+  categories: ['#EF857D', '#D9BBF1', '#909090', '#7FBC76', '#438CFA', '#FFC36A'],
 };
 
 export default theme;

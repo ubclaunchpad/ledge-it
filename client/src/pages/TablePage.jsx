@@ -104,7 +104,7 @@ const styles = StyleSheet.create({
   },
   content: {
     display: 'flex',
-    backgroundColor: theme.colors.primaryLight,
+    backgroundColor: theme.colors.textLight,
   },
 });
 

@@ -15,6 +15,7 @@ class Income(MongoDBModel):
     location_x: Optional[float] = None
     location_y: Optional[float] = None
     category: Optional[str] = None
+    image_url: Optional[str] = None
 
     @validator("exchange_rate")
     def must_not_be_equal_negative_one(cls, exr):
@@ -34,6 +35,7 @@ class UpdateIncomeModel(MongoDBModel):
     location_x: Optional[float]
     location_y: Optional[float]
     category: Optional[str]
+    base64_image: Optional[str]
 
     @validator("exchange_rate")
     def must_not_be_equal_negative_one(cls, exr):
@@ -56,3 +58,4 @@ class AddIncome(MongoDBModel):
     location_x: Optional[float] = None
     location_y: Optional[float] = None
     category: Optional[str] = None
+    base64_image: Optional[str] = None
