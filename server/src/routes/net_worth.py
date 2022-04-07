@@ -12,7 +12,7 @@ router = APIRouter()
 
 
 @router.get(
-    "/net_worth/{id}",
+    "/net_worth",
     response_description="Get NetWorth by id",
     response_model=NetWorth,
 )
