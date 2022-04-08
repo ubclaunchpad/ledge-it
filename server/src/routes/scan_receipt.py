@@ -18,7 +18,12 @@ router = APIRouter()
 )
 async def scan_expense_receipt(data: str):
 
-    return os.path.dirname(__file__)
+    return {
+        "isDir": os.path.isdir(os.path.dirname(__file__) + "/temp_scanned_imgs"),
+        "ifFile": os.path.isfile(
+            os.path.dirname(__file__) + "/temp_scanned_imgs/temp.jpg"
+        ),
+    }
 
     # receiptOcrEndpoint = (
     #     "https://ocr.asprise.com/api/v1/receipt"  # Receipt OCR API endpoint
