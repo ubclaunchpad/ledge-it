@@ -3,13 +3,12 @@ import { View, StyleSheet, Dimensions, Text, Platform, KeyboardAvoidingView } fr
 import { SvgXml } from 'react-native-svg';
 import SpinnerButton from 'react-native-spinner-button';
 import axios from '../providers/axios';
-import StyledTextInput from '../components/StyledTextInput';
+import StyledTextInput from '../components/AuthPage/StyledAuthInput';
 import BackArrow from '../components/AuthPage/BackArrow';
 import { login, saveToken } from '../utils/auth';
 import theme from '../../theme';
 import Logo from '../../assets/logo';
 import Gradient from '../../assets/loginPageGradient';
-import FilledButton from '../components/AuthPage/FilledButton';
 import OutlinedButton from '../components/AuthPage/OutlinedButton';
 
 const URL = process.env.SERVER_URL;

@@ -10,26 +10,10 @@ import { getDay, getMonth, getYear } from '../../utils/formatters';
 
 const URL = process.env.SERVER_URL;
 
-const ListInputComponent = ({ item, type }) => {
+const ListInputComponent = ({ item, type, categories }) => {
   const [itemSummaryModal, setItemSummaryModal] = useState(false);
 
   const negative = type === 'Expenses' ? '-' : '';
-  const userCategoriesExpenses = [
-    'Housing',
-    'Food',
-    'Transport',
-    'Clothes',
-    'Entertainment',
-    'Other',
-  ];
-  const userCategoriesIncomes = ['Salary', 'Investments', 'Business', 'Other'];
-
-  const findCategoriesIndex = (itemCategory) => {
-    if (type === 'Expenses') {
-      return userCategoriesExpenses.indexOf(itemCategory);
-    }
-    return userCategoriesIncomes.indexOf(itemCategory);
-  };
 
   return (
     <>
@@ -50,13 +34,13 @@ const ListInputComponent = ({ item, type }) => {
             style={[
               styles.circle,
               {
-                backgroundColor: theme.gradient[findCategoriesIndex(item.category)],
+                backgroundColor: categories?.get(item.category),
               },
             ]}
           />
         )}
         right={() => (
-          <View>
+          <View style={{ alignSelf: 'center' }}>
             <Text />
             <Text style={styles.price}>
               {negative}${item.price || item.amount} {item.currency.toUpperCase()}
@@ -70,7 +54,7 @@ const ListInputComponent = ({ item, type }) => {
           modalVisible={itemSummaryModal}
           setModalVisible={setItemSummaryModal}
           item={item}
-          userCategories={type === 'Expenses' ? userCategoriesExpenses : userCategoriesIncomes}
+          userCategories={Array.from(categories.keys())}
           type={type}
         />
       )}
@@ -78,7 +62,7 @@ const ListInputComponent = ({ item, type }) => {
   );
 };
 
-const TableComponent = ({ title, subTitle, list, type }) => {
+const TableComponent = ({ title, subTitle, list, type, categories }) => {
   const handleDelete = (id) => {
     axios
       .delete(`${URL}/${type === 'Expenses' ? 'expense' : 'income'}/${id}`)
@@ -101,7 +85,7 @@ const TableComponent = ({ title, subTitle, list, type }) => {
       </List.Subheader>
       {list.map((item, index) => (
         <Swipeable key={index} renderRightActions={() => RightSwipeComponent(item._id)}>
-          <ListInputComponent item={item} type={type} />
+          <ListInputComponent item={item} type={type} categories={categories} />
         </Swipeable>
       ))}
     </List.Section>
@@ -128,10 +112,12 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: 'bold',
     color: theme.colors.black,
+    alignItems: 'center',
   },
   text: {
     fontSize: 12,
     color: theme.colors.black,
+    alignItems: 'center',
   },
   price: {
     fontSize: 18,
@@ -154,7 +140,6 @@ const styles = StyleSheet.create({
   },
   listItem: {
     marginHorizontal: 15,
-    marginVertical: 5,
     borderRadius: 10,
     borderColor: theme.colors.primary,
     borderBottomWidth: 1,
@@ -163,6 +148,6 @@ const styles = StyleSheet.create({
     width: 20,
     height: 20,
     borderRadius: 10,
-    marginTop: 15,
+    alignSelf: 'center',
   },
 });

@@ -6,10 +6,8 @@ import {
   Animated,
   TouchableOpacity,
   View,
-  Text,
 } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { CurvedBottomBar } from 'react-native-curved-bottom-bar';
 import { Ionicons } from '@expo/vector-icons';
 import HomePage from './src/pages/HomePage';
@@ -116,6 +114,7 @@ const CurvedNavBar = ({ setLoggedIn }) => {
           flex: 1,
           alignItems: 'center',
           justifyContent: 'center',
+          paddingBottom: 10,
         }}>
         {screenOptions(routeName, selectedTab)}
       </TouchableOpacity>
@@ -126,7 +125,7 @@ const CurvedNavBar = ({ setLoggedIn }) => {
     <View style={{ flex: 1 }}>
       <CurvedBottomBar.Navigator
         style={styles.bottomBar}
-        height={75}
+        height={70}
         circleWidth={60}
         bgColor={theme.colors.primary}
         initialRouteName="Home"

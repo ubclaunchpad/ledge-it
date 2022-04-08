@@ -128,8 +128,15 @@ const StaticAreaGraph = ({ setButton }) => {
             />
           </VictoryChart>
         ) : (
-          <Text style={{ fontSize: 25, textAlign: 'center', color: theme.colors.primary }}>
-            Insufficient data to display spending chart
+          <Text
+            style={{
+              fontSize: 25,
+              fontWeight: '600',
+              textAlign: 'center',
+              color: theme.colors.primary,
+              marginHorizontal: 20,
+            }}>
+            You haven&apos;t had many expenses this week!
           </Text>
         )}
       </View>

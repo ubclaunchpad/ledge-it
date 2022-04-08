@@ -12,7 +12,7 @@ const URL = process.env.SERVER_URL;
 
 const TablePage = () => {
   const [type, setType] = useState('Expenses');
-  const [categories, setCategories] = useState([]);
+  const [categories, setCategories] = useState(new Map());
   const [expenseData, setExpenseData] = useState([]);
   const [incomeData, setIncomeData] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
@@ -54,12 +54,25 @@ const TablePage = () => {
     }, []),
   );
 
-  // TODO: Fetch user categories from db here
   useEffect(() => {
     if (type === 'Expenses') {
-      setCategories(['Housing', 'Food', 'Transport', 'Clothes', 'Entertainment', 'Other']);
+      axios
+        .get(`${URL}/expense_categories`)
+        .then(({ data }) => {
+          const categoriesMap = new Map();
+          data.forEach(({ name, color }) => categoriesMap.set(name, color));
+          setCategories(categoriesMap);
+        })
+        .catch((e) => console.log(e));
     } else {
-      setCategories(['Salary', 'Investments', 'Business', 'Other']);
+      axios
+        .get(`${URL}/income_categories`)
+        .then(({ data }) => {
+          const categoriesMap = new Map();
+          data.forEach(({ name, color }) => categoriesMap.set(name, color));
+          setCategories(categoriesMap);
+        })
+        .catch((e) => console.log(e));
     }
   }, [type]);
 
@@ -67,7 +80,7 @@ const TablePage = () => {
     setAllButton(true);
     setSelectedCategories((sl) => {
       const copyOfSelectedLookup = sl;
-      categories.forEach((category) => {
+      Array.from(categories.keys()).forEach((category) => {
         copyOfSelectedLookup[category] = true;
       });
       return { ...copyOfSelectedLookup };
@@ -89,7 +102,11 @@ const TablePage = () => {
           setSelectedCategories={setSelectedCategories}
         />
         <ScrollView style={styles.content}>
-          <ScrollTable renderList={filterCategories(filterEntries())} type={type} />
+          <ScrollTable
+            renderList={filterCategories(filterEntries())}
+            type={type}
+            categories={categories}
+          />
         </ScrollView>
       </SafeAreaView>
       <DefaultActionButton />

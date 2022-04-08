@@ -1,7 +1,6 @@
-import React, { useRef } from 'react';
+import React from 'react';
 import { StyleSheet, SafeAreaView, View } from 'react-native';
 import Animated, { useSharedValue, useAnimatedScrollHandler } from 'react-native-reanimated';
-import { TouchableOpacity } from 'react-native-gesture-handler';
 import CategoryPieChart from '../components/HomePage/CategoryPieChart';
 import ToggleCard from '../components/HomePage/ToggleCard';
 import NetWorthCard from '../components/HomePage/NetWorthCard';
@@ -21,7 +20,10 @@ const HomePage = ({ navigate }) => {
     <>
       <SafeAreaView style={styles.container}>
         <NetWorthCard scrollValue={scrollY} navigate={navigate} />
-        <Animated.ScrollView onScroll={scrollHandler} style={styles.content}>
+        <Animated.ScrollView
+          onScroll={scrollHandler}
+          style={styles.content}
+          scrollEventThrottle={32}>
           <ToggleCard />
           <CategoryPieChart />
           <RecentTransactions />

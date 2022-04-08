@@ -1,15 +1,12 @@
-import React, { useCallback, useState, forwardRef } from 'react';
+import React, { useCallback, useState } from 'react';
 import { StyleSheet, View, Text, Dimensions, TouchableOpacity } from 'react-native';
 import Animated, { useAnimatedStyle, interpolate, Extrapolate } from 'react-native-reanimated';
 import { useFocusEffect } from '@react-navigation/native';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
-import { faDotCircle, faCog } from '@fortawesome/free-solid-svg-icons';
+import { faCog } from '@fortawesome/free-solid-svg-icons';
 import axios from '../../providers/axios';
 import theme from '../../../theme';
 import { formatNumber } from '../../utils/formatters';
-
-// TODO: remove this once user support is added
-const NET_WORTH_ID = '61ab71e8efaeac62430a1822';
 
 const URL = process.env.SERVER_URL;
 
@@ -56,7 +53,7 @@ const NetWorthCard = ({ scrollValue, navigate }) => {
 
   const getNetWorthData = () => {
     axios
-      .get(`${URL}/net_worth/${NET_WORTH_ID}`)
+      .get(`${URL}/net_worth`)
       .then(({ data }) => {
         setIncome(data.all_time_income);
         setExpenses(data.all_time_expenses);
@@ -92,8 +89,8 @@ const NetWorthCard = ({ scrollValue, navigate }) => {
               setSelected('net');
               setCurrNum(netWorth);
             }}
-            style={[styles.btn, selected == 'net' ? styles.selBtn : styles.notSelbtn]}>
-            <Text style={selected == 'net' ? styles.selBtnText : styles.notSelBtnText}>
+            style={[styles.btn, selected === 'net' ? styles.selBtn : styles.notSelbtn]}>
+            <Text style={selected === 'net' ? styles.selBtnText : styles.notSelBtnText}>
               All Time Net
             </Text>
           </TouchableOpacity>
@@ -103,8 +100,8 @@ const NetWorthCard = ({ scrollValue, navigate }) => {
               setSelected('income');
               setCurrNum(income);
             }}
-            style={[styles.btn, selected == 'income' ? styles.selBtn : styles.notSelBtn]}>
-            <Text style={selected == 'income' ? styles.selBtnText : styles.notSelBtnText}>
+            style={[styles.btn, selected === 'income' ? styles.selBtn : styles.notSelBtn]}>
+            <Text style={selected === 'income' ? styles.selBtnText : styles.notSelBtnText}>
               Total Income
             </Text>
           </TouchableOpacity>
@@ -114,8 +111,8 @@ const NetWorthCard = ({ scrollValue, navigate }) => {
               setSelected('expense');
               setCurrNum(expense);
             }}
-            style={[styles.btn, selected == 'expense' ? styles.selBtn : styles.notSelBtn]}>
-            <Text style={selected == 'expense' ? styles.selBtnText : styles.notSelBtnText}>
+            style={[styles.btn, selected === 'expense' ? styles.selBtn : styles.notSelBtn]}>
+            <Text style={selected === 'expense' ? styles.selBtnText : styles.notSelBtnText}>
               Total Expense
             </Text>
           </TouchableOpacity>
@@ -143,8 +140,14 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: theme.colors.primary,
-    borderBottomRightRadius: 20,
-    borderBottomLeftRadius: 20,
+    borderBottomRightRadius: 25,
+    borderBottomLeftRadius: 25,
+
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.5,
+    shadowRadius: 3,
+    elevation: 5,
   },
 
   container2: {
@@ -175,12 +178,10 @@ const styles = StyleSheet.create({
   },
 
   btn: {
-    paddingHorizontal: 10,
-    paddingVertical: 5,
+    marginHorizontal: 5,
+    paddingHorizontal: 12,
+    paddingVertical: 6,
     borderRadius: 20,
-    borderWidth: 4,
-    borderColor: theme.colors.primaryDark,
-    marginHorizontal: 3,
     backgroundColor: theme.colors.textLight,
 
     shadowColor: '#000',

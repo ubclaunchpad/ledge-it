@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { View, StyleSheet, Dimensions, Text, KeyboardAvoidingView, Platform } from 'react-native';
 import { SvgXml } from 'react-native-svg';
 import SpinnerButton from 'react-native-spinner-button';
-import StyledTextInput from '../components/StyledTextInput';
+import StyledTextInput from '../components/AuthPage/StyledAuthInput';
 import BackArrow from '../components/AuthPage/BackArrow';
 import { login, saveToken } from '../utils/auth';
 import Logo from '../../assets/logo';

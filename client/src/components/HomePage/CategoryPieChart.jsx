@@ -15,6 +15,7 @@ const getMonth = () => {
 };
 
 const CategoryPieChart = () => {
+  const [colors, setColors] = useState(new Map());
   const [categoryBudgetData, setCategoryBudgetData] = useState([]);
 
   const windowWidth = Dimensions.get('window').width;
@@ -26,8 +27,13 @@ const CategoryPieChart = () => {
     }, []),
   );
 
-  const getCategoryBudgets = () => {
+  const getCategoryBudgets = async () => {
     const d = new Date();
+    const colorMap = new Map();
+    const { data: categories } = await axios.get(`${URL}/expense_categories`);
+    categories.forEach((category) => colorMap.set(category.name, category.color));
+    setColors(colorMap);
+
     axios
       .get(`${URL}/budget/category/all`, {
         params: {
@@ -58,7 +64,7 @@ const CategoryPieChart = () => {
 
   const categoryData = categoryBudgetData.map((category, index) => ({
     ...category,
-    color: theme.gradient[index],
+    color: colors.get(category.category) || theme.gradient[index],
   }));
 
   categoryData.push({
@@ -79,7 +85,6 @@ const CategoryPieChart = () => {
           data={categoryData}
           x="category"
           y={(data) => data.spent}
-          colorScale={theme.gradient.slice(0, categoryData.length - 1).concat([theme.colors.white])}
           labels={() => null}
           style={{
             parent: {
@@ -89,6 +94,7 @@ const CategoryPieChart = () => {
             data: {
               stroke: theme.colors.grey,
               strokeWidth: 1,
+              fill: ({ datum }) => datum.color,
             },
           }}
           labelComponent={
@@ -126,8 +132,8 @@ const CategoryPieChart = () => {
                   styles.card,
                   {
                     backgroundColor: item.color,
-                    borderBottomLeftRadius: index === categoryData.length - 1 ? 10 : 0,
-                    borderBottomRightRadius: index === categoryData.length - 1 ? 10 : 0,
+                    borderBottomLeftRadius: index === categoryData.length - 1 ? 20 : 0,
+                    borderBottomRightRadius: index === categoryData.length - 1 ? 20 : 0,
                     borderBottomWidth: index === categoryData.length - 1 ? 0 : 1,
                   },
                 ]}
@@ -156,11 +162,10 @@ const styles = StyleSheet.create({
     backgroundColor: theme.colors.textLight,
     paddingBottom: 50,
 
-    // shadow - make a common style
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.7,
-    shadowRadius: 2,
+    shadowOpacity: 0.5,
+    shadowRadius: 3,
     elevation: 5,
   },
   title: {
