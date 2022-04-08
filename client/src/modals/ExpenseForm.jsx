@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { StyleSheet, View, Image } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { FontAwesome5 } from '@expo/vector-icons';
 import axios from '../providers/axios';
 import AmountBox from '../components/AmountBox';

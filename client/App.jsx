@@ -1,12 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import {
-  ScrollView,
-  StatusBar,
-  StyleSheet,
-  Animated,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import { ScrollView, StatusBar, StyleSheet, Animated, TouchableOpacity, View } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { CurvedBottomBar } from 'react-native-curved-bottom-bar';
 import { Ionicons } from '@expo/vector-icons';

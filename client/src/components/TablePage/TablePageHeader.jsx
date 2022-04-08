@@ -124,33 +124,30 @@ const TablePageHeader = ({
               All
             </Text>
           </Chip>
-          {Array.from(categories.entries()).map((category) => {
-            console.log(category);
-            return (
-              <Chip
+          {Array.from(categories.entries()).map((category) => (
+            <Chip
+              style={[
+                styles.chip,
+                {
+                  backgroundColor: selectedCategories[category[0]]
+                    ? category[1]
+                    : theme.colors.white,
+                },
+              ]}
+              icon={emptyIcon}
+              key={category[0]}
+              selected={selectedCategories[category[0]]}
+              onPress={() => categoryButtonPressLogic(category[0])}>
+              <Text
                 style={[
-                  styles.chip,
                   {
-                    backgroundColor: selectedCategories[category[0]]
-                      ? category[1]
-                      : theme.colors.white,
+                    color: selectedCategories[category[0]] ? theme.colors.white : category[1],
                   },
-                ]}
-                icon={emptyIcon}
-                key={category[0]}
-                selected={selectedCategories[category[0]]}
-                onPress={() => categoryButtonPressLogic(category[0])}>
-                <Text
-                  style={[
-                    {
-                      color: selectedCategories[category[0]] ? theme.colors.white : category[1],
-                    },
-                  ]}>
-                  {category[0]}
-                </Text>
-              </Chip>
-            );
-          })}
+                ]}>
+                {category[0]}
+              </Text>
+            </Chip>
+          ))}
         </ScrollView>
       </View>
     </View>
