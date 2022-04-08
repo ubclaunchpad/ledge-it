@@ -1,12 +1,11 @@
-from pyexpat import model
+import os
 import requests
 from PIL import Image
 from io import BytesIO
 import base64
 import json
 
-from fastapi import APIRouter, status
-from fastapi.responses import JSONResponse
+from fastapi import APIRouter
 
 from ..models import Expense
 
@@ -23,22 +22,18 @@ async def scan_expense_receipt(data: str):
         "https://ocr.asprise.com/api/v1/receipt"  # Receipt OCR API endpoint
     )
 
-    # For testing, convert the receipt.jpg into base64
-    with open("./src/routes/receipt.jpg", "rb") as f:
-        im_b64_test = base64.b64encode(f.read())
-
     # base64 string to PIL image
     im_bytes = base64.b64decode(
-        im_b64_test
-    )  # im_bytes is a binary image     #TODO: replace im_b64_test with data
+        data
+    )  # im_bytes is a binary image
     im_file = BytesIO(im_bytes)  # convert image to file-like object
     img = Image.open(im_file)  # img is now PIL Image object
 
     # Convert PIL image to jpg
     rgb_img = img.convert("RGB")
-    rgb_img.save("./src/routes/temp_scanned_imgs/temp.jpg")
+    rgb_img.save(os.path.dirname(__file__) + "/temp_scanned_imgs/temp.jpg")
 
-    destination_file_name = "./src/routes/temp_scanned_imgs/temp.jpg"
+    destination_file_name = os.path.dirname(__file__) + "/temp_scanned_imgs/temp.jpg"
 
     r = requests.post(
         receiptOcrEndpoint,
