@@ -23,9 +23,7 @@ async def scan_expense_receipt(data: str):
     )
 
     # base64 string to PIL image
-    im_bytes = base64.b64decode(
-        data
-    )  # im_bytes is a binary image
+    im_bytes = base64.b64decode(data)  # im_bytes is a binary image
     im_file = BytesIO(im_bytes)  # convert image to file-like object
     img = Image.open(im_file)  # img is now PIL Image object
 
