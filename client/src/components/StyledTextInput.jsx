@@ -93,6 +93,7 @@ const styles = StyleSheet.create({
     paddingTop: 8,
   },
   text: {
+    width: '50%',
     borderWidth: 0,
     shadowRadius: 0,
     paddingRight: 30,

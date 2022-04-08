@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { FontAwesome5 } from '@expo/vector-icons';
+import { useFocusEffect } from '@react-navigation/native';
 import axios from '../providers/axios';
 import AmountBox from '../components/AmountBox';
 import StyledTextInput from '../components/StyledTextInput';
@@ -11,15 +12,6 @@ import ImagePreview from './ImagePreview';
 import ToggleButtons from '../components/ToggleButtons';
 
 const URL = process.env.SERVER_URL;
-
-const categories = [
-  { value: 'Housing', label: 'Housing' },
-  { value: 'Food', label: 'Food' },
-  { value: 'Transport', label: 'Transport' },
-  { value: 'Clothes', label: 'Clothes' },
-  { value: 'Entertainment', label: 'Entertainment' },
-  { value: 'Other', label: 'Other' },
-];
 
 const getCurrentDate = () => {
   const date = new Date();
@@ -38,6 +30,22 @@ const AddExpense = ({ setModalVisible, setExpenseModalVisible, type, setType }) 
   const [location, setLocation] = useState(undefined);
   const [imagePreviewVisible, setImagePreviewVisible] = useState(false);
   const [base64Image, setBase64Image] = useState('');
+  const [categories, setCategories] = useState([]);
+
+  const getCategories = async () => {
+    const { data } = await axios.get(`${URL}/expense_categories`);
+    setCategories(
+      data
+        .map(({ name: categoryName }) => ({ value: categoryName, label: categoryName }))
+        .sort((a, b) => a.value > b.value),
+    );
+  };
+
+  useFocusEffect(
+    useCallback(() => {
+      getCategories();
+    }, []),
+  );
 
   const submitExpense = async () => {
     axios

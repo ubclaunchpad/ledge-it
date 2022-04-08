@@ -119,7 +119,7 @@ const lineStyles = StyleSheet.create({
   container: {
     marginTop: -10,
     margin: 10,
-    width: Dimensions.get('window').width * 0.35,
+    width: Dimensions.get('window').width * 0.4,
     alignItems: 'flex-end',
   },
   placeholder: { color: theme.colors.lightgrey },

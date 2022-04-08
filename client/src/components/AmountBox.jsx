@@ -3,6 +3,9 @@ import { Text, StyleSheet, View } from 'react-native';
 import theme from '../../theme';
 import StyledButton from './StyledButton';
 import openCamera from '../utils/pickImage';
+import axios from '../providers/axios';
+
+const URL = process.env.SERVER_URL;
 
 export default ({
   date,
@@ -20,6 +23,8 @@ export default ({
       const b64img = await openCamera();
       if (b64img === '') return;
       setb64(b64img);
+      const { data } = await axios.get(`${URL}/scan_expense_receipt`, { params: { data: b64img } });
+      console.log(data);
     }
 
     setImgModal(true);

@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, StyleSheet, Image } from 'react-native';
+import { View, StyleSheet, Image, Dimensions } from 'react-native';
 import CustomModal from '../components/CustomModal';
 import StyledButton from '../components/StyledButton';
 
@@ -13,7 +13,13 @@ const ImagePreview = ({ isModalVisible, setModalVisible, b64Img, setb64img }) =>
     <CustomModal isModalVisible={isModalVisible} setModalVisible={setModalVisible}>
       {b64Img !== '' && (
         <Image
-          style={{ width: 320, height: 500, borderRadius: 15, marginHorizontal: 20 }}
+          style={{
+            width: Dimensions.get('screen').width - 80,
+            height: Dimensions.get('screen').height * 0.6,
+            borderRadius: 15,
+            marginHorizontal: 20,
+            alignSelf: 'center',
+          }}
           source={{ uri: b64Img }}
         />
       )}
