@@ -11,7 +11,7 @@ import uuid
 
 # TODO: download the "google-keys.json" file from the Google Drive folder and put it in the root of the ./server folder
 #  Then uncomment this line
-os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "./google-keys.json"
+# os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "./google-keys.json"
 
 storage_client = storage.Client()
 my_bucket = storage_client.get_bucket("images-ledgeit")
