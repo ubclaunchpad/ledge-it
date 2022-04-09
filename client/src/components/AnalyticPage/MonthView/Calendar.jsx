@@ -1,132 +1,169 @@
-import React, {useEffect, useState, useRef} from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 
-import { StyleSheet, View, Text, Dimensions, ScrollView } from "react-native";
+import { StyleSheet, View, Text, Dimensions, ScrollView } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
-import theme from "../../../../theme";
+import theme from '../../../../theme';
 
 // LAYOUT CONSTANTS
 
-const cellHeight = (.65 * Dimensions.get('window').height) / 6;
+const cellHeight = (0.65 * Dimensions.get('window').height) / 6;
 const cellWidth = (Dimensions.get('window').width - 10) / 7;
 const eventSubcellHeight = 15;
-const cellHeaderHeight = cellHeight * .25;
+const cellHeaderHeight = cellHeight * 0.25;
 
 const calendarContainerHMargins = 5;
-const calendarContainerWidth = Dimensions.get('window').width - 1*calendarContainerHMargins;
+const calendarContainerWidth = Dimensions.get('window').width - 1 * calendarContainerHMargins;
 const calendarWidthTotal = calendarContainerWidth + calendarContainerHMargins;
 
 const isToday = (date) => {
   const today = new Date();
-  return date.setHours(0,0,0,0) === today.setHours(0,0,0,0);
-}
+  return date.setHours(0, 0, 0, 0) === today.setHours(0, 0, 0, 0);
+};
 
 // COMPONENTS
 
-const Calendar = ({monthEvents, calArr, handleScroll, selectedMonth, scrollViewRef, setSelectedDate, categories}) => {
-
+const Calendar = ({
+  monthEvents,
+  calArr,
+  handleScroll,
+  selectedMonth,
+  scrollViewRef,
+  setSelectedDate,
+  categories,
+}) => {
   const getEventsForDate = (date) => {
     const m = date.getMonth(),
-    y = date.getFullYear(),
-    d = date.getDate();
-    if ((y in monthEvents) && (m in monthEvents[y]) && (d in monthEvents[y][m])) {
+      y = date.getFullYear(),
+      d = date.getDate();
+    if (y in monthEvents && m in monthEvents[y] && d in monthEvents[y][m]) {
       return monthEvents[date.getFullYear()][date.getMonth()][date.getDate()];
     } else {
       return [];
     }
-  }
+  };
 
   return (
     <>
-      <DayLabels/>
+      <DayLabels />
       <View>
-      <ScrollView
-        ref={scrollViewRef}
-        bounces={false}
-        decelerationRate={'fast'}
-        snapToInterval={Dimensions.get('window').width} 
-        snapToAlignment='start' 
-        horizontal={true}
-        onMomentumScrollEnd={handleScroll}
-        contentOffset={{x: 0, y: 0}}
-        showsHorizontalScrollIndicator={false}
-        style={{display: 'flex', flexDirection: 'row', marginBottom: 5, direction: 'rtl'}}>
-        <>
-        {calArr.map((dates, i) => {
-            return (
-            <View key={i} style={styles.container}>
-              {dates.calendarList.map((date, index) => {
-                return <Cell
+        <ScrollView
+          ref={scrollViewRef}
+          bounces={false}
+          decelerationRate="fast"
+          snapToInterval={Dimensions.get('window').width}
+          snapToAlignment="start"
+          horizontal={true}
+          onMomentumScrollEnd={handleScroll}
+          contentOffset={{ x: 0, y: 0 }}
+          showsHorizontalScrollIndicator={false}
+          style={{ display: 'flex', flexDirection: 'row', marginBottom: 5, direction: 'rtl' }}>
+          <>
+            {calArr.map((dates, i) => {
+              return (
+                <View key={i} style={styles.container}>
+                  {dates.calendarList.map((date, index) => {
+                    return (
+                      <Cell
                         key={index}
                         num={date.getDate()}
                         date={date}
-                        shouldMakeNumGrey={((date.getMonth() !== selectedMonth.getMonth()) || (date.getFullYear() !== selectedMonth.getFullYear()))}
+                        shouldMakeNumGrey={
+                          date.getMonth() !== selectedMonth.getMonth() ||
+                          date.getFullYear() !== selectedMonth.getFullYear()
+                        }
                         dateEvents={getEventsForDate(date)}
                         categories={categories}
                         onPress={() => {
                           setSelectedDate(date);
-                        }}/>;
-              })}
-            </View>
-            );
-          })}
+                        }}
+                      />
+                    );
+                  })}
+                </View>
+              );
+            })}
           </>
-      </ScrollView>
+        </ScrollView>
       </View>
     </>
-  ); 
-}
+  );
+};
 
-
-const Cell = ({ date, num, shouldMakeNumGrey, dateEvents, onPress, categories}) => {
+const Cell = ({ date, num, shouldMakeNumGrey, dateEvents, onPress, categories }) => {
   return (
-    <TouchableOpacity 
-      style={((date.getDay() === 6)) ? [styles.cellStyle, {borderRightWidth: 0}] : styles.cellStyle}
+    <TouchableOpacity
+      style={date.getDay() === 6 ? [styles.cellStyle, { borderRightWidth: 0 }] : styles.cellStyle}
       onPress={onPress}>
       <View style={styles.cellHeader}>
-        <View style={isToday(date) ? [styles.cellNumber, {backgroundColor: theme.colors.primary}] : styles.cellNumber}>
-          <Text style={isToday(date) ? 
-            {color: theme.colors.white} : 
-            shouldMakeNumGrey ? 
-              {color: theme.colors.primary, opacity: .65} : 
-              {color: theme.colors.primary}}>{num}</Text>
+        <View
+          style={
+            isToday(date)
+              ? [styles.cellNumber, { backgroundColor: theme.colors.primary }]
+              : styles.cellNumber
+          }>
+          <Text
+            style={
+              isToday(date)
+                ? { color: theme.colors.white }
+                : shouldMakeNumGrey
+                ? { color: theme.colors.primary, opacity: 0.65 }
+                : { color: theme.colors.primary }
+            }>
+            {num}
+          </Text>
         </View>
       </View>
       <View style={styles.subcellsContainer}>
-        {dateEvents !== undefined && dateEvents.map((e, index) => {
-          if (((index + 1) * eventSubcellHeight) > (cellHeight - cellHeaderHeight - 15)) return undefined;
-          return <EventSubcell key={index} backgroundColor={categories !== undefined ? categories[e.category] : 'black'} text={e.name}/>
-        })}
-        {((dateEvents !== undefined) && ((dateEvents.length * eventSubcellHeight) > cellHeight - cellHeaderHeight - 15)) &&
-        <View style={styles.hiddenSubcells}>
-          <Text style={styles.hiddenSubcellText}>{'+' + `${dateEvents.length - Math.floor((cellHeight - cellHeaderHeight - 15) / eventSubcellHeight)}`}</Text>
-        </View>}
+        {dateEvents !== undefined &&
+          dateEvents.map((e, index) => {
+            if ((index + 1) * eventSubcellHeight > cellHeight - cellHeaderHeight - 15) {
+            {return undefined;}
+            return (
+              <EventSubcell
+                key={index}
+                backgroundColor={categories !== undefined ? categories[e.category] : 'black'}
+                text={e.name}
+              />
+            );
+          })}
+        {dateEvents !== undefined &&
+          dateEvents.length * eventSubcellHeight > cellHeight - cellHeaderHeight - 15 && (
+            <View style={styles.hiddenSubcells}>
+              <Text style={styles.hiddenSubcellText}>
+                {'+' +
+                  `${
+                    dateEvents.length -
+                    Math.floor((cellHeight - cellHeaderHeight - 15) / eventSubcellHeight)
+                  }`}
+              </Text>
+            </View>
+          )}
       </View>
     </TouchableOpacity>
   );
-}
-
+};
 
 const EventSubcell = ({ backgroundColor, text }) => {
   return (
-    <View style={[styles.eventSubcellContainer, {backgroundColor: backgroundColor}]}>
+    <View style={[styles.eventSubcellContainer, { backgroundColor }]}>
       <Text style={styles.eventSubcellText}>{text}</Text>
     </View>
   );
-}
-
+};
 
 const DayLabels = () => {
   return (
     <View style={styles.dayLabelContainer}>
       {['S', 'M', 'T', 'W', 'T', 'F', 'S'].map((l, i) => {
-        return (<View key={i} style={styles.dayLabels}>
-          <Text style={styles.dayLabelText}>{l}</Text>
-        </View>);
+        return (
+          <View key={i} style={styles.dayLabels}>
+            <Text style={styles.dayLabelText}>{l}</Text>
+          </View>
+        );
       })}
     </View>
   );
-}
-
+};
 
 const styles = StyleSheet.create({
   dayLabelText: {
@@ -139,7 +176,7 @@ const styles = StyleSheet.create({
     marginTop: 5,
     display: 'flex',
     flexDirection: 'row',
-    alignSelf: 'center'
+    alignSelf: 'center',
   },
 
   dayLabels: {
@@ -152,7 +189,7 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     alignSelf: 'center',
     color: theme.colors.primary,
-  }, 
+  },
 
   hiddenSubcells: {
     borderColor: theme.colors.primary,
@@ -189,7 +226,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     flexDirection: 'row',
     height: 22,
-  },  
+  },
 
   cellHeader: {
     height: cellHeaderHeight,
@@ -202,8 +239,8 @@ const styles = StyleSheet.create({
   cellStyle: {
     width: cellWidth,
     borderColor: theme.colors.primary,
-    borderTopWidth: .5,
-    borderRightWidth: .5,
+    borderTopWidth: 0.5,
+    borderRightWidth: 0.5,
     height: cellHeight,
     // backgroundColor: theme.colors.white,
   },
@@ -216,8 +253,8 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
     flexDirection: 'row',
     width: calendarContainerWidth,
-  }
+  },
 });
 
 export default Calendar;
-export {calendarWidthTotal as calendarWidthTotal}; 
+export { calendarWidthTotal };

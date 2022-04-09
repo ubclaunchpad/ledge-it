@@ -29,7 +29,8 @@ export default ({
             style={[
               styles.label,
               { color: isLight ? theme.colors.textLight : theme.colors.primary },
-            ]}>
+            ]}
+          >
             {label}
           </Text>
         </View>

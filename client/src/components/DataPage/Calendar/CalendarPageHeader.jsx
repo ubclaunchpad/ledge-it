@@ -3,35 +3,40 @@ import { Text, View, StyleSheet, Pressable } from 'react-native';
 import theme from '../../../../theme';
 import MonthSelect from '../../AnalyticPage/MonthView/MonthSelect';
 
-const CalenderPageHeader = ({ month, goToMonth, year, viewingExpenses, setViewingExpenses, monthOverview }) => {
-
+const CalenderPageHeader = ({
+  month,
+  goToMonth,
+  year,
+  viewingExpenses,
+  setViewingExpenses,
+  monthOverview,
+}) => {
   return (
     <View style={styles.headerBackground}>
       <View>
-        <MonthSelect month={month} goToMonth={goToMonth}/>  
+        <MonthSelect month={month} goToMonth={goToMonth} />
         <IncomeExpenseToggle
           setViewingExpenses={setViewingExpenses}
           viewingExpenses={viewingExpenses}
-          monthOverview={monthOverview}/>
+          monthOverview={monthOverview}
+        />
       </View>
-      <View style={styles.screenOptions}>
-      </View>
+      <View style={styles.screenOptions} />
     </View>
   );
 };
 
-const IncomeExpenseToggle = ({setViewingExpenses, monthOverview, viewingExpenses}) => {
+const IncomeExpenseToggle = ({ setViewingExpenses, monthOverview, viewingExpenses }) => {
   return (
-    <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+    <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
       <Pressable
         style={() => [
           screenButton.background,
           { backgroundColor: viewingExpenses ? theme.colors.white : theme.colors.primary },
         ]}
-        onPress={() => setViewingExpenses(true)}>
-        <Text style={viewingExpenses ? screenButton.focusedText : screenButton.text}>
-          Expenses
-        </Text>
+        onPress={() => setViewingExpenses(true)}
+      >
+        <Text style={viewingExpenses ? screenButton.focusedText : screenButton.text}>Expenses</Text>
       </Pressable>
       <Text style={styles.overViewText}>${monthOverview}</Text>
       <Pressable
@@ -39,14 +44,13 @@ const IncomeExpenseToggle = ({setViewingExpenses, monthOverview, viewingExpenses
           screenButton.background,
           { backgroundColor: viewingExpenses ? theme.colors.primary : theme.colors.white },
         ]}
-        onPress={() => setViewingExpenses(false)}>
-        <Text style={viewingExpenses ? screenButton.text : screenButton.focusedText}>
-          Incomes
-        </Text>
+        onPress={() => setViewingExpenses(false)}
+      >
+        <Text style={viewingExpenses ? screenButton.text : screenButton.focusedText}>Incomes</Text>
       </Pressable>
     </View>
   );
-}
+};
 
 const styles = StyleSheet.create({
   headerBackground: {

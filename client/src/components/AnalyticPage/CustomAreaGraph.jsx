@@ -172,7 +172,8 @@ const CustomAreaGraph = ({ dateStringData, dateData, viewing }) => {
                   borderRadius: 20,
                 }}
                 color="white"
-                onPress={() => handleRangeChange('1W')}>
+                onPress={() => handleRangeChange('1W')}
+              >
                 1W
               </Button>
             </DataTable.Cell>
@@ -183,7 +184,8 @@ const CustomAreaGraph = ({ dateStringData, dateData, viewing }) => {
                   borderRadius: 20,
                 }}
                 color="white"
-                onPress={() => handleRangeChange('1M')}>
+                onPress={() => handleRangeChange('1M')}
+              >
                 1M
               </Button>
             </DataTable.Cell>
@@ -194,7 +196,8 @@ const CustomAreaGraph = ({ dateStringData, dateData, viewing }) => {
                   borderRadius: 20,
                 }}
                 color="white"
-                onPress={() => handleRangeChange('3M')}>
+                onPress={() => handleRangeChange('3M')}
+              >
                 3M
               </Button>
             </DataTable.Cell>
@@ -205,7 +208,8 @@ const CustomAreaGraph = ({ dateStringData, dateData, viewing }) => {
                   borderRadius: 20,
                 }}
                 color="white"
-                onPress={() => handleRangeChange('1Y')}>
+                onPress={() => handleRangeChange('1Y')}
+              >
                 1Y
               </Button>
             </DataTable.Cell>
@@ -216,7 +220,8 @@ const CustomAreaGraph = ({ dateStringData, dateData, viewing }) => {
                   borderRadius: 20,
                 }}
                 color="white"
-                onPress={() => handleRangeChange('2Y')}>
+                onPress={() => handleRangeChange('2Y')}
+              >
                 2Y
               </Button>
             </DataTable.Cell>
@@ -227,7 +232,8 @@ const CustomAreaGraph = ({ dateStringData, dateData, viewing }) => {
                   borderRadius: 20,
                 }}
                 color="white"
-                onPress={() => handleRangeChange('All')}>
+                onPress={() => handleRangeChange('All')}
+              >
                 All
               </Button>
             </DataTable.Cell>

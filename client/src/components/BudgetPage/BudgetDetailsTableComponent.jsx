@@ -31,7 +31,8 @@ const BudgetDetailsTableComponent = ({ expenses }) => {
         <Swipeable
           key={index}
           renderLeftActions={() => DeleteComponent(expense._id)}
-          overshootLeft={false}>
+          overshootLeft={false}
+        >
           <List.Item
             key={index}
             title={<Text style={styles.subheader}>{expense.name}</Text>}

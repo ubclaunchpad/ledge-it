@@ -118,7 +118,8 @@ const CategoryPieChart = () => {
           style={[
             StyleSheet.absoluteFill,
             { backgroundColor: theme.colors.green, borderRadius: 20, width },
-          ]}>
+          ]}
+        >
           <Text style={styles.pbarTextExpense}>{ratio}</Text>
         </View>
         <Text style={[styles.pbarTextBudget]}>${formatNumber(calculateBudget.total || 0, 0)}</Text>
@@ -137,7 +138,8 @@ const CategoryPieChart = () => {
                     borderBottomWidth: index === categoryData.length - 1 ? 0 : 1,
                   },
                 ]}
-                key={item._id}>
+                key={item._id}
+              >
                 <Text style={styles.cardText}>{item.category}</Text>
                 <Text style={styles.cardText}>${formatNumber(item.spent)}</Text>
               </View>

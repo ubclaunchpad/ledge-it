@@ -1,64 +1,74 @@
 // YOU CAN ONLY ANIMATE NON-LAYOUT PROPERTIES
 
-
 import React, { useRef, useEffect } from 'react';
-import { View, StyleSheet, Text, Anima, Animated, Dimensions} from 'react-native';
+import { View, StyleSheet, Text, Anima, Animated, Dimensions } from 'react-native';
 import theme from '../../../theme';
 
 const bkrdMargins = 25;
-const bkrdWidth = Dimensions.get('window').width - 2*bkrdMargins;
+const bkrdWidth = Dimensions.get('window').width - 2 * bkrdMargins;
 const hlWidth = 0.45 * bkrdWidth;
 
-
-const Header = ({selected, setSelected}) => {
-
+const Header = ({ selected, setSelected }) => {
   const translateAnim = useRef(new Animated.Value(3)).current;
 
   useEffect(() => {
-    Animated.timing(
-      translateAnim,
-      {
-        toValue: selected === 'Line' ? 3 : bkrdWidth - hlWidth - 3,
-        useNativeDriver: false,
-        duration: 90,
-      }
-    ).start();
-  }, [selected])
+    Animated.timing(translateAnim, {
+      toValue: selected === 'Line' ? 3 : bkrdWidth - hlWidth - 3,
+      useNativeDriver: false,
+      duration: 90,
+    }).start();
+  }, [selected]);
 
   return (
-    <View
-      style={styles.container}>
-      <View
-        style={styles.background}>
-          <View style={{width: '100%', display: 'flex', flexDirection: 'row', justifyContent: 'space-evenly'}}>
-            <Text
-              onPress={() => {setSelected('Line')}}
-              style={'Line' === selected ? [styles.text, {color: theme.colors.white}] : [styles.text, {color: theme.colors.primary}]}>
-              Line
-            </Text>
-            <Text
-              onPress={() => {setSelected('Calendar')}}
-              style={'Calendar' === selected ? [styles.text, {color: theme.colors.white}] : [styles.text, {color: theme.colors.primary}]}>
-              Calendar
-            </Text>            
-          </View>
-        <Animated.View
-          style={[styles.highlight, {left: translateAnim}]}>
-          
-        </Animated.View>
+    <View style={styles.container}>
+      <View style={styles.background}>
+        <View
+          style={{
+            width: '100%',
+            display: 'flex',
+            flexDirection: 'row',
+            justifyContent: 'space-evenly',
+          }}
+        >
+          <Text
+            onPress={() => {
+              setSelected('Line');
+            }}
+            style={
+              selected === 'Line'
+                ? [styles.text, { color: theme.colors.white }]
+                : [styles.text, { color: theme.colors.primary }]
+            }
+          >
+            Line
+          </Text>
+          <Text
+            onPress={() => {
+              setSelected('Calendar');
+            }}
+            style={
+              selected === 'Calendar'
+                ? [styles.text, { color: theme.colors.white }]
+                : [styles.text, { color: theme.colors.primary }]
+            }
+          >
+            Calendar
+          </Text>
+        </View>
+        <Animated.View style={[styles.highlight, { left: translateAnim }]} />
       </View>
     </View>
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {
     backgroundColor: theme.colors.primary,
     height: 75,
     display: 'flex',
-    justifyContent: 'flex-end'
+    justifyContent: 'flex-end',
   },
-  
+
   background: {
     backgroundColor: theme.colors.white,
     height: 35,
@@ -67,8 +77,8 @@ const styles = StyleSheet.create({
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'flex-end',
-    alignItems: 'center'
-  }, 
+    alignItems: 'center',
+  },
 
   text: {
     fontWeight: '400',
@@ -87,4 +97,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Header; 
+export default Header;

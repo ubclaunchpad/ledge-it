@@ -89,7 +89,8 @@ const NetWorthCard = ({ scrollValue, navigate }) => {
               setSelected('net');
               setCurrNum(netWorth);
             }}
-            style={[styles.btn, selected === 'net' ? styles.selBtn : styles.notSelbtn]}>
+            style={[styles.btn, selected === 'net' ? styles.selBtn : styles.notSelbtn]}
+          >
             <Text style={selected === 'net' ? styles.selBtnText : styles.notSelBtnText}>
               All Time Net
             </Text>
@@ -100,7 +101,8 @@ const NetWorthCard = ({ scrollValue, navigate }) => {
               setSelected('income');
               setCurrNum(income);
             }}
-            style={[styles.btn, selected === 'income' ? styles.selBtn : styles.notSelBtn]}>
+            style={[styles.btn, selected === 'income' ? styles.selBtn : styles.notSelBtn]}
+          >
             <Text style={selected === 'income' ? styles.selBtnText : styles.notSelBtnText}>
               Total Income
             </Text>
@@ -111,7 +113,8 @@ const NetWorthCard = ({ scrollValue, navigate }) => {
               setSelected('expense');
               setCurrNum(expense);
             }}
-            style={[styles.btn, selected === 'expense' ? styles.selBtn : styles.notSelBtn]}>
+            style={[styles.btn, selected === 'expense' ? styles.selBtn : styles.notSelBtn]}
+          >
             <Text style={selected === 'expense' ? styles.selBtnText : styles.notSelBtnText}>
               Total Expense
             </Text>

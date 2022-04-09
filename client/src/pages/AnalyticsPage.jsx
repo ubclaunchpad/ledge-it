@@ -147,28 +147,27 @@ const AnalyticsPage = () => {
   }, [viewing, databaseExpense, databaseIncome, selectedCategories]);
 
   return (
-    <ScrollView 
-      style={styles.container}
-      showsVerticalScrollIndicator={false}>
-      <Header
-        selected={panel}
-        setSelected={setPanel}/>
-      {panel === 'Calendar' &&
-      <CalendarSubPage/>
-      }
-      {panel === 'Line' &&
-      <>
-      <CustomAreaGraph dateStringData={compressedData} dateData={processedData} viewing={viewing} />
-      <GraphFooter
-        categories={viewing === 'Expenses' ? expenseCategories : incomeCategories}
-        selectedCategories={selectedCategories}
-        setSelectedCategories={setSelectedCategories}
-        allSelected={allSelected}
-        setAllSelected={setAllSelected}
-        viewing={viewing}
-        setViewing={setViewing}
-      />
-      </>}
+    <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
+      <Header selected={panel} setSelected={setPanel} />
+      {panel === 'Calendar' && <CalendarSubPage />}
+      {panel === 'Line' && (
+        <>
+          <CustomAreaGraph
+            dateStringData={compressedData}
+            dateData={processedData}
+            viewing={viewing}
+          />
+          <GraphFooter
+            categories={viewing === 'Expenses' ? expenseCategories : incomeCategories}
+            selectedCategories={selectedCategories}
+            setSelectedCategories={setSelectedCategories}
+            allSelected={allSelected}
+            setAllSelected={setAllSelected}
+            viewing={viewing}
+            setViewing={setViewing}
+          />
+        </>
+      )}
     </ScrollView>
   );
 };

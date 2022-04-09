@@ -10,7 +10,8 @@ const BudgetProgressBar = ({ calculateBudget, ratio }) => {
         style={[
           StyleSheet.absoluteFill,
           { backgroundColor: theme.colors.green, borderRadius: 20, width: ratio },
-        ]}>
+        ]}
+      >
         <Text style={styles.pbarTextExpense}>{ratio}</Text>
       </View>
       <Text style={[styles.pbarTextBudget]}>${formatNumber(calculateBudget || 0, 0)}</Text>

@@ -100,7 +100,8 @@ const StaticAreaGraph = ({ setButton }) => {
               data: {
                 overflow: 'visible',
               },
-            }}>
+            }}
+          >
             <Defs>
               <LinearGradient id="gradientFill" x1="0%" y1="0%" x2="0%" y2="100%">
                 <Stop stopColor="white" offset="20%" stopOpacity="0.9" />
@@ -135,7 +136,8 @@ const StaticAreaGraph = ({ setButton }) => {
               textAlign: 'center',
               color: theme.colors.primary,
               marginHorizontal: 20,
-            }}>
+            }}
+          >
             You haven&apos;t had many expenses this week!
           </Text>
         )}

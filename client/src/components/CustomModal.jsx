@@ -17,7 +17,8 @@ const CustomModal = ({ isModalVisible, setModalVisible, children, ...rest }) => 
         setModalVisible(!isModalVisible);
       }}
       style={styles.modal}
-      {...rest}>
+      {...rest}
+    >
       <View style={styles.container}>
         <Pressable style={styles.closeButton} onPress={() => setModalVisible(!isModalVisible)}>
           <Ionicons name="close-circle-outline" color={theme.colors.primaryDark} size={35} />

@@ -115,12 +115,14 @@ const TablePageHeader = ({
             ]}
             icon={emptyIcon}
             selected={allButton}
-            onPress={allButtonPressLogic}>
+            onPress={allButtonPressLogic}
+          >
             <Text
               style={[
                 styles.text,
                 { color: allButton ? theme.colors.white : theme.colors.primary },
-              ]}>
+              ]}
+            >
               All
             </Text>
           </Chip>
@@ -137,13 +139,15 @@ const TablePageHeader = ({
               icon={emptyIcon}
               key={category[0]}
               selected={selectedCategories[category[0]]}
-              onPress={() => categoryButtonPressLogic(category[0])}>
+              onPress={() => categoryButtonPressLogic(category[0])}
+            >
               <Text
                 style={[
                   {
                     color: selectedCategories[category[0]] ? theme.colors.white : category[1],
                   },
-                ]}>
+                ]}
+              >
                 {category[0]}
               </Text>
             </Chip>

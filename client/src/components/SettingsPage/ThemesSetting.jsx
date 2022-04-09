@@ -19,7 +19,8 @@ const ThemesSetting = ({ state, setState }) => {
       backdropOpacity={1}
       onRequestClose={() => {
         setState({ isThemesModalOpen: false });
-      }}>
+      }}
+    >
       <SafeAreaView style={styles.container}>
         <View style={styles.header}>
           <StyledButton

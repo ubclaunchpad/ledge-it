@@ -99,7 +99,8 @@ const AddCategories = ({ isAddCategoryOpen, setIsAddCategoryOpen }) => {
       animationOut="slideOutRight"
       backdropTransitionInTiming={0}
       backdropColor={theme.colors.white}
-      backdropOpacity={1}>
+      backdropOpacity={1}
+    >
       <SafeAreaView style={styles.container}>
         <View style={styles.header}>
           <StyledButton
@@ -124,13 +125,15 @@ const AddCategories = ({ isAddCategoryOpen, setIsAddCategoryOpen }) => {
           <Button
             onPress={() => setExpenseToggle(true)}
             style={expenseToggle ? styles.onButton : styles.offButton}
-            color={expenseToggle ? 'white' : theme.colors.primary}>
+            color={expenseToggle ? 'white' : theme.colors.primary}
+          >
             Expenses
           </Button>
           <Button
             onPress={() => setExpenseToggle(false)}
             style={expenseToggle ? styles.offButton : styles.onButton}
-            color={!expenseToggle ? 'white' : theme.colors.primary}>
+            color={!expenseToggle ? 'white' : theme.colors.primary}
+          >
             Income
           </Button>
         </View>
@@ -145,7 +148,8 @@ const AddCategories = ({ isAddCategoryOpen, setIsAddCategoryOpen }) => {
           <Button
             onPress={() => handleAdd()}
             color="white"
-            style={{ backgroundColor: 'green', justifyContent: 'center', width: '20%' }}>
+            style={{ backgroundColor: 'green', justifyContent: 'center', width: '20%' }}
+          >
             Add
           </Button>
         </View>

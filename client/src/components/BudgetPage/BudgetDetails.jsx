@@ -68,7 +68,8 @@ const BudgetDetails = ({ currentMonth, currentYear, setShowDetails, setShowTable
           onPress={() => {
             setShowDetails(false);
             setShowTable(true);
-          }}>
+          }}
+        >
           <Ionicons name="arrow-back-outline" color={theme.colors.textLight} size={35} />
         </Pressable>
         <View style={{ alignItems: 'center', marginBottom: 10 }}>

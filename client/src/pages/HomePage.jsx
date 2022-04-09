@@ -23,7 +23,8 @@ const HomePage = ({ navigate }) => {
         <Animated.ScrollView
           onScroll={scrollHandler}
           style={styles.content}
-          scrollEventThrottle={32}>
+          scrollEventThrottle={32}
+        >
           <ToggleCard />
           <CategoryPieChart />
           <RecentTransactions />
