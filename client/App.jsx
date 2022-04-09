@@ -43,31 +43,6 @@ const App = () => {
   }
 };
 
-// const Tab = createBottomTabNavigator();
-
-// const TabNavBar = ({ setLoggedIn }) => {
-//   return (
-//     <Tab.Navigator
-//       screenOptions={({ route }) => ({
-//         tabBarIcon: ({ color }) => screenOptions(route, color),
-//         tabBarActiveTintColor: theme.colors.accentDark,
-//         tabBarInactiveTintColor: theme.colors.primaryLight,
-//         tabBarStyle: {
-//           backgroundColor: theme.colors.primary,
-//         },
-//         tabBarShowLabel: false,
-//         headerShown: false,
-//       })}
-//       style={styles.container}>
-//       <Tab.Screen name="Home" component={HomePage} />
-//       <Tab.Screen name="Table" component={TablePage} />
-//       <Tab.Screen name="Budget" component={BudgetPage} />
-//       <Tab.Screen name="Analytics" component={AnalyticsPage} />
-//       <Tab.Screen name="Settings">{() => <SettingsPage setLoggedIn={setLoggedIn} />}</Tab.Screen>
-//     </Tab.Navigator>
-//   );
-// };
-
 const screenOptions = (routeName, selectedTab) => {
   let iconName;
 
@@ -139,7 +114,10 @@ const CurvedNavBar = ({ setLoggedIn }) => {
         <CurvedBottomBar.Screen name="Budget" component={BudgetPage} position="right" />
         <CurvedBottomBar.Screen name="Analytics" component={AnalyticsPage} position="right" />
         {/* dont show settings on tab bar */}
-        <CurvedBottomBar.Screen name="Settings" component={SettingsPage} />
+        <CurvedBottomBar.Screen
+          name="Settings"
+          component={() => <SettingsPage setLoggedIn={setLoggedIn} />}
+        />
       </CurvedBottomBar.Navigator>
     </View>
   );

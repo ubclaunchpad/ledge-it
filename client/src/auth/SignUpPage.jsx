@@ -28,11 +28,11 @@ const SignUpPage = ({ setPage, setLoggedIn }) => {
     await axios
       .post(
         `${URL}/signup`,
-        JSON.stringify({
+        {
           email,
           hashed_password: secondPassword,
           active: true,
-        }),
+        },
         {
           headers: {
             'Content-Type': 'application/json',
@@ -138,7 +138,7 @@ const SignUpPage = ({ setPage, setLoggedIn }) => {
                   onPress={() => setIsLoading(true, signUpHandler())}
                   indicatorCount={10}
                   spinnerColor={theme.colors.primary}>
-                  <Text style={{ fontSize: 18, color: theme.colors.primary }}>Login</Text>
+                  <Text style={{ fontSize: 18, color: theme.colors.primary }}>Signup</Text>
                 </SpinnerButton>
               </View>
             </>
