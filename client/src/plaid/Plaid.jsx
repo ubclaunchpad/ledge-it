@@ -65,8 +65,7 @@ export default function Plaid() {
               isLoading={loading}
               onPress={() => setLoading(true, fetchTransactions())}
               indicatorCount={10}
-              spinnerColor="white"
-            >
+              spinnerColor="white">
               <Text style={{ fontSize: 18, color: 'white' }}>Fetch Transactions</Text>
             </SpinnerButton>
           </View>

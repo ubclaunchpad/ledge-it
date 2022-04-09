@@ -83,8 +83,7 @@ const CurvedNavBar = ({ setLoggedIn }) => {
           alignItems: 'center',
           justifyContent: 'center',
           paddingBottom: 10,
-        }}
-      >
+        }}>
         {screenOptions(routeName, selectedTab)}
       </TouchableOpacity>
     );
@@ -104,14 +103,12 @@ const CurvedNavBar = ({ setLoggedIn }) => {
               style={{
                 flex: 1,
                 justifyContent: 'center',
-              }}
-            >
+              }}>
               <DefaultActionButton />
             </View>
           </Animated.View>
         )}
-        tabBar={renderTabBar}
-      >
+        tabBar={renderTabBar}>
         <CurvedBottomBar.Screen name="Home" component={HomePage} position="left" />
         <CurvedBottomBar.Screen name="Table" component={TablePage} position="left" />
         <CurvedBottomBar.Screen name="Budget" component={BudgetPage} position="right" />

@@ -34,8 +34,7 @@ const LoginPage = ({ setPage, setLoggedIn }) => {
         style={{
           backgroundColor: theme.colors.primary,
           minHeight: Dimensions.get('window').height,
-        }}
-      >
+        }}>
         <View style={styles.header}>
           <SvgXml xml={Logo} alt="logo" transform={[{ scaleX: 0.625 }]} />
           <Text style={styles.headerText}>Welcome</Text>
@@ -68,8 +67,7 @@ const LoginPage = ({ setPage, setLoggedIn }) => {
               isLoading={isLoading}
               onPress={() => setIsLoading(true, submitLogin())}
               indicatorCount={10}
-              spinnerColor={theme.colors.primary}
-            >
+              spinnerColor={theme.colors.primary}>
               <Text style={{ fontSize: 18, color: theme.colors.primary }}>Login</Text>
             </SpinnerButton>
           </View>

@@ -20,8 +20,7 @@ export default function TheLink({ linkToken, setAccessToken, baseURL }) {
       onSuccess={(success) => {
         console.log(`Public Token: ${success.publicToken}`);
         exchangePublicToken(success.publicToken);
-      }}
-    >
+      }}>
       <Text>Open up App.js to start working on your app!</Text>
     </PlaidLinkWebview>
   );

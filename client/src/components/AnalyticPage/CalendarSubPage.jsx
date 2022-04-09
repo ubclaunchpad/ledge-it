@@ -146,7 +146,7 @@ const CalendarSubPage = () => {
     } else {
       setDateEvents([]);
     }
-  }, [selectedDate]);
+  }, [monthExpenses, monthIncome, selectedDate, viewingExpenses]);
 
   return (
     <>

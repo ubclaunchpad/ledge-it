@@ -32,8 +32,7 @@ export default ({
 
   return (
     <View
-      style={[styles.box, rounded && { borderBottomRightRadius: 20, borderBottomLeftRadius: 20 }]}
-    >
+      style={[styles.box, rounded && { borderBottomRightRadius: 20, borderBottomLeftRadius: 20 }]}>
       <View style={styles.header}>
         <Text style={date ? styles.available : styles.placeholder}>{date || 'Date'}</Text>
         <StyledButton
@@ -58,8 +57,7 @@ export default ({
           style={[
             name ? styles.available : styles.placeholder,
             { width: '50%', textAlign: 'right' },
-          ]}
-        >
+          ]}>
           {name || (type === 'Expense' ? 'Name' : 'Source')}
         </Text>
       </View>

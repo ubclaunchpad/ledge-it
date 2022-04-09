@@ -17,8 +17,7 @@ export default function PlaidSetting({ state, setState }) {
       backdropOpacity={1}
       onRequestClose={() => {
         setState({ isPlaidModalOpen: false });
-      }}
-    >
+      }}>
       <SafeAreaView style={styles.container}>
         <View style={styles.header}>
           <StyledButton

@@ -25,8 +25,7 @@ export default ({
         underlayColor={underlayColor || theme.colors.white}
         onPress={onTap}
         style={backgroundStyle || styles.background}
-        {...rest}
-      >
+        {...rest}>
         <View style={styles.textView}>
           <Text style={textStyle || styles.text}>{label}</Text>
           {iconName && (

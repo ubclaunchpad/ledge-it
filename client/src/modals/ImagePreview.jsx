@@ -30,8 +30,7 @@ const ImagePreview = ({ isModalVisible, setModalVisible, b64Img, setb64img }) =>
           justifyContent: 'center',
           alignItems: 'center',
           marginTop: 20,
-        }}
-      >
+        }}>
         <View style={styles.button}>
           <StyledButton label="Save" onTap={() => setModalVisible(false)} />
         </View>

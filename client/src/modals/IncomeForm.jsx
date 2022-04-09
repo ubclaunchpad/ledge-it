@@ -110,8 +110,7 @@ const AddIncome = ({ setModalVisible, setIncomeModalVisible, type, setType }) =>
           justifyContent: 'center',
           alignItems: 'center',
           marginTop: 20,
-        }}
-      >
+        }}>
         <View style={styles.button}>
           <StyledButton label="Cancel" onTap={() => setIncomeModalVisible(false)} />
         </View>

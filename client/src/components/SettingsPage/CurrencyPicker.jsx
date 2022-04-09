@@ -37,8 +37,7 @@ const CurrencyPicker = ({ state, setState, setSelectedCurrency }) => {
           onPress={() => {
             setSelectedCurrency(currentCurrency);
             setState({ isCurrencyPickerOpen: false });
-          }}
-        >
+          }}>
           <Text style={styles.buttonText}>Select</Text>
         </Pressable>
       </CustomModal>

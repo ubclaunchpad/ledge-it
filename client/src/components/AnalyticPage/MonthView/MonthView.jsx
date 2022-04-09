@@ -92,7 +92,7 @@ const MonthView = ({
     } else {
       let t = 0;
       Object.values(monthEvents[month.getFullYear()][month.getMonth()]).forEach((day) => {
-        Object.values(day).map((event) => {
+        Object.values(day).forEach((event) => {
           t += event.price;
         });
       });

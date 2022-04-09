@@ -67,8 +67,7 @@ const SignUpPage = ({ setPage, setLoggedIn }) => {
         style={{
           backgroundColor: theme.colors.primary,
           minHeight: Dimensions.get('window').height,
-        }}
-      >
+        }}>
         <View style={styles.header}>
           <SvgXml xml={Logo} alt="logo" transform={[{ scaleX: 0.625 }]} />
           <Text style={styles.headerText}>Welcome</Text>
@@ -128,8 +127,7 @@ const SignUpPage = ({ setPage, setLoggedIn }) => {
                   display: 'flex',
                   width: Dimensions.get('window').width,
                   alignSelf: 'center',
-                }}
-              >
+                }}>
                 <SpinnerButton
                   buttonStyle={{
                     backgroundColor: 'white',
@@ -139,8 +137,7 @@ const SignUpPage = ({ setPage, setLoggedIn }) => {
                   isLoading={isLoading}
                   onPress={() => setIsLoading(true, signUpHandler())}
                   indicatorCount={10}
-                  spinnerColor={theme.colors.primary}
-                >
+                  spinnerColor={theme.colors.primary}>
                   <Text style={{ fontSize: 18, color: theme.colors.primary }}>Signup</Text>
                 </SpinnerButton>
               </View>

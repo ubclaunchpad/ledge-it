@@ -14,8 +14,7 @@ const StartingPage = ({ setPage }) => {
         style={{
           backgroundColor: theme.colors.primary,
           minHeight: Dimensions.get('window').height,
-        }}
-      >
+        }}>
         <View style={{ backgroundColor: theme.colors.white }}>
           <View style={styles.header}>
             <SvgXml xml={Logo} alt="logo" transform={[{ scaleX: 0.625 }]} />

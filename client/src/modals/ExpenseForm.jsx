@@ -122,8 +122,7 @@ const AddExpense = ({ setModalVisible, setExpenseModalVisible, type, setType }) 
           justifyContent: 'center',
           alignItems: 'center',
           marginTop: 20,
-        }}
-      >
+        }}>
         <View style={styles.button}>
           <StyledButton label="Cancel" onTap={() => setExpenseModalVisible(false)} />
         </View>

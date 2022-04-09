@@ -28,8 +28,7 @@ const Header = ({ selected, setSelected }) => {
             display: 'flex',
             flexDirection: 'row',
             justifyContent: 'space-evenly',
-          }}
-        >
+          }}>
           <Text
             onPress={() => {
               setSelected('Line');
@@ -38,8 +37,7 @@ const Header = ({ selected, setSelected }) => {
               selected === 'Line'
                 ? [styles.text, { color: theme.colors.white }]
                 : [styles.text, { color: theme.colors.primary }]
-            }
-          >
+            }>
             Line
           </Text>
           <Text
@@ -50,8 +48,7 @@ const Header = ({ selected, setSelected }) => {
               selected === 'Calendar'
                 ? [styles.text, { color: theme.colors.white }]
                 : [styles.text, { color: theme.colors.primary }]
-            }
-          >
+            }>
             Calendar
           </Text>
         </View>

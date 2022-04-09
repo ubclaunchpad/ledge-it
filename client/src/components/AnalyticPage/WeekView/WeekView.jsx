@@ -78,8 +78,7 @@ const WeekView = ({ events, selectedDate, setSelectedDate }) => {
         style={{ backgroundColor: theme.colors.primary }}
         onPress={() => {
           setSelectedDate(undefined);
-        }}
-      >
+        }}>
         <Entypo
           name="calendar"
           size={45}
@@ -106,8 +105,7 @@ const DayLabels = () => {
         paddingLeft: scrollViewMargin,
         paddingTop: 15,
         backgroundColor: theme.colors.primary,
-      }}
-    >
+      }}>
       {['S', 'M', 'T', 'W', 'T', 'F', 'S'].map((i, j) => {
         return (
           <View
@@ -118,8 +116,7 @@ const DayLabels = () => {
               marginLeft: cellMarginLeft,
               paddingBottom: 5,
               paddingTop: 5,
-            }}
-          >
+            }}>
             <Text style={styles.text}>{i}</Text>
           </View>
         );
@@ -139,8 +136,7 @@ const DateLabel = ({ date }) => {
         justifyContent: 'center',
         height: 30,
         width: '100%',
-      }}
-    >
+      }}>
       <Text style={styles.text}>{stringFromDate(date)}</Text>
     </View>
   );
@@ -164,8 +160,7 @@ const SelectDayScroll = ({ selectedDate, setSelectedDate }) => {
           backgroundColor: theme.colors.primary,
           paddingLeft: scrollViewMargin,
           paddingRight: scrollViewMargin,
-        }}
-      >
+        }}>
         {weekArray.slice(0, weekArray.length).map((i, j) => {
           i.setHours(0, 0, 0, 0);
           selectedDate.setHours(0, 0, 0, 0);
@@ -177,15 +172,13 @@ const SelectDayScroll = ({ selectedDate, setSelectedDate }) => {
                   ? [styles.block, { backgroundColor: theme.colors.white }]
                   : styles.block
               }
-              onPress={() => setSelectedDate(i)}
-            >
+              onPress={() => setSelectedDate(i)}>
               <Text
                 style={
                   i.toDateString() === selectedDate.toDateString()
                     ? [styles.text, { color: theme.colors.primary }]
                     : [styles.text, { opacity: 0.75 }]
-                }
-              >
+                }>
                 {i.getDate()}
               </Text>
             </TouchableOpacity>

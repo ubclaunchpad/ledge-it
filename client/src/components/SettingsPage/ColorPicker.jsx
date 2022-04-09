@@ -76,8 +76,7 @@ const ColorPicker = ({
       animationOut="slideOutRight"
       backdropTransitionInTiming={0}
       backdropColor={theme.colors.white}
-      backdropOpacity={1}
-    >
+      backdropOpacity={1}>
       <SafeAreaView style={styles.container}>
         <View style={styles.header}>
           <StyledButton

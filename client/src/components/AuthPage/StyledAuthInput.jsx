@@ -23,8 +23,10 @@ export default ({
     <View style={styles.container}>
       <>
         <Text
-          style={[styles.label, { color: isLight ? theme.colors.textLight : theme.colors.primary }]}
-        >
+          style={[
+            styles.label,
+            { color: isLight ? theme.colors.textLight : theme.colors.primary },
+          ]}>
           {label}
           {required && '*'}
         </Text>

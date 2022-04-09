@@ -36,8 +36,7 @@ const MonthSelect = ({ month, goToMonth }) => {
         onPress={() => {
           setModalVisible(true);
         }}
-        style={styles.container}
-      >
+        style={styles.container}>
         <View>
           <Text style={styles.text}>{months[month]}</Text>
         </View>
@@ -49,7 +48,7 @@ const MonthSelect = ({ month, goToMonth }) => {
         {getMonths.map((v, i) => {
           return (
             <View key={i}>
-              {(i === 0 || (i > 0 && getMonths[i - 1].getFullYear() != v.getFullYear())) && (
+              {(i === 0 || (i > 0 && getMonths[i - 1].getFullYear() !== v.getFullYear())) && (
                 <Text style={{ fontSize: 20, fontWeight: '200', margin: 10, textAlign: 'center' }}>
                   {v.getFullYear()}
                 </Text>

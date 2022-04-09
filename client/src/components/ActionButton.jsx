@@ -22,16 +22,14 @@ const DefaultActionButton = () => {
           style={styles.button}
           icon="currency-usd"
           mode="contained"
-          onPress={() => setAddDataModalVisible('Income')}
-        >
+          onPress={() => setAddDataModalVisible('Income')}>
           Add Income
         </Button>
         <Button
           style={styles.button}
           icon="currency-usd-off"
           mode="contained"
-          onPress={() => setAddDataModalVisible('Expense')}
-        >
+          onPress={() => setAddDataModalVisible('Expense')}>
           Add Expense
         </Button>
       </Modal>

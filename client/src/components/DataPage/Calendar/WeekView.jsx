@@ -88,8 +88,7 @@ const DayLabels = () => {
         flexDirection: 'row',
         paddingLeft: scrollViewMargin,
         backgroundColor: theme.colors.primary,
-      }}
-    >
+      }}>
       {['S', 'M', 'T', 'W', 'T', 'F', 'S'].map((i, j) => {
         return (
           <View
@@ -100,8 +99,7 @@ const DayLabels = () => {
               marginLeft: cellMarginLeft,
               paddingBottom: 5,
               paddingTop: 5,
-            }}
-          >
+            }}>
             <Text style={styles.text}>{i}</Text>
           </View>
         );
@@ -121,8 +119,7 @@ const DateLabel = ({ date }) => {
         justifyContent: 'center',
         height: 30,
         width: '100%',
-      }}
-    >
+      }}>
       <Text style={styles.text}>{stringFromDate(date)}</Text>
     </View>
   );
@@ -148,8 +145,7 @@ const SelectDayScroll = ({ selectedDate, setSelectedDate }) => {
           backgroundColor: theme.colors.primary,
           paddingLeft: scrollViewMargin,
           paddingRight: scrollViewMargin,
-        }}
-      >
+        }}>
         {weekArray.slice(0, weekArray.length - 1).map((i, j) => {
           return (
             <TouchableOpacity
@@ -159,15 +155,13 @@ const SelectDayScroll = ({ selectedDate, setSelectedDate }) => {
                   ? [styles.block, { backgroundColor: theme.colors.white }]
                   : styles.block
               }
-              onPress={() => setSelectedDate(i)}
-            >
+              onPress={() => setSelectedDate(i)}>
               <Text
                 style={
                   i === selectedDate
                     ? [styles.text, { color: theme.colors.primary }]
                     : [styles.text, { opacity: 0.75 }]
-                }
-              >
+                }>
                 {i.getDate()}
               </Text>
             </TouchableOpacity>
@@ -180,15 +174,13 @@ const SelectDayScroll = ({ selectedDate, setSelectedDate }) => {
               ? [styles.block, { backgroundColor: theme.colors.white, marginRight: 10 }]
               : [styles.block, { marginRight: 10 }]
           }
-          onPress={() => setSelectedDate(weekArray[weekArray.length - 1])}
-        >
+          onPress={() => setSelectedDate(weekArray[weekArray.length - 1])}>
           <Text
             style={
               weekArray[weekArray.length - 1] === selectedDate
                 ? [styles.text, { color: theme.colors.primary }]
                 : [styles.text, { opacity: 0.75 }]
-            }
-          >
+            }>
             {weekArray[weekArray.length - 1].getDate()}
           </Text>
         </TouchableOpacity>

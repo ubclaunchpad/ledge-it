@@ -94,8 +94,10 @@ const RecentTransactions = () => {
               </View>
               <View style={styles.cardRight}>
                 <Text
-                  style={[styles.cardText, item.price < 0 ? styles.expenseText : styles.incomeText]}
-                >
+                  style={[
+                    styles.cardText,
+                    item.price < 0 ? styles.expenseText : styles.incomeText,
+                  ]}>
                   {item.price < 0 && '-'}${formatNumber(item.price || item.amount)}
                 </Text>
               </View>

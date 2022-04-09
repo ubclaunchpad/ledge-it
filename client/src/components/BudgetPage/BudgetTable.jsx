@@ -134,8 +134,7 @@ const BudgetTable = ({
             await createIfBudgetDNE();
             setShowTable(false);
             setShowEdit(true);
-          }}
-        >
+          }}>
           Add Budget
         </Button>
       </View>

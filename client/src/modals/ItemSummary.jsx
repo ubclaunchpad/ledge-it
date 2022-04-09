@@ -105,8 +105,7 @@ const ItemSummary = ({ modalVisible, setModalVisible, item, userCategories, type
             justifyContent: 'center',
             alignItems: 'center',
             marginTop: 20,
-          }}
-        >
+          }}>
           <View style={styles.button}>
             <StyledButton label="Cancel" onTap={() => setModalVisible(false)} />
           </View>

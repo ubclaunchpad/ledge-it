@@ -52,8 +52,7 @@ export default function EditBudget({ month, year, setShowTable, setShowEdit }) {
             onPress={() => {
               setShowEdit(false);
               setShowTable(true);
-            }}
-          >
+            }}>
             <Ionicons name="arrow-back-outline" color={theme.colors.primaryDark} size={35} />
           </Pressable>
           <Text style={styles.titleText}>{MONTHS[month - 1]} Budget</Text>

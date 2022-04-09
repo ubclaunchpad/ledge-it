@@ -83,8 +83,7 @@ const DeleteCategories = ({ isDeleteCategoryOpen, setIsDeleteCategoryOpen }) => 
       animationOut="slideOutRight"
       backdropTransitionInTiming={0}
       backdropColor={theme.colors.white}
-      backdropOpacity={1}
-    >
+      backdropOpacity={1}>
       <SafeAreaView style={styles.container}>
         <View style={styles.header}>
           <StyledButton
@@ -115,15 +114,13 @@ const DeleteCategories = ({ isDeleteCategoryOpen, setIsDeleteCategoryOpen }) => 
           <Button
             onPress={() => setExpenseToggle(true)}
             style={expenseToggle ? styles.onButton : styles.offButton}
-            color={expenseToggle ? 'white' : theme.colors.primary}
-          >
+            color={expenseToggle ? 'white' : theme.colors.primary}>
             Expenses
           </Button>
           <Button
             onPress={() => setExpenseToggle(false)}
             style={expenseToggle ? styles.offButton : styles.onButton}
-            color={!expenseToggle ? 'white' : theme.colors.primary}
-          >
+            color={!expenseToggle ? 'white' : theme.colors.primary}>
             Income
           </Button>
         </View>
@@ -132,8 +129,7 @@ const DeleteCategories = ({ isDeleteCategoryOpen, setIsDeleteCategoryOpen }) => 
             return (
               <Swipeable
                 key={category.name}
-                renderRightActions={() => RightSwipeComponent(category.name)}
-              >
+                renderRightActions={() => RightSwipeComponent(category.name)}>
                 <View style={styles.setSettingOptions}>
                   <Text style={styles.optionText}>{category.name}</Text>
                 </View>

@@ -33,8 +33,7 @@ export default function EditModal({ editModal, setEditModal, month, year, catego
       backdropTransitionInTiming={0}
       backdropColor={theme.colors.white}
       backdropOpacity={0.75}
-      onBackdropPress={() => setEditModal(false)}
-    >
+      onBackdropPress={() => setEditModal(false)}>
       <View style={styles.container}>
         <View style={{ margin: 5, flexDirection: 'row', justifyContent: 'space-between' }}>
           <TextInput
@@ -54,8 +53,7 @@ export default function EditModal({ editModal, setEditModal, month, year, catego
               backgroundColor: theme.colors.primary,
               justifyContent: 'center',
               width: '20%',
-            }}
-          >
+            }}>
             Add
           </Button>
         </View>

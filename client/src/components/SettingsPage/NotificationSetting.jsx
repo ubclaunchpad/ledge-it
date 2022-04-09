@@ -21,8 +21,7 @@ const NotificationSetting = ({ state, setState }) => {
       backdropOpacity={1}
       onRequestClose={() => {
         setState({ isNotificationModalOpen: false });
-      }}
-    >
+      }}>
       <SafeAreaView style={styles.container}>
         <View style={styles.header}>
           <StyledButton

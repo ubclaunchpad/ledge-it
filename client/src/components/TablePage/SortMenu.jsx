@@ -24,8 +24,7 @@ const RNPMenu = () => {
                 <FontAwesome name="chevron-down" size={15} color="white" />
               </Button>
             </>
-          }
-        >
+          }>
           <Menu.Item onPress={() => {}} title="Sort by: Price" />
           <Menu.Item onPress={() => {}} title="Sort by: Category" />
           <Menu.Item onPress={() => {}} title="Sort by: Time" />

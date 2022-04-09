@@ -34,8 +34,7 @@ const IncomeExpenseToggle = ({ setViewingExpenses, monthOverview, viewingExpense
           screenButton.background,
           { backgroundColor: viewingExpenses ? theme.colors.white : theme.colors.primary },
         ]}
-        onPress={() => setViewingExpenses(true)}
-      >
+        onPress={() => setViewingExpenses(true)}>
         <Text style={viewingExpenses ? screenButton.focusedText : screenButton.text}>Expenses</Text>
       </Pressable>
       <Text style={styles.overViewText}>${monthOverview}</Text>
@@ -44,8 +43,7 @@ const IncomeExpenseToggle = ({ setViewingExpenses, monthOverview, viewingExpense
           screenButton.background,
           { backgroundColor: viewingExpenses ? theme.colors.primary : theme.colors.white },
         ]}
-        onPress={() => setViewingExpenses(false)}
-      >
+        onPress={() => setViewingExpenses(false)}>
         <Text style={viewingExpenses ? screenButton.text : screenButton.focusedText}>Incomes</Text>
       </Pressable>
     </View>

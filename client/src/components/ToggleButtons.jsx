@@ -14,8 +14,7 @@ export default ({ type, setType }) => {
         borderWidth: 3,
         borderColor: theme.colors.primary,
         marginBottom: 10,
-      }}
-    >
+      }}>
       <StyledButton
         label="Expense"
         onTap={() => setType('Expense')}

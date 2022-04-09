@@ -93,7 +93,8 @@ const Cell = ({ num, shouldMakeNumGrey, events }) => {
         {events !== undefined &&
           events.map((e, index) => {
             if ((index + 1) * eventSubcellHeight > cellHeight - cellHeaderHeight - 15) {
-            {return undefined;}
+              return undefined;
+            }
             return <EventSubcell key={index} backgroundColor={e.color} text={e.text} />;
           })}
         {(events !== undefined && events.length * eventSubcellHeight) >

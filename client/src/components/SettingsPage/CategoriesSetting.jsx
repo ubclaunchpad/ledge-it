@@ -32,8 +32,7 @@ const CategoriesSetting = ({ state, setState }) => {
       backdropOpacity={1}
       onRequestClose={() => {
         setState({ isCategoriesModalOpen: false });
-      }}
-    >
+      }}>
       <SafeAreaView style={styles.container}>
         <View style={styles.header}>
           <StyledButton

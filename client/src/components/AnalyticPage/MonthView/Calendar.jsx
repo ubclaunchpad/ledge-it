@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React from 'react';
 
 import { StyleSheet, View, Text, Dimensions, ScrollView } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
@@ -117,7 +117,8 @@ const Cell = ({ date, num, shouldMakeNumGrey, dateEvents, onPress, categories })
         {dateEvents !== undefined &&
           dateEvents.map((e, index) => {
             if ((index + 1) * eventSubcellHeight > cellHeight - cellHeaderHeight - 15) {
-            {return undefined;}
+              return undefined;
+            }
             return (
               <EventSubcell
                 key={index}
