@@ -1,10 +1,12 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useFocusEffect } from '@react-navigation/native';
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet, ScrollView } from 'react-native';
 import axios from '../providers/axios';
 import CustomAreaGraph from '../components/AnalyticPage/CustomAreaGraph';
 import GraphFooter from '../components/AnalyticPage/GraphFooter';
 import theme from '../../theme';
+import Header from '../components/AnalyticPage/Header';
+import CalendarSubPage from '../components/AnalyticPage/CalendarSubPage';
 
 const URL = process.env.SERVER_URL;
 
@@ -18,6 +20,8 @@ const AnalyticsPage = () => {
   const [databaseIncome, setDatabaseIncome] = useState([]);
   const [expenseCategories, setExpenseCategories] = useState([]);
   const [incomeCategories, setIncomeCategories] = useState([]);
+
+  const [panel, setPanel] = useState('Line');
 
   const handleFilteringData = (data, categories) => {
     return data.filter((row) => {
@@ -143,18 +147,28 @@ const AnalyticsPage = () => {
   }, [viewing, databaseExpense, databaseIncome, selectedCategories]);
 
   return (
-    <View style={styles.container}>
-      <CustomAreaGraph dateStringData={compressedData} dateData={processedData} viewing={viewing} />
-      <GraphFooter
-        categories={viewing === 'Expenses' ? expenseCategories : incomeCategories}
-        selectedCategories={selectedCategories}
-        setSelectedCategories={setSelectedCategories}
-        allSelected={allSelected}
-        setAllSelected={setAllSelected}
-        viewing={viewing}
-        setViewing={setViewing}
-      />
-    </View>
+    <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
+      <Header selected={panel} setSelected={setPanel} />
+      {panel === 'Calendar' && <CalendarSubPage />}
+      {panel === 'Line' && (
+        <>
+          <CustomAreaGraph
+            dateStringData={compressedData}
+            dateData={processedData}
+            viewing={viewing}
+          />
+          <GraphFooter
+            categories={viewing === 'Expenses' ? expenseCategories : incomeCategories}
+            selectedCategories={selectedCategories}
+            setSelectedCategories={setSelectedCategories}
+            allSelected={allSelected}
+            setAllSelected={setAllSelected}
+            viewing={viewing}
+            setViewing={setViewing}
+          />
+        </>
+      )}
+    </ScrollView>
   );
 };
 

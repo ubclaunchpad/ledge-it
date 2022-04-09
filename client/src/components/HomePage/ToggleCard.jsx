@@ -4,6 +4,7 @@ import StaticAreaGraph from './StaticAreaGraph';
 import Paginator from './Paginator';
 import theme from '../../../theme';
 import StyledButton from '../StyledButton';
+import StaticCalendar from './StaticCalendar';
 
 const data = [
   {
@@ -42,7 +43,7 @@ const ToggleCard = () => {
               <StaticAreaGraph scrollX={scrollX} setButton={setDisplayDurationButton} />
             </>
           ) : null}
-          {item.title === 'Calendar' ? <Text style={styles.text}>{item.description}</Text> : null}
+          {item.title === 'Calendar' ? <StaticCalendar tHeight={100} tWidth={100} /> : null}
         </View>
       </View>
     );
