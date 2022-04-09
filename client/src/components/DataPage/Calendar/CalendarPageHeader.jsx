@@ -1,106 +1,52 @@
 import React, { useState, useCallback } from 'react';
 import { Text, View, StyleSheet, Pressable } from 'react-native';
-import DropDownPicker from 'react-native-dropdown-picker';
-import { useFocusEffect } from '@react-navigation/native';
-import axios from 'axios';
 import theme from '../../../../theme';
-import { formatNumber, formatDateBE } from '../../../utils/formatters';
+import MonthSelect from '../../AnalyticPage/MonthView/MonthSelect';
 
-const URL = process.env.SERVER_URL;
-
-const months = [
-  { label: 'January', value: 0 },
-  { label: 'Febuary', value: 1 },
-  { label: 'March', value: 2 },
-  { label: 'April', value: 3 },
-  { label: 'May', value: 4 },
-  { label: 'June', value: 5 },
-  { label: 'July', value: 6 },
-  { label: 'August', value: 7 },
-  { label: 'September', value: 8 },
-  { label: 'October', value: 9 },
-  { label: 'November', value: 10 },
-  { label: 'December', value: 11 },
-];
-
-const CalenderPageHeader = ({ month, setMonth, year }) => {
-  const [incomeOverview, setIncomeOverview] = useState([]);
-  const [expenseOverview, setExpenseOverview] = useState([]);
-  const [monthDropdownVisible, setMonthDropdownVisible] = useState(false);
-  const [expenseScreenVisible, setExpenseScreenVisible] = useState(true); // use this to show correct calendar
-  const dropdownTextStyle = monthDropdownVisible ? styles.placeholder : styles.text;
-
-  useFocusEffect(() => {
-    getMonthOverview();
-  });
-
-  const getMonthOverview = useCallback(() => {
-    const options = { year: '4-digit', month: '2-digit', day: '2-digit' };
-    const start_time = formatDateBE(new Date(year, month, 1).toLocaleDateString(options));
-    const end_time = formatDateBE(new Date(year, month + 1, 0).toLocaleDateString(options));
-
-    axios
-      .get(`${URL}/income/ranged/${start_time}/${end_time}`, {})
-      .then((res) => {
-        const income = res.data.reduce((acc, item) => acc + item.amount, 0);
-        setIncomeOverview(income);
-      })
-      .catch((e) => setIncomeOverview(0));
-    axios
-      .get(`${URL}/expense/ranged/${start_time}/${end_time}`, {})
-      .then((res) => {
-        const expense = res.data.reduce((acc, item) => acc + item.price, 0);
-        setExpenseOverview(expense);
-      })
-      .catch((e) => setExpenseOverview(0));
-    return formatNumber(incomeOverview + expenseOverview);
-  }, [expenseOverview, incomeOverview, month, year]);
+const CalenderPageHeader = ({ month, goToMonth, year, viewingExpenses, setViewingExpenses, monthOverview }) => {
 
   return (
     <View style={styles.headerBackground}>
-      <View style={styles.monthTitle}>
-        <DropDownPicker
-          style={[styles.choiceSelect, { border: 'none' }]}
-          open={monthDropdownVisible}
-          value={month}
-          items={months}
-          setOpen={setMonthDropdownVisible}
-          setValue={setMonth}
-          placeholder="January"
-          placeholderStyle={styles.placeholder}
-          textStyle={dropdownTextStyle}
-          dropDownContainerStyle={styles.dropDown}
-          containerStyle={styles.container}
-          listMode="SCROLLVIEW"
-          showArrowIcon={false}
-        />
+      <View>
+        <MonthSelect month={month} goToMonth={goToMonth}/>  
+        <IncomeExpenseToggle
+          setViewingExpenses={setViewingExpenses}
+          viewingExpenses={viewingExpenses}
+          monthOverview={monthOverview}/>
       </View>
       <View style={styles.screenOptions}>
-      <Pressable
-        style={() => [
-          screenButton.background,
-          { backgroundColor: expenseScreenVisible ? theme.colors.white : theme.colors.primary },
-        ]}
-        onPress={() => setExpenseScreenVisible(true)}>
-        <Text style={expenseScreenVisible ? screenButton.focusedText : screenButton.text}>
-          Expenses
-        </Text>
-      </Pressable>
-        <Pressable
-          style={() => [
-            screenButton.background,
-            { backgroundColor: expenseScreenVisible ? theme.colors.primary : theme.colors.white },
-          ]}
-          onPress={() => setExpenseScreenVisible(false)}>
-          <Text style={expenseScreenVisible ? screenButton.text : screenButton.focusedText}>
-            Incomes
-          </Text>
-        </Pressable>
       </View>
-      <Text style={styles.overViewText}>${getMonthOverview()}</Text>
     </View>
   );
 };
+
+const IncomeExpenseToggle = ({setViewingExpenses, monthOverview, viewingExpenses}) => {
+  return (
+    <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+      <Pressable
+        style={() => [
+          screenButton.background,
+          { backgroundColor: viewingExpenses ? theme.colors.white : theme.colors.primary },
+        ]}
+        onPress={() => setViewingExpenses(true)}>
+        <Text style={viewingExpenses ? screenButton.focusedText : screenButton.text}>
+          Expenses
+        </Text>
+      </Pressable>
+      <Text style={styles.overViewText}>${monthOverview}</Text>
+      <Pressable
+        style={() => [
+          screenButton.background,
+          { backgroundColor: viewingExpenses ? theme.colors.primary : theme.colors.white },
+        ]}
+        onPress={() => setViewingExpenses(false)}>
+        <Text style={viewingExpenses ? screenButton.text : screenButton.focusedText}>
+          Incomes
+        </Text>
+      </Pressable>
+    </View>
+  );
+}
 
 const styles = StyleSheet.create({
   headerBackground: {
@@ -152,15 +98,17 @@ const styles = StyleSheet.create({
     color: theme.colors.lightgrey,
   },
   screenOptions: {
+    paddingTop: 5,
+    paddingBottom: 10,
     flexDirection: 'row',
+    alignItems: 'center',
     justifyContent: 'space-between',
   },
   overViewText: {
     fontSize: 24,
     fontWeight: '300',
     color: theme.colors.white,
-    textAlign: 'center',
-    marginTop: -5,
+    marginTop: 5,
   },
 });
 
