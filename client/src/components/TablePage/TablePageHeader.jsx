@@ -20,22 +20,13 @@ const TablePageHeader = ({
   const [searchBarVisible, setSearchBarVisible] = useState(false);
 
   const onChangeSearch = (query) => setSearchQuery(query);
-  const onToggleSwitch = () => {
-    /*
-    if (type === 'Expenses') {
-      slideRight();
-    } else {
-      slideLeft();
-    }
-    */
-    setType(type === 'Expenses' ? 'Income' : 'Expenses');
-  };
+  const onToggleSwitch = () => setType(type === 'Expenses' ? 'Income' : 'Expenses');
 
   useEffect(() => {
     setAllButton(true);
     setSelectedCategories((sl) => {
       const copyOfSelectedLookup = sl;
-      categories.forEach((category) => {
+      Array.from(categories.keys()).forEach((category) => {
         copyOfSelectedLookup[category] = true;
       });
       return { ...copyOfSelectedLookup };
@@ -46,7 +37,7 @@ const TablePageHeader = ({
     if (allButton) {
       setSelectedCategories(() => {
         const temp = {};
-        categories.forEach((category) => {
+        Array.from(categories.keys()).forEach((category) => {
           temp[category] = false;
         });
         return { ...temp };
@@ -55,7 +46,7 @@ const TablePageHeader = ({
     } else {
       setSelectedCategories(() => {
         const temp = {};
-        categories.forEach((category) => {
+        Array.from(categories.keys()).forEach((category) => {
           temp[category] = true;
         });
         return { ...temp };
@@ -70,7 +61,7 @@ const TablePageHeader = ({
       copyOfS[category] = !copyOfS[category];
       return { ...copyOfS };
     });
-    setAllButton(categories.every((item) => selectedCategories[item]));
+    setAllButton(Array.from(categories.keys()).every((item) => selectedCategories[item]));
   };
 
   const emptyIcon = () => null;
@@ -86,6 +77,8 @@ const TablePageHeader = ({
           buttonColor={theme.colors.primary}
           borderColor={theme.colors.primary}
           fontSize={30}
+          textStyle={{ fontWeight: '600' }}
+          selectedTextStyle={{ fontWeight: '600' }}
           height={50}
           options={[
             { label: 'Expense', value: 'expenses' },
@@ -131,27 +124,27 @@ const TablePageHeader = ({
               All
             </Text>
           </Chip>
-          {categories.map((category, index) => (
+          {Array.from(categories.entries()).map((category) => (
             <Chip
               style={[
                 styles.chip,
                 {
-                  backgroundColor: selectedCategories[category]
-                    ? theme.categories[index]
+                  backgroundColor: selectedCategories[category[0]]
+                    ? category[1]
                     : theme.colors.white,
                 },
               ]}
               icon={emptyIcon}
-              key={category}
-              selected={selectedCategories[category]}
-              onPress={() => categoryButtonPressLogic(category)}>
+              key={category[0]}
+              selected={selectedCategories[category[0]]}
+              onPress={() => categoryButtonPressLogic(category[0])}>
               <Text
                 style={[
                   {
-                    color: selectedCategories[category] ? theme.colors.white : theme.colors.primary,
+                    color: selectedCategories[category[0]] ? theme.colors.white : category[1],
                   },
                 ]}>
-                {category}
+                {category[0]}
               </Text>
             </Chip>
           ))}
@@ -171,28 +164,6 @@ const styles = StyleSheet.create({
     width: '80%',
     alignSelf: 'center',
   },
-  toggleButton: {
-    backgroundColor: theme.colors.primary,
-    display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginTop: 15,
-    paddingHorizontal: 20,
-    borderRadius: 25,
-    borderColor: theme.colors.white,
-    shadowRadius: 5,
-    shadowOpacity: 0.2,
-    shadowOffset: { width: 0, height: 0 },
-  },
-  toggleButtonText: {
-    paddingVertical: 10,
-    marginRight: 10,
-    color: theme.colors.white,
-    textAlign: 'center',
-    fontSize: 24,
-    fontWeight: 'bold',
-  },
   container: {
     marginTop: 10,
     marginVertical: 5,
@@ -208,14 +179,14 @@ const styles = StyleSheet.create({
   },
   searchBar: {
     shadowOpacity: 0.1,
-    width: Dimensions.get('window').width - 150,
-    height: 38,
+    width: Dimensions.get('window').width - 65,
+    height: 40,
     marginRight: 10,
     borderRadius: 15,
   },
   searchIcon: {
     marginRight: 20,
-    color: theme.colors.primary,
+    color: theme.colors.white,
     marginTop: 5,
   },
 });

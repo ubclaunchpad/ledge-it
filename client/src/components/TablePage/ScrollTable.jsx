@@ -4,7 +4,7 @@ import TableComponent from './TableComponent';
 import theme from '../../../theme';
 import { getMonth, getYear } from '../../utils/formatters';
 
-const ScrollTable = ({ type, renderList }) => {
+const ScrollTable = ({ type, renderList, categories }) => {
   const [splitList, setSplitList] = useState([]);
 
   useEffect(() => {
@@ -35,6 +35,7 @@ const ScrollTable = ({ type, renderList }) => {
             subTitle={monthExp.year}
             list={monthExp.list}
             type={type}
+            categories={categories}
           />
         ))
       ) : (

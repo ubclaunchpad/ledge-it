@@ -1,23 +1,17 @@
-import React, { useState } from 'react';
-import { StyleSheet, View, Image } from 'react-native';
+import React, { useCallback, useState } from 'react';
+import { StyleSheet, View } from 'react-native';
+import { FontAwesome5 } from '@expo/vector-icons';
+import { useFocusEffect } from '@react-navigation/native';
 import axios from '../providers/axios';
 import AmountBox from '../components/AmountBox';
 import StyledTextInput from '../components/StyledTextInput';
 import StyledButton from '../components/StyledButton';
 import StyledSelect from '../components/StyledSelect';
 import { formatDateBE } from '../utils/formatters';
+import ImagePreview from './ImagePreview';
 import ToggleButtons from '../components/ToggleButtons';
 
 const URL = process.env.SERVER_URL;
-
-const categories = [
-  { value: 'Housing', label: 'Housing' },
-  { value: 'Food', label: 'Food' },
-  { value: 'Transport', label: 'Transport' },
-  { value: 'Clothes', label: 'Clothes' },
-  { value: 'Entertainment', label: 'Entertainment' },
-  { value: 'Other', label: 'Other' },
-];
 
 const getCurrentDate = () => {
   const date = new Date();
@@ -34,7 +28,24 @@ const AddExpense = ({ setModalVisible, setExpenseModalVisible, type, setType }) 
   const [tag, setTag] = useState(undefined);
   const [description, setDesc] = useState(undefined);
   const [location, setLocation] = useState(undefined);
+  const [imagePreviewVisible, setImagePreviewVisible] = useState(false);
   const [base64Image, setBase64Image] = useState('');
+  const [categories, setCategories] = useState([]);
+
+  const getCategories = async () => {
+    const { data } = await axios.get(`${URL}/expense_categories`);
+    setCategories(
+      data
+        .map(({ name: categoryName }) => ({ value: categoryName, label: categoryName }))
+        .sort((a, b) => a.value > b.value),
+    );
+  };
+
+  useFocusEffect(
+    useCallback(() => {
+      getCategories();
+    }, []),
+  );
 
   const submitExpense = async () => {
     axios
@@ -64,7 +75,9 @@ const AddExpense = ({ setModalVisible, setExpenseModalVisible, type, setType }) 
         category={category}
         amount={Number(price || 0) * -1}
         type="Expense"
+        currb64img={base64Image}
         setb64={setBase64Image}
+        setImgModal={setImagePreviewVisible}
       />
       <ToggleButtons type={type} setType={setType} />
       <StyledTextInput
@@ -73,20 +86,7 @@ const AddExpense = ({ setModalVisible, setExpenseModalVisible, type, setType }) 
         label="Amount"
         placeholder="$$$"
         required
-      />
-      <StyledTextInput
-        onChange={setName}
-        keyboardType="default"
-        label="Name"
-        placeholder="Amazon"
-        required
-      />
-      <StyledTextInput
-        onChange={setDesc}
-        keyboardType="default"
-        label="Description"
-        placeholder="Optional..."
-        multiline
+        icon={<FontAwesome5 name="coins" size={32} color="white" />}
       />
       <StyledTextInput
         onChange={setDate}
@@ -95,6 +95,15 @@ const AddExpense = ({ setModalVisible, setExpenseModalVisible, type, setType }) 
         placeholder="MM/DD/YYYY"
         defaultValue={getCurrentDate()}
         required
+        icon={<FontAwesome5 name="calendar-alt" size={32} color="white" />}
+      />
+      <StyledTextInput
+        onChange={setName}
+        keyboardType="default"
+        label="Name"
+        placeholder="Ex.Amazon"
+        required
+        icon={<FontAwesome5 name="shopping-basket" size={32} color="white" />}
       />
       <StyledSelect
         label="Category"
@@ -103,20 +112,9 @@ const AddExpense = ({ setModalVisible, setExpenseModalVisible, type, setType }) 
         setSelected={setCategory}
         dropdownVisible={categoryDropdownVisible}
         setDropdownVisible={setCategoryDropdownVisible}
-        placeholder="Select a category"
+        placeholder="Select"
         required
-      />
-      <StyledTextInput
-        onChange={setTag}
-        keyboardType="default"
-        label="Tag"
-        placeholder="Optional..."
-      />
-      <StyledTextInput
-        onChange={setLocation}
-        keyboardType="default"
-        label="Location"
-        placeholder="Optional..."
+        icon={<FontAwesome5 name="tag" size={32} color="white" />}
       />
       <View
         style={{
@@ -125,19 +123,21 @@ const AddExpense = ({ setModalVisible, setExpenseModalVisible, type, setType }) 
           alignItems: 'center',
           marginTop: 20,
         }}>
-        {base64Image !== '' && (
-          <Image
-            style={{ width: 85, height: 85, borderRadius: 15, marginHorizontal: 20 }}
-            source={{ uri: base64Image }}
-          />
-        )}
         <View style={styles.button}>
           <StyledButton label="Cancel" onTap={() => setExpenseModalVisible(false)} />
         </View>
+
         <View style={styles.button}>
           <StyledButton label="Add" onTap={submitExpense} />
         </View>
       </View>
+
+      <ImagePreview
+        isModalVisible={imagePreviewVisible}
+        setModalVisible={setImagePreviewVisible}
+        b64Img={base64Image}
+        setb64img={setBase64Image}
+      />
     </>
   );
 };

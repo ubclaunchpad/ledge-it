@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
 import { View, StyleSheet, Dimensions, Text, Platform, KeyboardAvoidingView } from 'react-native';
 import { SvgXml } from 'react-native-svg';
+import SpinnerButton from 'react-native-spinner-button';
 import axios from '../providers/axios';
-import StyledTextInput from '../components/StyledTextInput';
+import StyledTextInput from '../components/AuthPage/StyledAuthInput';
 import BackArrow from '../components/AuthPage/BackArrow';
 import { login, saveToken } from '../utils/auth';
 import theme from '../../theme';
 import Logo from '../../assets/logo';
 import Gradient from '../../assets/loginPageGradient';
-import FilledButton from '../components/AuthPage/FilledButton';
 import OutlinedButton from '../components/AuthPage/OutlinedButton';
 
 const URL = process.env.SERVER_URL;
@@ -20,6 +20,7 @@ const SignUpPage = ({ setPage, setLoggedIn }) => {
   const [firstPassword, setFirstPassword] = useState('');
   const [secondPassword, setSecondPassword] = useState('');
   const [pwdWarn, setPwdWarn] = useState(undefined);
+  const [isLoading, setIsLoading] = useState(false);
 
   const isFormOneFilled = () => !!name && !!email;
 
@@ -27,11 +28,11 @@ const SignUpPage = ({ setPage, setLoggedIn }) => {
     await axios
       .post(
         `${URL}/signup`,
-        JSON.stringify({
+        {
           email,
           hashed_password: secondPassword,
           active: true,
-        }),
+        },
         {
           headers: {
             'Content-Type': 'application/json',
@@ -42,16 +43,20 @@ const SignUpPage = ({ setPage, setLoggedIn }) => {
     const { data } = await login(email, secondPassword);
     await saveToken(data.access_token, data.expiry);
     setLoggedIn(true);
+    setIsLoading(false);
   };
 
-  const signUpHandler = () => {
+  const signUpHandler = async () => {
     if (firstPassword !== secondPassword) {
       setPwdWarn("Passwords don't match");
+      setTimeout(() => {
+        setIsLoading(false);
+      }, 1000);
       setTimeout(() => {
         setPwdWarn(undefined);
       }, 10000);
     } else {
-      submitSignUp();
+      await submitSignUp();
     }
   };
 
@@ -101,22 +106,43 @@ const SignUpPage = ({ setPage, setLoggedIn }) => {
               />
             </>
           )}
-          <View style={styles.btnContainer}>
-            {form === 0 ? (
-              <>
+          {form === 0 ? (
+            <>
+              <View style={styles.btnContainer}>
                 <OutlinedButton
                   label="Next"
                   onPress={() => setForm(1)}
                   disabled={!isFormOneFilled()}
                 />
-              </>
-            ) : (
-              <>
+              </View>
+            </>
+          ) : (
+            <>
+              <View style={styles.btnContainer}>
                 <OutlinedButton label="Back" onPress={() => setForm(0)} />
-                <FilledButton label="Create an account" onPress={signUpHandler} />
-              </>
-            )}
-          </View>
+                {/* <FilledButton label="Create an account" onPress={signUpHandler} /> */}
+              </View>
+              <View
+                style={{
+                  display: 'flex',
+                  width: Dimensions.get('window').width,
+                  alignSelf: 'center',
+                }}>
+                <SpinnerButton
+                  buttonStyle={{
+                    backgroundColor: 'white',
+                    borderRadius: Dimensions.get('window').width,
+                    width: Dimensions.get('window').width / 1.2,
+                  }}
+                  isLoading={isLoading}
+                  onPress={() => setIsLoading(true, signUpHandler())}
+                  indicatorCount={10}
+                  spinnerColor={theme.colors.primary}>
+                  <Text style={{ fontSize: 18, color: theme.colors.primary }}>Signup</Text>
+                </SpinnerButton>
+              </View>
+            </>
+          )}
         </View>
       </KeyboardAvoidingView>
       <BackArrow onPress={() => setPage('startingPage')} />

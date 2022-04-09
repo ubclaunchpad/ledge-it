@@ -20,6 +20,7 @@ const data = [
 
 const ToggleCard = () => {
   const [, setCurrentIndex] = useState(0);
+  const [displayDurationButton, setDisplayDurationButton] = useState(false);
   const scrollX = useRef(new Animated.Value(0)).current;
   const slidesRef = useRef(null);
 
@@ -35,8 +36,10 @@ const ToggleCard = () => {
         <View style={styles.content}>
           {item.title === 'Visualization' ? (
             <>
-              <StyledButton key="all" label="Last 7 Days" customStyles={buttonSelectedStyle} />
-              <StaticAreaGraph scrollX={scrollX} />
+              {displayDurationButton ? (
+                <StyledButton key="all" label="Last 7 Days" customStyles={buttonSelectedStyle} />
+              ) : null}
+              <StaticAreaGraph scrollX={scrollX} setButton={setDisplayDurationButton} />
             </>
           ) : null}
           {item.title === 'Calendar' ? <Text style={styles.text}>{item.description}</Text> : null}
@@ -91,16 +94,21 @@ const styles = StyleSheet.create({
     width: Dimensions.get('window').width - 30,
     justifyContent: 'center',
     alignItems: 'center',
-    borderWidth: 4,
+    borderWidth: 0,
     borderRadius: 20,
-    backgroundColor: 'white',
+    backgroundColor: theme.colors.textLight,
     borderColor: theme.colors.primaryDark,
-    // paddingTop: 10
+
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.5,
+    shadowRadius: 3,
+    elevation: 5,
   },
 
   text: {
     fontWeight: 'bold',
-    color: theme.colors.black,
+    color: theme.colors.textDark,
     fontSize: 20,
   },
 });

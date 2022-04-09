@@ -135,7 +135,7 @@ const BudgetTable = ({
             setShowTable(false);
             setShowEdit(true);
           }}>
-          Edit Budget
+          Add Budget
         </Button>
       </View>
     </>

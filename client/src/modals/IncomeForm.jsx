@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
-import { StyleSheet, View, Image } from 'react-native';
+import { StyleSheet, View } from 'react-native';
+import { FontAwesome5 } from '@expo/vector-icons';
 import axios from '../providers/axios';
 import StyledTextInput from '../components/StyledTextInput';
 import StyledButton from '../components/StyledButton';
 import StyledSelect from '../components/StyledSelect';
 import { formatDateBE } from '../utils/formatters';
 import AmountBox from '../components/AmountBox';
+import ImagePreview from './ImagePreview';
 import ToggleButtons from '../components/ToggleButtons';
 
 const URL = process.env.SERVER_URL;
@@ -31,6 +33,7 @@ const AddIncome = ({ setModalVisible, setIncomeModalVisible, type, setType }) =>
   const [categoryDropdownVisible, setCategoryDropdownVisible] = useState(false);
   const [description, setDesc] = useState(undefined);
   const [location, setLocation] = useState(undefined);
+  const [imagePreviewVisible, setImagePreviewVisible] = useState(false);
   const [base64Image, setBase64Image] = useState('');
 
   const submitIncome = async () => {
@@ -60,7 +63,9 @@ const AddIncome = ({ setModalVisible, setIncomeModalVisible, type, setType }) =>
         category={category}
         amount={amount}
         type="Income"
+        currb64img={base64Image}
         setb64={setBase64Image}
+        setImgModal={setImagePreviewVisible}
       />
       <ToggleButtons type={type} setType={setType} />
       <StyledTextInput
@@ -69,20 +74,7 @@ const AddIncome = ({ setModalVisible, setIncomeModalVisible, type, setType }) =>
         label="Amount"
         placeholder="$$$"
         required
-      />
-      <StyledTextInput
-        onChange={setName}
-        keyboardType="default"
-        label="Income Source"
-        placeholder="Salary"
-        required
-      />
-      <StyledTextInput
-        onChange={setDesc}
-        keyboardType="default"
-        label="Description"
-        placeholder="Optional..."
-        multiline
+        icon={<FontAwesome5 name="coins" size={32} color="white" />}
       />
       <StyledTextInput
         onChange={setDate}
@@ -91,6 +83,15 @@ const AddIncome = ({ setModalVisible, setIncomeModalVisible, type, setType }) =>
         placeholder="DD/MM/YYYY"
         defaultValue={getCurrentDate()}
         required
+        icon={<FontAwesome5 name="calendar-alt" size={32} color="white" />}
+      />
+      <StyledTextInput
+        onChange={setName}
+        keyboardType="default"
+        label="Source"
+        placeholder="Ex. Salary"
+        required
+        icon={<FontAwesome5 name="shopping-basket" size={32} color="white" />}
       />
       <StyledSelect
         label="Category"
@@ -99,14 +100,9 @@ const AddIncome = ({ setModalVisible, setIncomeModalVisible, type, setType }) =>
         setSelected={setCategory}
         dropdownVisible={categoryDropdownVisible}
         setDropdownVisible={setCategoryDropdownVisible}
-        placeholder="Select a category"
+        placeholder="Select"
         required
-      />
-      <StyledTextInput
-        onChange={setLocation}
-        keyboardType="default"
-        label="Location"
-        placeholder="Optional..."
+        icon={<FontAwesome5 name="tag" size={32} color="white" />}
       />
       <View
         style={{
@@ -115,19 +111,21 @@ const AddIncome = ({ setModalVisible, setIncomeModalVisible, type, setType }) =>
           alignItems: 'center',
           marginTop: 20,
         }}>
-        {base64Image !== '' && (
-          <Image
-            style={{ width: 85, height: 85, borderRadius: 15, marginHorizontal: 20 }}
-            source={{ uri: base64Image }}
-          />
-        )}
         <View style={styles.button}>
           <StyledButton label="Cancel" onTap={() => setIncomeModalVisible(false)} />
         </View>
+
         <View style={styles.button}>
           <StyledButton label="Add" onTap={submitIncome} />
         </View>
       </View>
+
+      <ImagePreview
+        isModalVisible={imagePreviewVisible}
+        setModalVisible={setImagePreviewVisible}
+        b64Img={base64Image}
+        setb64img={setBase64Image}
+      />
     </>
   );
 };
