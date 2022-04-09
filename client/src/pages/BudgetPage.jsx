@@ -3,14 +3,17 @@ import { useFocusEffect } from '@react-navigation/native';
 import axios from '../providers/axios';
 import BudgetTable from '../components/BudgetPage/BudgetTable';
 import BudgetDetails from '../components/BudgetPage/BudgetDetails';
+import EditBudget from '../components/BudgetPage/EditBudget';
 
 const URL = process.env.SERVER_URL;
 
 const BudgetPage = () => {
-  const [showDetails, setShowDetails] = useState(false);
   const [month, setMonth] = useState(new Date().getMonth() + 1);
   const [year, setYear] = useState(new Date().getFullYear());
   const [databaseBudget, setDatabaseBudget] = useState([]);
+  const [showDetails, setShowDetails] = useState(false);
+  const [showEdit, setShowEdit] = useState(false);
+  const [showTable, setShowTable] = useState(true);
 
   useFocusEffect(
     useCallback(() => {
@@ -23,21 +26,32 @@ const BudgetPage = () => {
 
   return (
     <>
-      {showDetails ? (
+      {showTable && (
+        <BudgetTable
+          renderList={databaseBudget}
+          setMonth={setMonth}
+          month={month}
+          year={year}
+          setYear={setYear}
+          setShowTable={setShowTable}
+          setShowDetails={setShowDetails}
+          setShowEdit={setShowEdit}
+        />
+      )}
+      {showDetails && (
         <BudgetDetails
           currentMonth={month}
           currentYear={year}
-          isVisible={showDetails}
-          setVisible={setShowDetails}
+          setShowDetails={setShowDetails}
+          setShowTable={setShowTable}
         />
-      ) : (
-        <BudgetTable
-          renderList={databaseBudget}
-          isVisible={showDetails}
-          setVisible={setShowDetails}
-          setMonth={setMonth}
+      )}
+      {showEdit && (
+        <EditBudget
+          month={month}
           year={year}
-          setYear={setYear}
+          setShowTable={setShowTable}
+          setShowEdit={setShowEdit}
         />
       )}
     </>

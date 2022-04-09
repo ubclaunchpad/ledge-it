@@ -50,6 +50,36 @@ def add_expense_category(
         raise HTTPException(status_code=400, detail=f"Category already exists.")
 
 
+@router.put(
+    "/expense_categories/change_color",
+    response_description="Update color of expense category",
+)
+def change_expense_category_color(
+    category_name: str,
+    category_color: str,
+    current_user: User = Depends(get_current_active_user),
+):
+    new_category_dict = {"name": category_name, "color": category_color}
+    new_category = Category(**new_category_dict)
+    new_category = jsonable_encoder(new_category)
+    if any(category_name == c["name"] for c in current_user["expense_categories_list"]):
+        user_collection.update_one(
+            {
+                "email": current_user["email"],
+                "expense_categories_list.name": category_name,
+            },
+            {"$set": {"expense_categories_list.$": new_category}},
+        )
+        return JSONResponse(
+            status_code=status.HTTP_200_OK,
+            content="Category color changed successfully.",
+        )
+    else:
+        raise HTTPException(
+            status_code=400, detail=f"Category does not exist. Cannot change color."
+        )
+
+
 @router.delete(
     "/expense_categories",
     response_description="Delete expense category",
@@ -113,6 +143,36 @@ def add_income_category(
         )
     else:
         raise HTTPException(status_code=400, detail=f"Category already exists.")
+
+
+@router.put(
+    "/income_categories/change_color",
+    response_description="Update color of income category",
+)
+def change_income_category_color(
+    category_name: str,
+    category_color: str,
+    current_user: User = Depends(get_current_active_user),
+):
+    new_category_dict = {"name": category_name, "color": category_color}
+    new_category = Category(**new_category_dict)
+    new_category = jsonable_encoder(new_category)
+    if any(category_name == c["name"] for c in current_user["income_categories_list"]):
+        user_collection.update_one(
+            {
+                "email": current_user["email"],
+                "income_categories_list.name": category_name,
+            },
+            {"$set": {"income_categories_list.$": new_category}},
+        )
+        return JSONResponse(
+            status_code=status.HTTP_200_OK,
+            content="Category color changed successfully.",
+        )
+    else:
+        raise HTTPException(
+            status_code=400, detail=f"Category does not exist. Cannot change color."
+        )
 
 
 @router.delete(

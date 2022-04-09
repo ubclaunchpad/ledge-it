@@ -7,6 +7,7 @@ from typing import List, Optional
 from re import compile
 from datetime import date
 
+from ..routes.image_to_s3 import upload_image, delete_image
 from ..middleware import get_current_active_user
 from ..models.user import User
 from .net_worth import update_net_worth
@@ -74,7 +75,7 @@ def get_expense_by_id(id, current_user: User = Depends(get_current_active_user))
 
 
 @router.post("/expense", response_description="Add new expense", response_model=Expense)
-def create_expense(
+async def create_expense(
     expense: AddExpense = Body(...),
     current_user: User = Depends(get_current_active_user),
 ):
@@ -108,6 +109,14 @@ def create_expense(
         expense.exchange_rate = get_exchange_rate_to_cad(expense.currency)
 
     expense_dict = {k: v for k, v in expense.dict().items()}
+
+    if "base64_image" in expense:
+        try:
+            expense["image_url"] = await upload_image(expense["base64_image"])
+            del expense["base64_image"]
+        except ValueError as err:
+            raise HTTPException(status_code=404, detail=f"{err}")
+
     expense_dict["email"] = current_user["email"]
 
     try:
@@ -127,7 +136,7 @@ def create_expense(
 @router.put(
     "/expense/{id}", response_description="Update an expense", response_model=Expense
 )
-def update_expense(
+async def update_expense(
     id,
     expense: UpdateExpenseModel = Body(...),
     current_user: User = Depends(get_current_active_user),
@@ -165,6 +174,14 @@ def update_expense(
             expense.exchange_rate = get_exchange_rate_to_cad(expense.currency)
 
     expense = {k: v for k, v in expense.dict().items() if v is not None}
+
+    if "base64_image" in expense:
+        try:
+            expense["image_url"] = await upload_image(expense["base64_image"])
+            del expense["base64_image"]
+        except ValueError as err:
+            raise HTTPException(status_code=404, detail=f"{err}")
+
     expense["email"] = current_user["email"]
     expense = jsonable_encoder(expense)
 
@@ -192,7 +209,7 @@ def update_expense(
 
 
 @router.delete("/expense/{id}", response_description="Delete an expense")
-def delete_expense(id, current_user: User = Depends(get_current_active_user)):
+async def delete_expense(id, current_user: User = Depends(get_current_active_user)):
     expense_to_delete: Expense = expense_collection.find_one(
         {"_id": id, "email": current_user["email"]}
     )
@@ -225,6 +242,13 @@ def delete_expense(id, current_user: User = Depends(get_current_active_user)):
         -expense_to_delete["price"],
         current_user,
     )
+
+    if expense_to_delete.image_url is not None:
+        file_name = expense_to_delete.image_url.split("/")[-1]
+        try:
+            await delete_image(file_name)
+        except ValueError as err:
+            raise HTTPException(status_code=404, detail=f"{err}")
 
     delete_result = expense_collection.delete_one(
         {"_id": expense_to_delete["_id"], "email": current_user["email"]}

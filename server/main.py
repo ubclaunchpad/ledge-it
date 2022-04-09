@@ -8,6 +8,7 @@ from src.routes import (
     login,
     net_worth,
     category,
+    plaid,
     image_to_s3,
 )
 
@@ -23,6 +24,7 @@ app.include_router(category_budget.router)
 app.include_router(signup.router)
 app.include_router(login.router)
 app.include_router(category.router)
+app.include_router(plaid.router)
 app.include_router(image_to_s3.router)
 
 
